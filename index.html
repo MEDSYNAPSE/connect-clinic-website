@@ -11,36 +11,95 @@
   <meta property="og:url" content="https://connectclinic.co.nz" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    .gradient-hero { background: linear-gradient(135deg, #0c1a2e 0%, #0d3152 50%, #0a5c6b 100%); }
-    .service-card:hover { transform: translateY(-4px); transition: all 0.3s ease; }
-    .pulse-dot::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10b981; margin-right: 8px; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .sticky-nav { backdrop-filter: blur(12px); background: rgba(255,255,255,0.92); }
+    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+
+    /* Hero */
+    .hero-bg {
+      background: #050d1a;
+      position: relative;
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 50%, rgba(14,116,144,0.25) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 20%, rgba(56,189,248,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 40% at 60% 80%, rgba(99,102,241,0.1) 0%, transparent 50%);
+    }
+    .hero-grid {
+      background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* Nav */
+    .sticky-nav {
+      backdrop-filter: blur(20px) saturate(180%);
+      background: rgba(5,13,26,0.85);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* Cards */
+    .service-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .service-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15);
+    }
+    .pricing-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .pricing-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px -8px rgba(14,116,144,0.15);
+      border-color: #0891b2;
+    }
+
+    /* Pulse */
+    .pulse-dot::before {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      margin-right: 8px;
+      animation: pulse 2s infinite;
+      vertical-align: middle;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.4); } 50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(16,185,129,0); } }
+
+    /* Misc */
     html { scroll-behavior: smooth; }
-    .faq-item { border-bottom: 1px solid #f0f0f0; }
+    .faq-item { border-bottom: 1px solid #f3f4f6; }
+    .glass { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+    .text-gradient { background: linear-gradient(135deg, #38bdf8 0%, #34d399 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .section-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    input, select, textarea { transition: border-color 0.15s, box-shadow 0.15s; }
   </style>
 </head>
 <body class="bg-white text-gray-900" x-data="{ mobileMenu: false, bookingService: '', submitted: false, referralSubmitted: false, openFaq: null }">
 
   <!-- NAV -->
-  <nav class="sticky top-0 z-50 sticky-nav border-b border-gray-100 shadow-sm">
+  <nav class="sticky top-0 z-50 sticky-nav">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500 to-teal-500 flex items-center justify-center">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-teal-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         </div>
-        <span class="font-bold text-lg text-gray-900">Connect Clinic</span>
+        <span class="font-bold text-base text-white tracking-tight">Connect Clinic</span>
       </div>
-      <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
-        <a href="#services" class="hover:text-sky-600 transition">Services</a>
-        <a href="#pricing" class="hover:text-sky-600 transition">Pricing</a>
-        <a href="#about" class="hover:text-sky-600 transition">About</a>
-        <a href="#faq" class="hover:text-sky-600 transition">FAQ</a>
-        <a href="#refer" class="hover:text-sky-600 transition">Refer a patient</a>
-        <a href="#book" class="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg transition font-semibold">Book now</a>
+      <div class="hidden md:flex items-center gap-7 text-sm font-medium text-gray-400">
+        <a href="#services" class="hover:text-white transition-colors">Services</a>
+        <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
+        <a href="#about" class="hover:text-white transition-colors">About</a>
+        <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+        <a href="#refer" class="hover:text-white transition-colors">Refer</a>
+        <a href="#book" class="bg-cyan-500 hover:bg-cyan-400 text-white px-5 py-2 rounded-lg transition font-semibold text-sm shadow-lg shadow-cyan-500/25">Book now</a>
       </div>
       <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -57,37 +116,43 @@
   </nav>
 
   <!-- HERO -->
-  <section class="gradient-hero text-white py-24 px-4 relative overflow-hidden">
-    <div class="absolute inset-0 opacity-10">
-      <div class="absolute top-20 left-10 w-64 h-64 bg-sky-400 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-10 right-10 w-80 h-80 bg-teal-400 rounded-full blur-3xl"></div>
-    </div>
-    <div class="max-w-4xl mx-auto relative z-10 text-center">
-      <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-sm mb-6 pulse-dot">
-        NZ-registered GP, available now
+  <section class="hero-bg hero-grid text-white py-28 px-4 relative overflow-hidden">
+    <div class="max-w-5xl mx-auto relative z-10 text-center">
+      <div class="inline-flex items-center gap-1 glass rounded-full px-4 py-2 text-xs text-emerald-300 font-semibold mb-8 pulse-dot">
+        NZ-registered doctors available now
       </div>
-      <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-4">
+      <h1 class="text-6xl md:text-7xl font-black leading-[1.05] tracking-tight mb-6">
         Real healthcare,<br />
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-teal-300">wherever you are.</span>
+        <span class="text-gradient">wherever you are.</span>
       </h1>
-      <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-        See an Auckland GP by video today. Repeat scripts, sick notes, Wegovy assessments, and more — sorted in minutes, not weeks.
+      <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+        See an NZ GP by video today. Repeat scripts, sick notes, Wegovy — sorted in minutes, not weeks. From <span class="text-white font-semibold">$35.</span>
       </p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <a href="#book" class="bg-white text-sky-700 font-bold px-8 py-4 rounded-xl hover:bg-sky-50 transition text-lg shadow-lg">
-          See a doctor today
+      <div class="flex flex-col sm:flex-row gap-3 justify-center mb-12">
+        <a href="#book" class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold px-8 py-4 rounded-xl transition text-base shadow-2xl shadow-cyan-500/30">
+          Book a consult
         </a>
-        <a href="#services" class="border border-white/40 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/10 transition text-lg">
-          View services
+        <a href="#pricing" class="glass text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/10 transition text-base">
+          See pricing
         </a>
       </div>
-      <p class="mt-6 text-blue-200 text-sm">No waiting room. No travel. Prescriptions sent straight to your pharmacy.</p>
+      <div class="flex flex-wrap justify-center gap-10 text-center">
+        <div><div class="text-2xl font-black text-white">$55</div><div class="text-xs text-gray-500 mt-0.5">General consult</div></div>
+        <div class="w-px bg-white/10 hidden sm:block"></div>
+        <div><div class="text-2xl font-black text-white">Same day</div><div class="text-xs text-gray-500 mt-0.5">Appointments</div></div>
+        <div class="w-px bg-white/10 hidden sm:block"></div>
+        <div><div class="text-2xl font-black text-white">NZ-wide</div><div class="text-xs text-gray-500 mt-0.5">Available anywhere</div></div>
+        <div class="w-px bg-white/10 hidden sm:block"></div>
+        <div><div class="text-2xl font-black text-white">4 roles</div><div class="text-xs text-gray-500 mt-0.5">GPs, nurses, dieticians, coaches</div></div>
+      </div>
     </div>
   </section>
 
+  <!-- TRUST
+
   <!-- TRUST BAR -->
-  <section class="bg-gray-50 border-b border-gray-100 py-5 px-4">
-    <div class="max-w-5xl mx-auto flex flex-wrap justify-center gap-8 text-sm text-gray-500 font-medium">
+  <section class="bg-gray-950 border-y border-white/5 py-4 px-4">
+    <div class="max-w-5xl mx-auto flex flex-wrap justify-center gap-7 text-xs text-gray-500 font-medium">
       <span class="flex items-center gap-2"><svg class="w-5 h-5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>FRNZCGP-qualified GP</span>
       <span class="flex items-center gap-2"><svg class="w-5 h-5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Prescriptions to your pharmacy</span>
       <span class="flex items-center gap-2"><svg class="w-5 h-5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Sick notes and medical certs</span>
@@ -100,7 +165,7 @@
   <section id="services" class="py-20 px-4 bg-white">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-14">
-        <span class="text-sky-600 font-semibold text-sm uppercase tracking-wide">What we treat</span>
+        <span class="section-label text-cyan-500">What we treat</span>
         <h2 class="text-4xl font-bold mt-2 text-gray-900">Services designed for real life</h2>
         <p class="text-gray-500 mt-3 max-w-xl mx-auto">Can't get into your GP? Can't take time off work? We've got you covered.</p>
       </div>
@@ -165,10 +230,10 @@
   </section>
 
   <!-- HOW IT WORKS -->
-  <section id="how-it-works" class="py-20 px-4 bg-gray-50">
+  <section id="how-it-works" class="py-20 px-4 bg-slate-50">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-14">
-        <span class="text-sky-600 font-semibold text-sm uppercase tracking-wide">Simple process</span>
+        <span class="section-label text-cyan-500">Simple process</span>
         <h2 class="text-4xl font-bold mt-2">How it works</h2>
         <p class="text-gray-500 mt-3">From booking to sorted in three simple steps.</p>
       </div>
@@ -203,17 +268,17 @@
   <section id="pricing" class="py-20 px-4 bg-white">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-14">
-        <span class="text-sky-600 font-semibold text-sm uppercase tracking-wide">Transparent pricing</span>
+        <span class="section-label text-cyan-500">Transparent pricing</span>
         <h2 class="text-4xl font-bold mt-2 text-gray-900">Simple, upfront fees</h2>
         <p class="text-gray-500 mt-3 max-w-xl mx-auto">No hidden costs. Pay only for what you need. All consultations include follow-up notes sent to you by email.</p>
       </div>
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <div class="rounded-2xl border border-gray-100 p-6 hover:border-sky-200 hover:shadow-md transition">
+        <div class="pricing-card rounded-2xl border border-gray-100 p-6">
           <div class="text-sky-600 font-semibold text-sm mb-1">Repeat Prescription</div>
           <div class="text-3xl font-extrabold text-gray-900 mb-1">$35<span class="text-lg font-normal text-gray-400"> + script fee</span></div>
           <p class="text-gray-500 text-sm">Script sent direct to your pharmacy. No consultation needed for stable conditions.</p>
         </div>
-        <div class="rounded-2xl border border-gray-100 p-6 hover:border-sky-200 hover:shadow-md transition">
+        <div class="pricing-card rounded-2xl border border-gray-100 p-6">
           <div class="text-indigo-600 font-semibold text-sm mb-1">Sick Note</div>
           <div class="text-3xl font-extrabold text-gray-900 mb-1">$35</div>
           <p class="text-gray-500 text-sm">Official NZ medical certificate emailed to you within hours of your consult.</p>
@@ -224,17 +289,17 @@
           <div class="text-3xl font-extrabold text-gray-900 mb-1">$55</div>
           <p class="text-gray-500 text-sm">Full video consultation with Dr Katoa. Acute illness, skin concerns, mental health check-in, and more.</p>
         </div>
-        <div class="rounded-2xl border border-gray-100 p-6 hover:border-sky-200 hover:shadow-md transition">
+        <div class="pricing-card rounded-2xl border border-gray-100 p-6">
           <div class="text-purple-600 font-semibold text-sm mb-1">Wegovy Assessment</div>
           <div class="text-3xl font-extrabold text-gray-900 mb-1">$120</div>
           <p class="text-gray-500 text-sm">Full eligibility assessment, programme explanation, and prescription if suitable.</p>
         </div>
-        <div class="rounded-2xl border border-gray-100 p-6 hover:border-sky-200 hover:shadow-md transition">
+        <div class="pricing-card rounded-2xl border border-gray-100 p-6">
           <div class="text-teal-600 font-semibold text-sm mb-1">Dietician Consult</div>
           <div class="text-3xl font-extrabold text-gray-900 mb-1">$95</div>
           <p class="text-gray-500 text-sm">Personalised dietary plan from our registered dietician, with clinical notes sent to your GP.</p>
         </div>
-        <div class="rounded-2xl border border-gray-100 p-6 hover:border-sky-200 hover:shadow-md transition">
+        <div class="pricing-card rounded-2xl border border-gray-100 p-6">
           <div class="text-rose-600 font-semibold text-sm mb-1">Second Opinion</div>
           <div class="text-3xl font-extrabold text-gray-900 mb-1">$85</div>
           <p class="text-gray-500 text-sm">Independent clinical review of your diagnosis or treatment plan, with written summary.</p>
@@ -245,10 +310,10 @@
   </section>
 
   <!-- ABOUT -->
-  <section id="about" class="py-20 px-4 bg-gray-50">
+  <section id="about" class="py-20 px-4 bg-slate-50">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-14">
-        <span class="text-sky-600 font-semibold text-sm uppercase tracking-wide">Our team</span>
+        <span class="section-label text-cyan-500">Our team</span>
         <h2 class="text-4xl font-bold mt-2 text-gray-900">Real clinicians, NZ-wide</h2>
         <p class="text-gray-500 mt-3 max-w-xl mx-auto">Connect Clinic brings together a multi-disciplinary team of NZ-registered clinicians available across New Zealand.</p>
       </div>
@@ -333,10 +398,10 @@
   </section>
 
   <!-- FAQ -->
-  <section id="faq" class="py-20 px-4 bg-gray-50">
+  <section id="faq" class="py-20 px-4 bg-slate-50">
     <div class="max-w-3xl mx-auto">
       <div class="text-center mb-14">
-        <span class="text-sky-600 font-semibold text-sm uppercase tracking-wide">Common questions</span>
+        <span class="section-label text-cyan-500">Common questions</span>
         <h2 class="text-4xl font-bold mt-2 text-gray-900">Frequently asked questions</h2>
       </div>
       <div class="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-100">
@@ -397,7 +462,7 @@
   <section id="book" class="py-20 px-4 bg-white">
     <div class="max-w-2xl mx-auto">
       <div class="text-center mb-10">
-        <span class="text-sky-600 font-semibold text-sm uppercase tracking-wide">Get started</span>
+        <span class="section-label text-cyan-500">Get started</span>
         <h2 class="text-4xl font-bold mt-2">Book a consult</h2>
         <p class="text-gray-500 mt-3">Fill in your details and we'll be in touch to confirm your appointment time.</p>
       </div>
@@ -514,7 +579,7 @@
   <section id="refer" class="py-20 px-4 bg-gray-50">
     <div class="max-w-2xl mx-auto">
       <div class="text-center mb-10">
-        <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wide">For healthcare providers</span>
+        <span class="section-label text-indigo-400">For healthcare providers</span>
         <h2 class="text-4xl font-bold mt-2">Refer a patient</h2>
         <p class="text-gray-500 mt-3">GP, specialist, or allied health provider? Refer directly to Connect Clinic for fast telehealth follow-up.</p>
       </div>
@@ -587,7 +652,7 @@
   </section>
 
   <!-- FOOTER -->
-  <footer class="bg-gray-900 text-gray-400 py-12 px-4">
+  <footer class="bg-gray-950 text-gray-400 py-12 px-4">
     <div class="max-w-6xl mx-auto">
       <div class="grid md:grid-cols-3 gap-8 mb-8">
         <div>
