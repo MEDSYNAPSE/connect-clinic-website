@@ -1,452 +1,914 @@
 <!DOCTYPE html>
+<!-- This page should be password-protected before going to production -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Connect Clinic — Admin</title>
+  <title>Admin Dashboard — Connect Clinic</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
   <style>
-    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
-    .status-pending    { background: #fef3c7; color: #92400e; }
-    .status-confirmed  { background: #d1fae5; color: #065f46; }
-    .status-completed  { background: #dbeafe; color: #1e40af; }
-    .status-cancelled  { background: #fee2e2; color: #991b1b; }
-    .pay-unpaid  { background: #fee2e2; color: #991b1b; }
-    .pay-paid    { background: #d1fae5; color: #065f46; }
-    .pay-refunded{ background: #e0e7ff; color: #3730a3; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; background: #050d1a; }
+
+    .glass {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+    }
+    .glass-strong {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      backdrop-filter: blur(16px);
+    }
+
+    .sticky-nav {
+      backdrop-filter: blur(20px) saturate(180%);
+      background: rgba(5,13,26,0.92);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .grad-text {
+      background: linear-gradient(90deg, #22d3ee, #14b8a6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .stat-card:hover { border-color: rgba(34,211,238,0.3); transform: translateY(-2px); }
+
+    .booking-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      transition: border-color 0.2s;
+    }
+    .booking-card:hover { border-color: rgba(34,211,238,0.2); }
+    .booking-card.flagged { border-color: rgba(239,68,68,0.4) !important; background: rgba(239,68,68,0.04) !important; }
+
+    @keyframes flash-in {
+      0%   { opacity: 0; transform: translateY(-8px); border-color: rgba(34,211,238,0.6); }
+      50%  { border-color: rgba(34,211,238,0.4); }
+      100% { opacity: 1; transform: translateY(0); border-color: rgba(255,255,255,0.07); }
+    }
+    .booking-new { animation: flash-in 0.7s ease forwards; }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+    ::-webkit-scrollbar-thumb { background: rgba(34,211,238,0.3); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(34,211,238,0.5); }
+
+    input, select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #e2e8f0;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: rgba(34,211,238,0.5);
+      box-shadow: 0 0 0 2px rgba(34,211,238,0.1);
+    }
+    input::placeholder { color: rgba(226,232,240,0.35); }
+    select option { background: #0f172a; color: #e2e8f0; }
+
+    .allergy-warn { background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.3); color: #fbbf24; }
+    .allergy-safe { color: #6ee7b7; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22d3ee, #14b8a6);
+      color: #050d1a;
+      font-weight: 600;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #94a3b8;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.09); color: #e2e8f0; border-color: rgba(255,255,255,0.2); }
+
+    .zoom-banner {
+      background: linear-gradient(135deg, rgba(34,211,238,0.08), rgba(20,184,166,0.08));
+      border: 1px solid rgba(34,211,238,0.22);
+    }
+
+    .live-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: pulse-green 2s infinite;
+    }
+    @keyframes pulse-green {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+      50%       { opacity: 0.7; box-shadow: 0 0 0 5px rgba(16,185,129,0); }
+    }
+
+    .admin-warn { background: rgba(251,191,36,0.08); border-bottom: 1px solid rgba(251,191,36,0.2); }
+
+    html { scroll-behavior: smooth; }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen" x-data="adminApp()" x-init="init()">
+<body class="min-h-screen text-slate-200">
 
-  <!-- LOGIN -->
-  <div x-show="!session" class="min-h-screen flex items-center justify-center px-4">
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 w-full max-w-sm">
-      <div class="flex items-center gap-3 mb-8">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-teal-500 flex items-center justify-center">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        </div>
-        <div>
-          <p class="font-bold text-gray-900">Connect Clinic</p>
-          <p class="text-xs text-gray-400">Admin portal</p>
-        </div>
-      </div>
-      <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
-        <input x-model="loginEmail" type="email" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-300" placeholder="admin@connectclinic.co.nz" @keydown.enter="login()" />
-      </div>
-      <div class="mb-6">
-        <label class="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
-        <input x-model="loginPassword" type="password" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-300" @keydown.enter="login()" />
-      </div>
-      <p x-show="loginError" x-text="loginError" class="text-red-500 text-sm mb-4"></p>
-      <button @click="login()" :disabled="loginLoading" class="w-full bg-cyan-500 hover:bg-cyan-600 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition text-sm">
-        <span x-text="loginLoading ? 'Signing in...' : 'Sign in'"></span>
-      </button>
-    </div>
+<div x-data="adminApp()" x-init="init()" class="min-h-screen">
+
+  <!-- Admin warning bar -->
+  <div class="admin-warn py-2 px-4 text-center text-xs text-amber-400 font-medium tracking-wide select-none">
+    &#9888; Admin access &mdash; do not share this URL
   </div>
 
-  <!-- DASHBOARD -->
-  <div x-show="session">
+  <!-- ===== STICKY HEADER ===== -->
+  <header class="sticky top-0 z-50 sticky-nav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
 
-    <!-- Top nav -->
-    <nav class="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-teal-500 flex items-center justify-center">
-          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      <!-- Logo + title -->
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg,#22d3ee,#14b8a6);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="10" y="3" width="4" height="18" rx="2" fill="#050d1a" fill-opacity="0.8"/>
+            <rect x="3" y="10" width="18" height="4" rx="2" fill="#050d1a" fill-opacity="0.8"/>
+          </svg>
         </div>
-        <span class="font-bold text-gray-900">Connect Clinic</span>
-        <span class="text-gray-300 text-xs">|</span>
-        <span class="text-sm text-gray-500">Admin</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <span class="text-sm text-gray-400" x-text="session?.user?.email"></span>
-        <button @click="signOut()" class="text-sm text-gray-500 hover:text-red-500 transition">Sign out</button>
-      </div>
-    </nav>
-
-    <!-- Stats bar -->
-    <div class="max-w-7xl mx-auto px-6 py-6">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div class="bg-white rounded-xl border border-gray-100 p-5">
-          <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1">Total bookings</p>
-          <p class="text-3xl font-bold text-gray-900" x-text="bookings.length"></p>
-        </div>
-        <div class="bg-white rounded-xl border border-gray-100 p-5">
-          <p class="text-xs text-amber-500 font-medium uppercase tracking-wide mb-1">Pending</p>
-          <p class="text-3xl font-bold text-amber-600" x-text="bookings.filter(b => b.status === 'pending').length"></p>
-        </div>
-        <div class="bg-white rounded-xl border border-gray-100 p-5">
-          <p class="text-xs text-green-500 font-medium uppercase tracking-wide mb-1">Confirmed</p>
-          <p class="text-3xl font-bold text-green-600" x-text="bookings.filter(b => b.status === 'confirmed').length"></p>
-        </div>
-        <div class="bg-white rounded-xl border border-gray-100 p-5">
-          <p class="text-xs text-blue-500 font-medium uppercase tracking-wide mb-1">Completed</p>
-          <p class="text-3xl font-bold text-blue-600" x-text="bookings.filter(b => b.status === 'completed').length"></p>
-        </div>
-      </div>
-
-      <!-- Tabs -->
-      <div class="flex gap-1 mb-6 bg-gray-100 rounded-xl p-1 w-fit">
-        <button @click="activeTab = 'bookings'" :class="activeTab === 'bookings' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 rounded-lg text-sm font-medium transition">
-          Bookings
-        </button>
-        <button @click="activeTab = 'referrals'; loadReferrals()" :class="activeTab === 'referrals' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 rounded-lg text-sm font-medium transition">
-          GP Referrals
-        </button>
-        <button @click="activeTab = 'patients'; loadPatients()" :class="activeTab === 'patients' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 rounded-lg text-sm font-medium transition">
-          Patients
-        </button>
-      </div>
-
-      <!-- BOOKINGS TAB -->
-      <div x-show="activeTab === 'bookings'">
-        <!-- Filters -->
-        <div class="flex flex-wrap gap-3 mb-4 items-center">
-          <select x-model="filterStatus" class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-300 bg-white">
-            <option value="">All statuses</option>
-            <option value="pending">Pending</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
-          <select x-model="filterPayment" class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-300 bg-white">
-            <option value="">All payments</option>
-            <option value="unpaid">Unpaid</option>
-            <option value="paid">Paid</option>
-            <option value="refunded">Refunded</option>
-          </select>
-          <button @click="loadBookings()" class="ml-auto text-sm text-cyan-600 hover:text-cyan-700 font-medium flex items-center gap-1.5">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            Refresh
-          </button>
-        </div>
-
-        <div x-show="loading" class="text-center py-20 text-gray-400">Loading bookings...</div>
-
-        <div x-show="!loading && filteredBookings.length === 0" class="text-center py-20 text-gray-400">No bookings found.</div>
-
-        <div x-show="!loading && filteredBookings.length > 0" class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-              <thead class="bg-gray-50 border-b border-gray-100">
-                <tr>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Patient</th>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Service</th>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Status</th>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Payment</th>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Date</th>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Actions</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-50">
-                <template x-for="booking in filteredBookings" :key="booking.id">
-                  <tr class="hover:bg-gray-50 transition">
-                    <td class="px-5 py-4">
-                      <p class="font-semibold text-gray-900" x-text="booking.patient_name || 'Unknown'"></p>
-                      <p class="text-xs text-gray-400" x-text="booking.email || ''"></p>
-                      <p class="text-xs text-gray-400" x-text="booking.phone || ''"></p>
-                    </td>
-                    <td class="px-5 py-4">
-                      <p class="font-medium text-gray-700" x-text="booking.service"></p>
-                      <p class="text-xs text-gray-400 mt-0.5" x-text="booking.reason ? booking.reason.substring(0,60) + (booking.reason.length > 60 ? '...' : '') : ''"></p>
-                    </td>
-                    <td class="px-5 py-4">
-                      <select
-                        :value="booking.status"
-                        @change="updateBooking(booking.id, 'status', $event.target.value)"
-                        :class="'status-' + booking.status"
-                        class="text-xs font-semibold px-2.5 py-1.5 rounded-full border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-300"
-                      >
-                        <option value="pending">Pending</option>
-                        <option value="confirmed">Confirmed</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                      </select>
-                    </td>
-                    <td class="px-5 py-4">
-                      <select
-                        :value="booking.payment_status"
-                        @change="updateBooking(booking.id, 'payment_status', $event.target.value)"
-                        :class="'pay-' + booking.payment_status"
-                        class="text-xs font-semibold px-2.5 py-1.5 rounded-full border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-300"
-                      >
-                        <option value="unpaid">Unpaid</option>
-                        <option value="paid">Paid</option>
-                        <option value="refunded">Refunded</option>
-                      </select>
-                    </td>
-                    <td class="px-5 py-4 text-xs text-gray-400" x-text="new Date(booking.created_at).toLocaleDateString('en-NZ', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})"></td>
-                    <td class="px-5 py-4">
-                      <button @click="viewBooking(booking)" class="text-cyan-600 hover:text-cyan-700 text-xs font-medium">View</button>
-                    </td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-bold text-white text-sm sm:text-base leading-tight">Connect Clinic</span>
+            <span class="hidden sm:inline-block text-xs px-2 py-0.5 rounded-md border border-slate-700 text-slate-500 font-medium">Admin</span>
+          </div>
+          <div class="flex items-center gap-1.5 mt-0.5">
+            <span class="live-dot"></span>
+            <span class="text-xs text-slate-500" x-text="isDemo ? 'Demo mode' : 'Live — Supabase connected'"></span>
           </div>
         </div>
       </div>
 
-      <!-- GP REFERRALS TAB -->
-      <div x-show="activeTab === 'referrals'">
-        <div x-show="loadingReferrals" class="text-center py-20 text-gray-400">Loading referrals...</div>
-        <div x-show="!loadingReferrals && referrals.length === 0" class="text-center py-20 text-gray-400">No referrals yet.</div>
-        <div x-show="!loadingReferrals && referrals.length > 0" class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-              <thead class="bg-gray-50 border-b border-gray-100">
-                <tr>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Referrer</th>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Patient</th>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Reason</th>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Status</th>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Date</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-50">
-                <template x-for="ref in referrals" :key="ref.id">
-                  <tr class="hover:bg-gray-50 transition">
-                    <td class="px-5 py-4">
-                      <p class="font-semibold text-gray-900" x-text="ref.referrer_name"></p>
-                      <p class="text-xs text-gray-400" x-text="ref.referrer_email"></p>
-                    </td>
-                    <td class="px-5 py-4">
-                      <p class="font-medium text-gray-700" x-text="ref.patient_name"></p>
-                      <p class="text-xs text-gray-400" x-text="ref.patient_contact || ''"></p>
-                    </td>
-                    <td class="px-5 py-4 text-xs text-gray-500 max-w-xs" x-text="(ref.referral_reason || '').substring(0,80)"></td>
-                    <td class="px-5 py-4">
-                      <select
-                        :value="ref.status"
-                        @change="updateReferral(ref.id, $event.target.value)"
-                        class="text-xs font-semibold px-2.5 py-1.5 rounded-full border border-gray-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-300"
-                      >
-                        <option value="pending">Pending</option>
-                        <option value="contacted">Contacted</option>
-                        <option value="booked">Booked</option>
-                        <option value="completed">Completed</option>
-                      </select>
-                    </td>
-                    <td class="px-5 py-4 text-xs text-gray-400" x-text="new Date(ref.created_at).toLocaleDateString('en-NZ', {day:'numeric',month:'short'})"></td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- PATIENTS TAB -->
-      <div x-show="activeTab === 'patients'">
-        <div x-show="loadingPatients" class="text-center py-20 text-gray-400">Loading patients...</div>
-        <div x-show="!loadingPatients && patients.length === 0" class="text-center py-20 text-gray-400">No patients yet.</div>
-        <div x-show="!loadingPatients && patients.length > 0" class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-              <thead class="bg-gray-50 border-b border-gray-100">
-                <tr>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Name</th>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Contact</th>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">DOB</th>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Medications</th>
-                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Registered</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-50">
-                <template x-for="p in patients" :key="p.id">
-                  <tr class="hover:bg-gray-50 transition">
-                    <td class="px-5 py-4">
-                      <p class="font-semibold text-gray-900" x-text="p.first_name + ' ' + p.last_name"></p>
-                      <p class="text-xs text-gray-400" x-text="p.gender || ''"></p>
-                    </td>
-                    <td class="px-5 py-4">
-                      <p class="text-gray-700" x-text="p.email || ''"></p>
-                      <p class="text-xs text-gray-400" x-text="p.phone || ''"></p>
-                    </td>
-                    <td class="px-5 py-4 text-xs text-gray-500" x-text="p.date_of_birth ? new Date(p.date_of_birth).toLocaleDateString('en-NZ') : ''"></td>
-                    <td class="px-5 py-4 text-xs text-gray-500 max-w-xs" x-text="(p.current_medications || 'None listed').substring(0,60)"></td>
-                    <td class="px-5 py-4 text-xs text-gray-400" x-text="new Date(p.created_at).toLocaleDateString('en-NZ', {day:'numeric',month:'short',year:'numeric'})"></td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- BOOKING DETAIL MODAL -->
-  <div x-show="selectedBooking" @click.self="selectedBooking = null" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div x-show="selectedBooking" class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-8 max-h-[90vh] overflow-y-auto">
-      <div class="flex items-start justify-between mb-6">
-        <h3 class="text-lg font-bold text-gray-900">Booking details</h3>
-        <button @click="selectedBooking = null" class="text-gray-400 hover:text-gray-600">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
-      <template x-if="selectedBooking">
-        <div class="space-y-4">
-          <div class="grid grid-cols-2 gap-4">
-            <div><p class="text-xs text-gray-400 mb-0.5">Patient</p><p class="font-semibold" x-text="selectedBooking.patient_name || 'N/A'"></p></div>
-            <div><p class="text-xs text-gray-400 mb-0.5">Service</p><p class="font-semibold" x-text="selectedBooking.service"></p></div>
-            <div><p class="text-xs text-gray-400 mb-0.5">Email</p><p class="text-sm" x-text="selectedBooking.email || 'N/A'"></p></div>
-            <div><p class="text-xs text-gray-400 mb-0.5">Phone</p><p class="text-sm" x-text="selectedBooking.phone || 'N/A'"></p></div>
-            <div><p class="text-xs text-gray-400 mb-0.5">Booking status</p>
-              <span :class="'status-' + selectedBooking.status" class="text-xs font-semibold px-2 py-1 rounded-full" x-text="selectedBooking.status"></span>
-            </div>
-            <div><p class="text-xs text-gray-400 mb-0.5">Payment</p>
-              <span :class="'pay-' + selectedBooking.payment_status" class="text-xs font-semibold px-2 py-1 rounded-full" x-text="selectedBooking.payment_status"></span>
-            </div>
-          </div>
-          <div>
-            <p class="text-xs text-gray-400 mb-1">Reason for booking</p>
-            <p class="text-sm text-gray-700 bg-gray-50 rounded-lg p-3" x-text="selectedBooking.reason || 'Not provided'"></p>
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div><p class="text-xs text-gray-400 mb-0.5">Booked</p><p class="text-sm" x-text="new Date(selectedBooking.created_at).toLocaleString('en-NZ')"></p></div>
-            <div><p class="text-xs text-gray-400 mb-0.5">Booking ID</p><p class="text-xs text-gray-500 font-mono" x-text="selectedBooking.id.substring(0,8) + '...'"></p></div>
-          </div>
-          <div class="pt-4 flex gap-3">
-            <a :href="'mailto:' + selectedBooking.email + '?subject=Connect+Clinic+Appointment+Confirmation'" class="flex-1 text-center bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2.5 rounded-xl text-sm transition">
-              Email patient
-            </a>
-            <button @click="selectedBooking = null" class="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 font-semibold py-2.5 rounded-xl text-sm transition">
-              Close
-            </button>
-          </div>
+      <!-- Pending badge -->
+      <template x-if="pendingCount > 0">
+        <div class="flex items-center gap-1.5 bg-amber-400/10 border border-amber-400/30 rounded-full px-3 py-1 flex-shrink-0">
+          <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+          <span class="text-amber-400 text-xs font-semibold" x-text="pendingCount + ' pending'"></span>
         </div>
       </template>
+
+      <!-- Right actions -->
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <button @click="refreshBookings()" class="btn-ghost rounded-lg px-2.5 py-1.5 text-xs flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" :class="loading ? 'animate-spin' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          <span class="hidden sm:inline">Refresh</span>
+        </button>
+        <a href="index.html" class="btn-ghost rounded-lg px-3 py-1.5 text-xs flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          <span class="hidden sm:inline">Back to site</span>
+        </a>
+      </div>
+
     </div>
-  </div>
+  </header>
 
-  <script>
-    // ── CONFIGURATION ────────────────────────────────────────────────
-    // Replace these with your real Supabase project details
-    const SUPABASE_URL = 'YOUR_SUPABASE_URL';         // e.g. https://xxxx.supabase.co
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Settings → API → anon public
-    // ────────────────────────────────────────────────────────────────
+  <!-- ===== MAIN ===== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-5">
 
-    function adminApp() {
+    <!-- Demo mode notice -->
+    <template x-if="isDemo">
+      <div class="glass rounded-xl px-4 py-3 flex items-start gap-3" style="border-color: rgba(34,211,238,0.2);">
+        <svg class="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <div>
+          <p class="text-cyan-300 text-sm font-semibold">Demo mode &mdash; showing sample bookings</p>
+          <p class="text-slate-400 text-xs mt-0.5">
+            Set <code class="text-cyan-400 bg-cyan-400/10 px-1 rounded">SUPABASE_URL</code> and
+            <code class="text-cyan-400 bg-cyan-400/10 px-1 rounded">SUPABASE_ANON_KEY</code>
+            at the top of the script block to connect to your live database.
+          </p>
+        </div>
+      </div>
+    </template>
+
+    <!-- ===== ZOOM BANNER ===== -->
+    <div class="zoom-banner rounded-xl px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background: rgba(34,211,238,0.15);">
+          <svg class="w-5 h-5 text-cyan-400" fill="currentColor" viewBox="0 0 24 24"><path d="M17 10.5V7a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1v-3.5l4 4v-11l-4 4z"/></svg>
+        </div>
+        <div>
+          <p class="text-white text-sm font-semibold leading-tight">Your Zoom room is always open</p>
+          <p class="text-slate-400 text-xs mt-0.5">
+            Meeting ID: <span class="text-slate-200 font-mono font-medium">596 611 1693</span>
+            <span class="mx-2 text-slate-600">|</span>
+            <a href="https://zoom.us/j/5966111693" target="_blank" rel="noopener" class="text-cyan-400 hover:text-cyan-300 transition-colors">zoom.us/j/5966111693</a>
+          </p>
+        </div>
+      </div>
+      <a href="https://zoom.us/j/5966111693" target="_blank" rel="noopener"
+         class="btn-primary rounded-xl px-5 py-2 text-sm flex items-center gap-2 flex-shrink-0 shadow-lg">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17 10.5V7a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1v-3.5l4 4v-11l-4 4z"/></svg>
+        Start Zoom
+      </a>
+    </div>
+
+    <!-- ===== STATS ROW ===== -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+
+      <div class="stat-card rounded-xl p-4">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs text-slate-500 font-medium uppercase tracking-wider">Today</span>
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(34,211,238,0.12);">
+            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+        </div>
+        <p class="text-3xl font-bold text-white" x-text="stats.today"></p>
+        <p class="text-xs text-slate-500 mt-1">bookings today</p>
+      </div>
+
+      <div class="stat-card rounded-xl p-4">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs text-slate-500 font-medium uppercase tracking-wider">Pending</span>
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(251,191,36,0.12);">
+            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+        </div>
+        <p class="text-3xl font-bold text-amber-400" x-text="stats.pending"></p>
+        <p class="text-xs text-slate-500 mt-1">needs action</p>
+      </div>
+
+      <div class="stat-card rounded-xl p-4">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs text-slate-500 font-medium uppercase tracking-wider">Confirmed</span>
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(56,189,248,0.12);">
+            <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+        </div>
+        <p class="text-3xl font-bold text-sky-400" x-text="stats.confirmed"></p>
+        <p class="text-xs text-slate-500 mt-1">payment received</p>
+      </div>
+
+      <div class="stat-card rounded-xl p-4">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs text-slate-500 font-medium uppercase tracking-wider">Completed</span>
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(16,185,129,0.12);">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          </div>
+        </div>
+        <p class="text-3xl font-bold text-emerald-400" x-text="stats.completed"></p>
+        <p class="text-xs text-slate-500 mt-1">consults done</p>
+      </div>
+
+    </div>
+
+    <!-- ===== FILTER BAR ===== -->
+    <div class="glass rounded-xl p-4">
+      <div class="flex flex-wrap gap-3">
+
+        <!-- Search -->
+        <div class="flex-1 min-w-52 relative">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input x-model="search" type="text" placeholder="Search name, email, ref..." class="w-full rounded-lg pl-9 pr-3 py-2 text-sm" />
+        </div>
+
+        <!-- Status filter -->
+        <select x-model="filterStatus" class="rounded-lg px-3 py-2 text-sm min-w-36">
+          <option value="">All statuses</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="completed">Completed</option>
+          <option value="flagged">Flagged</option>
+        </select>
+
+        <!-- Service filter -->
+        <select x-model="filterService" class="rounded-lg px-3 py-2 text-sm min-w-48">
+          <option value="">All services</option>
+          <option value="Repeat Prescription">Repeat Prescription</option>
+          <option value="Medical Certificate">Medical Certificate</option>
+          <option value="General Telehealth">General Telehealth / Consult</option>
+          <option value="Acute">Acute Illness</option>
+          <option value="Wegovy">Wegovy / Weight</option>
+          <option value="Dietician">Dietician</option>
+          <option value="Second Opinion">Second Opinion</option>
+        </select>
+
+        <!-- Date from -->
+        <input x-model="dateFrom" type="date" class="rounded-lg px-3 py-2 text-sm" title="From date" />
+        <input x-model="dateTo" type="date" class="rounded-lg px-3 py-2 text-sm" title="To date" />
+
+        <!-- Clear -->
+        <button @click="clearFilters()" class="btn-ghost rounded-lg px-3 py-2 text-xs flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          Clear
+        </button>
+
+      </div>
+
+      <div class="mt-3 flex items-center justify-between">
+        <p class="text-xs text-slate-500">
+          Showing <span class="text-slate-300 font-medium" x-text="filteredBookings.length"></span>
+          of <span class="text-slate-300 font-medium" x-text="bookings.length"></span> bookings
+        </p>
+        <p class="text-xs text-slate-600" x-text="lastUpdated ? 'Last updated ' + lastUpdated : ''"></p>
+      </div>
+    </div>
+
+    <!-- ===== BOOKING CARDS ===== -->
+    <div class="space-y-3">
+
+      <!-- Loading state -->
+      <template x-if="loading">
+        <div class="glass rounded-xl py-16 text-center">
+          <svg class="w-8 h-8 text-cyan-500 mx-auto animate-spin mb-3" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+          </svg>
+          <p class="text-slate-500 text-sm">Loading bookings...</p>
+        </div>
+      </template>
+
+      <!-- Empty state -->
+      <template x-if="!loading && filteredBookings.length === 0">
+        <div class="glass rounded-xl py-16 text-center">
+          <svg class="w-12 h-12 text-slate-700 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <p class="text-slate-500 text-sm">No bookings match your filters</p>
+          <button @click="clearFilters()" class="mt-3 text-cyan-400 text-xs hover:text-cyan-300 underline">Clear filters</button>
+        </div>
+      </template>
+
+      <!-- Booking card loop -->
+      <template x-for="booking in filteredBookings" :key="booking.id">
+        <div
+          class="booking-card rounded-xl overflow-hidden"
+          :class="{
+            'flagged': booking.status === 'flagged',
+            'booking-new': booking._isNew
+          }"
+        >
+
+          <!-- CARD HEADER -->
+          <div class="px-4 sm:px-5 py-4">
+
+            <!-- Top row: name + badges -->
+            <div class="flex flex-wrap items-start gap-3">
+
+              <!-- Name + DOB + ref -->
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-2 mb-1">
+                  <h3 class="text-white font-semibold text-base leading-tight" x-text="booking.first_name + ' ' + booking.last_name"></h3>
+                  <span class="text-slate-600 text-xs font-mono" x-text="booking.booking_ref"></span>
+                </div>
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400">
+                  <span>DOB: <span class="text-slate-300" x-text="formatDate(booking.date_of_birth)"></span></span>
+                  <span class="text-slate-700">&#124;</span>
+                  <span x-text="formatAge(booking.date_of_birth) + ' yrs'"></span>
+                  <span class="text-slate-700">&#124;</span>
+                  <span x-text="formatDateTime(booking.created_at)"></span>
+                </div>
+              </div>
+
+              <!-- Badges -->
+              <div class="flex flex-wrap items-center gap-2 flex-shrink-0">
+                <span class="text-xs font-medium px-2.5 py-0.5 rounded-full"
+                      :class="serviceBadgeClass(booking.service)"
+                      x-text="serviceShortName(booking.service)"></span>
+                <span class="text-xs font-medium px-2.5 py-0.5 rounded-full capitalize"
+                      :class="statusBadgeClass(booking.status)"
+                      x-text="booking.status"></span>
+                <span class="text-xs font-medium px-2.5 py-0.5 rounded-full capitalize"
+                      :class="booking.payment_status === 'paid'
+                        ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25'
+                        : 'bg-red-500/15 text-red-400 border border-red-500/25'"
+                      x-text="booking.payment_status"></span>
+              </div>
+
+            </div>
+
+            <!-- Service line + allergy alert -->
+            <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs">
+              <span class="text-slate-400" x-text="booking.service"></span>
+              <template x-if="booking.allergies && booking.allergies.toUpperCase() !== 'NKDA'">
+                <span class="flex items-center gap-1 text-amber-400 font-semibold">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                  Allergy: <span x-text="booking.allergies"></span>
+                </span>
+              </template>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="mt-3 flex flex-wrap items-center gap-2">
+
+              <!-- Confirm -->
+              <template x-if="booking.status === 'pending'">
+                <button @click.stop="updateStatus(booking, 'confirmed')"
+                  class="btn-primary rounded-lg px-3 py-1.5 text-xs flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  Confirm
+                </button>
+              </template>
+
+              <!-- Mark Complete -->
+              <template x-if="booking.status === 'confirmed' || booking.status === 'pending'">
+                <button @click.stop="updateStatus(booking, 'completed')"
+                  class="rounded-lg px-3 py-1.5 text-xs flex items-center gap-1.5 bg-emerald-500/15 border border-emerald-500/25 text-emerald-400 hover:bg-emerald-500/25 transition-colors">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  Mark Complete
+                </button>
+              </template>
+
+              <!-- Zoom -->
+              <a href="https://zoom.us/j/5966111693" target="_blank" rel="noopener"
+                 class="rounded-lg px-3 py-1.5 text-xs flex items-center gap-1.5 bg-sky-500/15 border border-sky-500/25 text-sky-400 hover:bg-sky-500/25 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M17 10.5V7a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1v-3.5l4 4v-11l-4 4z"/></svg>
+                Open Zoom
+              </a>
+
+              <!-- Email -->
+              <a :href="buildMailto(booking)"
+                 class="rounded-lg px-3 py-1.5 text-xs flex items-center gap-1.5 bg-indigo-500/15 border border-indigo-500/25 text-indigo-400 hover:bg-indigo-500/25 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                Email patient
+              </a>
+
+              <!-- Flag / Unflag -->
+              <button
+                @click.stop="booking.status === 'flagged' ? updateStatus(booking, 'pending') : updateStatus(booking, 'flagged')"
+                class="rounded-lg px-3 py-1.5 text-xs flex items-center gap-1.5 transition-colors"
+                :class="booking.status === 'flagged'
+                  ? 'bg-red-500/20 border border-red-500/40 text-red-400 hover:bg-red-500/30'
+                  : 'btn-ghost'">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>
+                <span x-text="booking.status === 'flagged' ? 'Unflag' : 'Flag'"></span>
+              </button>
+
+              <!-- Toggle details -->
+              <button @click="booking._expanded = !booking._expanded"
+                class="btn-ghost rounded-lg px-3 py-1.5 text-xs flex items-center gap-1.5 ml-auto">
+                <span x-text="booking._expanded ? 'Hide details' : 'View clinical details'"></span>
+                <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="booking._expanded ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+
+            </div>
+          </div>
+
+          <!-- EXPANDABLE CLINICAL DETAILS -->
+          <div
+            x-show="booking._expanded"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+          >
+            <div class="border-t mx-4 sm:mx-5" style="border-color: rgba(255,255,255,0.06);"></div>
+            <div class="px-4 sm:px-5 py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+
+              <!-- Reason for booking (spans full width) -->
+              <div class="sm:col-span-2 lg:col-span-3">
+                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1.5 font-medium">Reason for booking</p>
+                <p class="text-sm text-slate-200 leading-relaxed" x-text="booking.reason || '—'"></p>
+              </div>
+
+              <!-- Current medications -->
+              <div>
+                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1.5 font-medium">Current medications</p>
+                <p class="text-sm text-slate-300 leading-relaxed" x-text="booking.current_medications || 'nil'"></p>
+              </div>
+
+              <!-- Allergies -->
+              <div>
+                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1.5 font-medium">Drug allergies</p>
+                <span class="text-sm font-semibold px-2.5 py-1 rounded-lg inline-block"
+                     :class="booking.allergies && booking.allergies.toUpperCase() !== 'NKDA'
+                       ? 'allergy-warn'
+                       : 'allergy-safe'"
+                     x-text="booking.allergies || 'NKDA'"></span>
+              </div>
+
+              <!-- Family history -->
+              <div>
+                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1.5 font-medium">Family history</p>
+                <p class="text-sm text-slate-300" x-text="booking.family_history || 'nil'"></p>
+              </div>
+
+              <!-- Recent admissions -->
+              <div>
+                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1.5 font-medium">Recent admissions</p>
+                <p class="text-sm text-slate-300" x-text="booking.recent_admissions || 'nil'"></p>
+              </div>
+
+              <!-- Preferred pharmacy -->
+              <div>
+                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1.5 font-medium">Preferred pharmacy</p>
+                <p class="text-sm text-slate-300" x-text="booking.preferred_pharmacy || '—'"></p>
+              </div>
+
+              <!-- Contact details -->
+              <div>
+                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1.5 font-medium">Contact</p>
+                <div class="space-y-1.5">
+                  <a :href="'mailto:' + booking.email"
+                     class="flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
+                    <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    <span class="truncate" x-text="booking.email"></span>
+                  </a>
+                  <a :href="'tel:' + booking.phone"
+                     class="flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
+                    <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    <span x-text="booking.phone"></span>
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </template>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center py-8 border-t" style="border-color: rgba(255,255,255,0.05);">
+      <p class="text-xs text-slate-700">
+        Connect Clinic Admin &mdash; Dr Francis Katoa
+        &mdash; <a href="tel:098735039" class="hover:text-slate-500 transition-colors">09 873 5039 ext. 800</a>
+        &mdash; <a href="mailto:connectclinic@outlook.com" class="hover:text-slate-500 transition-colors">connectclinic@outlook.com</a>
+      </p>
+    </div>
+
+  </main>
+
+</div>
+
+<!-- ===================== SCRIPT ===================== -->
+<script>
+// ============================================================
+// CONFIG — replace these with your real Supabase credentials
+// ============================================================
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+// ============================================================
+// DEMO DATA — used when Supabase credentials are not set
+// ============================================================
+const DEMO_BOOKINGS = [
+  {
+    id: 1,
+    created_at: '2026-03-30T08:12:00Z',
+    first_name: 'Aroha', last_name: 'Tane',
+    date_of_birth: '1988-04-15',
+    email: 'aroha.tane@gmail.com', phone: '021 555 1234',
+    service: 'Repeat Prescription — $35',
+    reason: 'Need repeat for metformin 500mg BD',
+    current_medications: 'Metformin 500mg BD',
+    allergies: 'NKDA',
+    family_history: 'T2DM paternal',
+    recent_admissions: 'nil',
+    preferred_pharmacy: 'Unichem Birkenhead',
+    status: 'pending', payment_status: 'unpaid',
+    booking_ref: 'CC-M8K3J2',
+  },
+  {
+    id: 2,
+    created_at: '2026-03-30T09:44:00Z',
+    first_name: 'Sione', last_name: 'Fifita',
+    date_of_birth: '1995-11-02',
+    email: 'sione.fifita@hotmail.com', phone: '027 888 4567',
+    service: 'Medical Certificate — $35',
+    reason: 'Off work 3 days with flu symptoms, need cert for employer',
+    current_medications: 'nil',
+    allergies: 'Penicillin',
+    family_history: 'nil',
+    recent_admissions: 'nil',
+    preferred_pharmacy: 'n/a',
+    status: 'confirmed', payment_status: 'paid',
+    booking_ref: 'CC-N9L4K1',
+  },
+  {
+    id: 3,
+    created_at: '2026-03-30T10:55:00Z',
+    first_name: 'Mei', last_name: 'Chen',
+    date_of_birth: '1979-07-30',
+    email: 'mei.chen@outlook.com', phone: '09 555 9876',
+    service: 'Wegovy / Weight Management Assessment — $120',
+    reason: 'Interested in Wegovy, BMI 34, T2DM on metformin, want to discuss eligibility',
+    current_medications: 'Metformin 1g BD, Ramipril 5mg daily',
+    allergies: 'Sulfonamides',
+    family_history: 'T2DM, CVD paternal side',
+    recent_admissions: 'nil',
+    preferred_pharmacy: 'Chemist Warehouse Manukau',
+    status: 'pending', payment_status: 'paid',
+    booking_ref: 'CC-P2R7M8',
+  },
+  {
+    id: 4,
+    created_at: '2026-03-30T11:30:00Z',
+    first_name: 'James', last_name: 'Wilson',
+    date_of_birth: '1965-03-22',
+    email: 'jwilson@gmail.com', phone: '021 333 5678',
+    service: 'General Telehealth Consult — $55',
+    reason: 'Persistent cough 2 weeks, no fever, non-smoker, wants assessment',
+    current_medications: 'Amlodipine 5mg, Atorvastatin 40mg',
+    allergies: 'NKDA',
+    family_history: 'CVD paternal, lung cancer paternal uncle',
+    recent_admissions: 'nil',
+    preferred_pharmacy: 'Green Cross Takapuna',
+    status: 'pending', payment_status: 'unpaid',
+    booking_ref: 'CC-Q5T8N3',
+  },
+  {
+    id: 5,
+    created_at: '2026-03-29T16:20:00Z',
+    first_name: 'Lani', last_name: 'Vaka',
+    date_of_birth: '2001-09-14',
+    email: 'lani.vaka@icloud.com', phone: '022 777 3456',
+    service: 'Medical Certificate — $35',
+    reason: 'Missed 2 days uni due to gastroenteritis',
+    current_medications: 'OCP',
+    allergies: 'NKDA',
+    family_history: 'nil',
+    recent_admissions: 'nil',
+    preferred_pharmacy: 'n/a',
+    status: 'completed', payment_status: 'paid',
+    booking_ref: 'CC-R6U9P4',
+  },
+];
+
+// ============================================================
+// ALPINE APP
+// ============================================================
+function adminApp() {
+  return {
+    bookings: [],
+    loading: true,
+    isDemo: false,
+    lastUpdated: '',
+    search: '',
+    filterStatus: '',
+    filterService: '',
+    dateFrom: '',
+    dateTo: '',
+    supabaseClient: null,
+
+    // ----- INIT -----
+    async init() {
+      const configured =
+        SUPABASE_URL !== 'YOUR_SUPABASE_URL' &&
+        SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
+
+      if (configured) {
+        try {
+          this.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          await this.fetchFromSupabase();
+          this.subscribeToRealtime();
+        } catch (e) {
+          console.error('Supabase init failed, using demo data:', e);
+          this.loadDemoData();
+        }
+      } else {
+        this.loadDemoData();
+      }
+    },
+
+    // ----- DEMO -----
+    loadDemoData() {
+      this.isDemo = true;
+      this.bookings = DEMO_BOOKINGS.map(b => ({ ...b, _expanded: false, _isNew: false }));
+      this.loading = false;
+      this.setLastUpdated();
+    },
+
+    // ----- SUPABASE FETCH -----
+    async fetchFromSupabase() {
+      this.loading = true;
+      try {
+        // Fetch bookings joined with patient data
+        const { data, error } = await this.supabaseClient
+          .from('bookings')
+          .select(`
+            id, created_at, service, reason, status, payment_status, booking_ref,
+            preferred_time, appointment_at,
+            family_history, recent_admissions,
+            patients (
+              first_name, last_name, date_of_birth,
+              email, phone, current_medications,
+              allergies, preferred_pharmacy
+            )
+          `)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        this.bookings = (data || []).map(b => {
+          const p = (b.patients) || {};
+          return {
+            ...b,
+            first_name: p.first_name || '',
+            last_name: p.last_name || '',
+            date_of_birth: p.date_of_birth || '',
+            email: p.email || '',
+            phone: p.phone || '',
+            current_medications: p.current_medications || '',
+            allergies: p.allergies || 'NKDA',
+            preferred_pharmacy: p.preferred_pharmacy || '',
+            _expanded: false,
+            _isNew: false,
+          };
+        });
+      } catch (e) {
+        console.error('Fetch error:', e);
+        this.loadDemoData();
+        return;
+      }
+      this.loading = false;
+      this.setLastUpdated();
+    },
+
+    async refreshBookings() {
+      if (this.isDemo) {
+        // Re-load demo to give feedback
+        this.loading = true;
+        await new Promise(r => setTimeout(r, 400));
+        this.loadDemoData();
+        return;
+      }
+      await this.fetchFromSupabase();
+    },
+
+    // ----- REALTIME -----
+    subscribeToRealtime() {
+      if (!this.supabaseClient) return;
+      this.supabaseClient
+        .channel('admin-bookings')
+        .on('postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'bookings' },
+          async () => {
+            // Re-fetch to get full joined data
+            await this.fetchFromSupabase();
+            // Flash the first card briefly
+            if (this.bookings.length > 0) {
+              this.bookings[0]._isNew = true;
+              setTimeout(() => { if (this.bookings[0]) this.bookings[0]._isNew = false; }, 1500);
+            }
+          }
+        )
+        .subscribe();
+    },
+
+    // ----- STATUS UPDATE -----
+    async updateStatus(booking, newStatus) {
+      const prev = booking.status;
+      booking.status = newStatus;
+
+      if (!this.isDemo && this.supabaseClient) {
+        const { error } = await this.supabaseClient
+          .from('bookings')
+          .update({ status: newStatus })
+          .eq('id', booking.id);
+
+        if (error) {
+          console.error('Update failed:', error);
+          booking.status = prev;
+          alert('Status update failed: ' + error.message);
+        }
+      }
+    },
+
+    // ----- FILTERS -----
+    get filteredBookings() {
+      const q = this.search.toLowerCase().trim();
+      return this.bookings.filter(b => {
+        if (q) {
+          const hay = [b.first_name, b.last_name, b.email, b.phone, b.booking_ref, b.service]
+            .filter(Boolean).join(' ').toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        if (this.filterStatus && b.status !== this.filterStatus) return false;
+        if (this.filterService && !(b.service || '').toLowerCase().includes(this.filterService.toLowerCase())) return false;
+        if (this.dateFrom) {
+          const from = new Date(this.dateFrom);
+          if (new Date(b.created_at) < from) return false;
+        }
+        if (this.dateTo) {
+          const to = new Date(this.dateTo);
+          to.setHours(23, 59, 59, 999);
+          if (new Date(b.created_at) > to) return false;
+        }
+        return true;
+      });
+    },
+
+    clearFilters() {
+      this.search = '';
+      this.filterStatus = '';
+      this.filterService = '';
+      this.dateFrom = '';
+      this.dateTo = '';
+    },
+
+    // ----- STATS -----
+    get stats() {
+      const todayStr = new Date().toDateString();
       return {
-        supabase: null,
-        session: null,
-        loginEmail: '',
-        loginPassword: '',
-        loginError: '',
-        loginLoading: false,
-        activeTab: 'bookings',
-        bookings: [],
-        referrals: [],
-        patients: [],
-        loading: false,
-        loadingReferrals: false,
-        loadingPatients: false,
-        filterStatus: '',
-        filterPayment: '',
-        selectedBooking: null,
-
-        get filteredBookings() {
-          return this.bookings.filter(b => {
-            if (this.filterStatus && b.status !== this.filterStatus) return false;
-            if (this.filterPayment && b.payment_status !== this.filterPayment) return false;
-            return true;
-          });
-        },
-
-        async init() {
-          if (SUPABASE_URL === 'YOUR_SUPABASE_URL') {
-            console.warn('Connect Clinic Admin: Set your Supabase URL and anon key in admin.html');
-            return;
-          }
-          this.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-          const { data: { session } } = await this.supabase.auth.getSession();
-          this.session = session;
-          if (session) await this.loadBookings();
-          this.supabase.auth.onAuthStateChange((_event, session) => {
-            this.session = session;
-            if (session) this.loadBookings();
-          });
-        },
-
-        async login() {
-          this.loginError = '';
-          this.loginLoading = true;
-          const { data, error } = await this.supabase.auth.signInWithPassword({
-            email: this.loginEmail,
-            password: this.loginPassword,
-          });
-          this.loginLoading = false;
-          if (error) {
-            this.loginError = error.message;
-          } else {
-            this.session = data.session;
-            await this.loadBookings();
-          }
-        },
-
-        async signOut() {
-          await this.supabase.auth.signOut();
-          this.session = null;
-          this.bookings = [];
-        },
-
-        async loadBookings() {
-          this.loading = true;
-          const { data, error } = await this.supabase
-            .from('pending_bookings')
-            .select('*')
-            .order('created_at', { ascending: false });
-          this.loading = false;
-          if (!error) this.bookings = data || [];
-        },
-
-        async loadReferrals() {
-          this.loadingReferrals = true;
-          const { data, error } = await this.supabase
-            .from('gp_referrals')
-            .select('*')
-            .order('created_at', { ascending: false });
-          this.loadingReferrals = false;
-          if (!error) this.referrals = data || [];
-        },
-
-        async loadPatients() {
-          this.loadingPatients = true;
-          const { data, error } = await this.supabase
-            .from('patients')
-            .select('*')
-            .order('created_at', { ascending: false });
-          this.loadingPatients = false;
-          if (!error) this.patients = data || [];
-        },
-
-        async updateBooking(id, field, value) {
-          await this.supabase
-            .from('bookings')
-            .update({ [field]: value })
-            .eq('id', id);
-          const booking = this.bookings.find(b => b.id === id);
-          if (booking) booking[field] = value;
-        },
-
-        async updateReferral(id, status) {
-          await this.supabase
-            .from('gp_referrals')
-            .update({ status })
-            .eq('id', id);
-          const ref = this.referrals.find(r => r.id === id);
-          if (ref) ref.status = status;
-        },
-
-        viewBooking(booking) {
-          this.selectedBooking = booking;
-        },
+        today:     this.bookings.filter(b => new Date(b.created_at).toDateString() === todayStr).length,
+        pending:   this.bookings.filter(b => b.status === 'pending').length,
+        confirmed: this.bookings.filter(b => b.status === 'confirmed').length,
+        completed: this.bookings.filter(b => b.status === 'completed').length,
       };
-    }
-  </script>
+    },
+
+    get pendingCount() {
+      return this.bookings.filter(b => b.status === 'pending').length;
+    },
+
+    // ----- HELPERS -----
+    setLastUpdated() {
+      this.lastUpdated = new Date().toLocaleTimeString('en-NZ', { hour: '2-digit', minute: '2-digit' });
+    },
+
+    formatDate(d) {
+      if (!d) return '—';
+      return new Date(d + 'T00:00:00').toLocaleDateString('en-NZ', {
+        day: 'numeric', month: 'short', year: 'numeric'
+      });
+    },
+
+    formatAge(dob) {
+      if (!dob) return '?';
+      const birth = new Date(dob);
+      const now = new Date();
+      let age = now.getFullYear() - birth.getFullYear();
+      const m = now.getMonth() - birth.getMonth();
+      if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
+      return age;
+    },
+
+    formatDateTime(dt) {
+      if (!dt) return '';
+      return new Date(dt).toLocaleString('en-NZ', {
+        day: 'numeric', month: 'short',
+        hour: '2-digit', minute: '2-digit', hour12: true
+      });
+    },
+
+    buildMailto(booking) {
+      const subject = encodeURIComponent('Connect Clinic — Your Appointment');
+      const body = encodeURIComponent(
+        `Kia ora ${booking.first_name},\n\nThank you for your booking with Connect Clinic.\n\nYour booking reference is: ${booking.booking_ref}.\n\nPlease join via Zoom at the time of your appointment:\nhttps://zoom.us/j/5966111693\nMeeting ID: 596 611 1693\n\nKind regards,\nDr Francis Katoa\nConnect Clinic\n09 873 5039 ext. 800`
+      );
+      return `mailto:${booking.email}?subject=${subject}&body=${body}`;
+    },
+
+    serviceShortName(service) {
+      if (!service) return 'Consult';
+      const s = service.toLowerCase();
+      if (s.includes('repeat') || s.includes('prescription')) return 'Rx Repeat';
+      if (s.includes('certificate')) return 'Med Cert';
+      if (s.includes('wegovy') || s.includes('weight')) return 'Wegovy';
+      if (s.includes('acute')) return 'Acute';
+      if (s.includes('dietician') || s.includes('dietitian')) return 'Dietician';
+      if (s.includes('second opinion')) return '2nd Opinion';
+      return 'Consult';
+    },
+
+    serviceBadgeClass(service) {
+      const s = (service || '').toLowerCase();
+      if (s.includes('repeat') || s.includes('prescription'))
+        return 'bg-sky-500/15 text-sky-400 border border-sky-500/25';
+      if (s.includes('certificate'))
+        return 'bg-indigo-500/15 text-indigo-400 border border-indigo-500/25';
+      if (s.includes('wegovy') || s.includes('weight'))
+        return 'bg-purple-500/15 text-purple-400 border border-purple-500/25';
+      if (s.includes('acute'))
+        return 'bg-orange-500/15 text-orange-400 border border-orange-500/25';
+      if (s.includes('dietician') || s.includes('dietitian'))
+        return 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25';
+      if (s.includes('second opinion'))
+        return 'bg-rose-500/15 text-rose-400 border border-rose-500/25';
+      // General / telehealth / consult
+      return 'bg-teal-500/15 text-teal-400 border border-teal-500/25';
+    },
+
+    statusBadgeClass(status) {
+      const map = {
+        pending:   'bg-amber-500/15 text-amber-400 border border-amber-500/25',
+        confirmed: 'bg-sky-500/15 text-sky-400 border border-sky-500/25',
+        completed: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25',
+        flagged:   'bg-red-500/15 text-red-400 border border-red-500/25',
+      };
+      return map[status] || 'bg-slate-500/15 text-slate-400 border border-slate-500/25';
+    },
+
+  };
+}
+</script>
+
 </body>
 </html>
