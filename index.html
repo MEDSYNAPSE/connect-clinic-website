@@ -82,7 +82,29 @@
     input, select, textarea { transition: border-color 0.15s, box-shadow 0.15s; }
   </style>
 </head>
-<body class="bg-white text-gray-900" x-data="{ mobileMenu: false, bookingService: '', submitted: false, referralSubmitted: false, openFaq: null }">
+<body class="bg-white text-gray-900" x-data="{
+  mobileMenu: false,
+  bookingService: '',
+  submitted: false,
+  referralSubmitted: false,
+  openFaq: null,
+  screenStep: 'questions',
+  screenAnswers: { emergency: false, chest: false, mentalCrisis: false, under16: false, overseas: false, controlled: false, physical: false, pregnant: false },
+  get screenFailed() {
+    return Object.values(this.screenAnswers).some(v => v);
+  },
+  get screenFailReason() {
+    if (this.screenAnswers.emergency) return { title: 'This is a medical emergency', msg: 'Please call 111 immediately or go to your nearest Emergency Department.', action: 'tel:111', label: 'Call 111 now' };
+    if (this.screenAnswers.chest) return { title: 'You may need urgent care', msg: 'Chest pain, difficulty breathing, or stroke symptoms need emergency assessment. Please call 111 or go to ED now.', action: 'tel:111', label: 'Call 111 now' };
+    if (this.screenAnswers.mentalCrisis) return { title: 'Please reach out for immediate support', msg: 'If you are in mental health crisis or having thoughts of suicide, please call or text 1737 — free, 24/7 support from a trained counsellor.', action: 'tel:1737', label: 'Call or text 1737' };
+    if (this.screenAnswers.under16) return { title: 'Parental consent required', msg: 'Patients under 16 need a parent or guardian present for the consultation. Please book and note this in your request, or have a parent contact us directly.', action: null, label: null };
+    if (this.screenAnswers.overseas) return { title: 'NZ residents only', msg: 'Connect Clinic is only available to patients currently in New Zealand. If you are overseas, please seek care from a local provider.', action: null, label: null };
+    if (this.screenAnswers.controlled) return { title: 'In-person assessment required', msg: 'Prescriptions for controlled substances (opioids, benzodiazepines, stimulants) require an in-person assessment. Please visit your regular GP or nearest clinic.', action: null, label: null };
+    if (this.screenAnswers.physical) return { title: 'In-person assessment recommended', msg: 'Your condition may require a physical examination — for example, a wound, lump, ear or eye issue. We recommend seeing a doctor in person. If you are unsure, contact us first.', action: 'mailto:connectclinic@outlook.com', label: 'Ask us first' };
+    if (this.screenAnswers.pregnant) return { title: 'Specialist maternity care recommended', msg: 'For pregnancy-related concerns, we recommend contacting your LMC, midwife, or maternity unit. We can assist with non-pregnancy issues during pregnancy.', action: null, label: null };
+    return null;
+  }
+}">
 
   <!-- NAV -->
   <nav class="sticky top-0 z-50 sticky-nav">
@@ -464,10 +486,87 @@
       <div class="text-center mb-10">
         <span class="section-label text-cyan-500">Get started</span>
         <h2 class="text-4xl font-bold mt-2">Book a consult</h2>
-        <p class="text-gray-500 mt-3">Fill in your details and we'll be in touch to confirm your appointment time.</p>
+        <p class="text-gray-500 mt-3">Answer a few quick questions to make sure we're the right service for you.</p>
       </div>
 
-      <div x-show="!submitted" class="bg-gray-50 rounded-2xl border border-gray-100 p-8">
+      <!-- SCREENING GATE -->
+      <div x-show="screenStep === 'questions' && !submitted">
+        <div class="bg-gray-50 rounded-2xl border border-gray-100 p-8">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div>
+              <p class="font-bold text-gray-900 text-sm">Quick eligibility check</p>
+              <p class="text-gray-500 text-xs mt-0.5">Tick any that apply to you right now. This helps us make sure you get the right care.</p>
+            </div>
+          </div>
+
+          <div class="space-y-3 mb-8">
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-red-200 hover:bg-red-50 transition" :class="screenAnswers.emergency ? 'border-red-300 bg-red-50' : ''">
+              <input type="checkbox" x-model="screenAnswers.emergency" class="mt-0.5 accent-red-500 w-4 h-4 flex-shrink-0" />
+              <span class="text-sm text-gray-700">I think I may be having a <strong>medical emergency</strong> (e.g. unconscious, severe bleeding, unable to breathe)</span>
+            </label>
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-red-200 hover:bg-red-50 transition" :class="screenAnswers.chest ? 'border-red-300 bg-red-50' : ''">
+              <input type="checkbox" x-model="screenAnswers.chest" class="mt-0.5 accent-red-500 w-4 h-4 flex-shrink-0" />
+              <span class="text-sm text-gray-700">I have <strong>chest pain, shortness of breath, or stroke symptoms</strong> right now (facial drooping, arm weakness, slurred speech)</span>
+            </label>
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-orange-200 hover:bg-orange-50 transition" :class="screenAnswers.mentalCrisis ? 'border-orange-300 bg-orange-50' : ''">
+              <input type="checkbox" x-model="screenAnswers.mentalCrisis" class="mt-0.5 accent-orange-500 w-4 h-4 flex-shrink-0" />
+              <span class="text-sm text-gray-700">I am experiencing a <strong>mental health crisis</strong> or having thoughts of self-harm or suicide</span>
+            </label>
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-amber-200 hover:bg-amber-50 transition" :class="screenAnswers.under16 ? 'border-amber-300 bg-amber-50' : ''">
+              <input type="checkbox" x-model="screenAnswers.under16" class="mt-0.5 accent-amber-500 w-4 h-4 flex-shrink-0" />
+              <span class="text-sm text-gray-700">The patient is <strong>under 16 years old</strong> and no parent or guardian is present</span>
+            </label>
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-amber-200 hover:bg-amber-50 transition" :class="screenAnswers.overseas ? 'border-amber-300 bg-amber-50' : ''">
+              <input type="checkbox" x-model="screenAnswers.overseas" class="mt-0.5 accent-amber-500 w-4 h-4 flex-shrink-0" />
+              <span class="text-sm text-gray-700">I am <strong>not currently in New Zealand</strong></span>
+            </label>
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-amber-200 hover:bg-amber-50 transition" :class="screenAnswers.controlled ? 'border-amber-300 bg-amber-50' : ''">
+              <input type="checkbox" x-model="screenAnswers.controlled" class="mt-0.5 accent-amber-500 w-4 h-4 flex-shrink-0" />
+              <span class="text-sm text-gray-700">I am seeking a prescription for a <strong>controlled drug</strong> (opioid painkillers, benzodiazepines, stimulants such as Ritalin)</span>
+            </label>
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-amber-200 hover:bg-amber-50 transition" :class="screenAnswers.physical ? 'border-amber-300 bg-amber-50' : ''">
+              <input type="checkbox" x-model="screenAnswers.physical" class="mt-0.5 accent-amber-500 w-4 h-4 flex-shrink-0" />
+              <span class="text-sm text-gray-700">My concern requires a <strong>physical examination</strong> (e.g. wound, lump, eye or ear problem that must be looked at in person)</span>
+            </label>
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-amber-200 hover:bg-amber-50 transition" :class="screenAnswers.pregnant ? 'border-amber-300 bg-amber-50' : ''">
+              <input type="checkbox" x-model="screenAnswers.pregnant" class="mt-0.5 accent-amber-500 w-4 h-4 flex-shrink-0" />
+              <span class="text-sm text-gray-700">I am <strong>pregnant</strong> and my concern is directly related to my pregnancy</span>
+            </label>
+          </div>
+
+          <!-- Blocked message -->
+          <div x-show="screenFailed" x-cloak class="mb-6 bg-red-50 border border-red-200 rounded-xl p-5">
+            <p class="font-bold text-red-800 text-sm mb-1" x-text="screenFailReason?.title"></p>
+            <p class="text-red-700 text-sm mb-3" x-text="screenFailReason?.msg"></p>
+            <a x-show="screenFailReason?.action" :href="screenFailReason?.action" class="inline-block bg-red-600 hover:bg-red-700 text-white text-sm font-bold px-4 py-2 rounded-lg transition" x-text="screenFailReason?.label"></a>
+          </div>
+
+          <!-- Continue button -->
+          <button
+            x-show="!screenFailed"
+            @click="screenStep = 'form'"
+            class="w-full bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3.5 rounded-xl transition text-base"
+          >
+            None of these apply — continue to booking
+          </button>
+          <p class="text-xs text-gray-400 text-center mt-3">If you're unsure whether this service is right for you, <a href="mailto:connectclinic@outlook.com" class="text-cyan-600 hover:underline">email us first</a>.</p>
+        </div>
+      </div>
+
+      <!-- BOOKING FORM (shown after screening) -->
+      <div x-show="(screenStep === 'form' || screenStep === 'questions') && !submitted">
+        <div x-show="screenStep === 'form'" class="mb-4">
+          <button @click="screenStep = 'questions'" class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            Back to eligibility check
+          </button>
+        </div>
+      </div>
+
+      <div x-show="screenStep === 'form' && !submitted" class="bg-gray-50 rounded-2xl border border-gray-100 p-8">
         <form
           method="POST"
           @submit.prevent="
