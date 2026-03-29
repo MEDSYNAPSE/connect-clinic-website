@@ -404,7 +404,6 @@
 
       <div x-show="!submitted" class="bg-gray-50 rounded-2xl border border-gray-100 p-8">
         <form
-          action="https://formspree.io/f/connectclinic"
           method="POST"
           @submit.prevent="
             fetch('https://formspree.io/f/xpwzkovj', {
@@ -415,6 +414,8 @@
             .catch(() => window.location='mailto:connectclinic@outlook.com?subject=Booking+Request')
           "
         >
+          <!-- Personal details -->
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Your details</p>
           <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">First name</label>
@@ -425,14 +426,39 @@
               <input type="text" name="last_name" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" />
             </div>
           </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
-            <input type="email" name="email" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" />
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Date of birth</label>
+              <input type="date" name="date_of_birth" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+              <select name="gender" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300">
+                <option value="">Prefer not to say</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Non-binary</option>
+                <option>Other</option>
+              </select>
+            </div>
           </div>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Phone number</label>
-            <input type="tel" name="phone" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="+64" />
+            <label class="block text-sm font-medium text-gray-700 mb-1">Current address</label>
+            <input type="text" name="address" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="Street address, suburb, city" />
           </div>
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+              <input type="email" name="email" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Phone number</label>
+              <input type="tel" name="phone" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="+64" />
+            </div>
+          </div>
+
+          <!-- Appointment details -->
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3 mt-6">Appointment details</p>
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-1">Service needed</label>
             <select name="service" x-model="bookingService" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300">
@@ -447,8 +473,20 @@
             </select>
           </div>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Brief description <span class="text-gray-400 font-normal">(optional)</span></label>
-            <textarea name="description" rows="3" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="e.g. need a repeat for my blood pressure medication"></textarea>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Main reason for booking</label>
+            <textarea name="reason" rows="3" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="e.g. need a repeat for my blood pressure medication, been unwell for 3 days with a cough and fever..."></textarea>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Current medications <span class="text-gray-400 font-normal">(if any)</span></label>
+            <input type="text" name="current_medications" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="e.g. metformin 500mg, ramipril 5mg" />
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Allergies <span class="text-gray-400 font-normal">(if any)</span></label>
+            <input type="text" name="allergies" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="e.g. penicillin" />
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Preferred pharmacy <span class="text-gray-400 font-normal">(for prescriptions)</span></label>
+            <input type="text" name="preferred_pharmacy" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="e.g. Unichem Birkenhead, Auckland" />
           </div>
           <div class="mb-6">
             <label class="block text-sm font-medium text-gray-700 mb-1">Referral code <span class="text-gray-400 font-normal">(if referred by a GP or clinic)</span></label>
