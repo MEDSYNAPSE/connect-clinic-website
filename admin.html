@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connect Clinic — Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .status-pending    { background: #fef3c7; color: #92400e; }
+    .status-confirmed  { background: #d1fae5; color: #065f46; }
+    .status-completed  { background: #dbeafe; color: #1e40af; }
+    .status-cancelled  { background: #fee2e2; color: #991b1b; }
+    .pay-unpaid  { background: #fee2e2; color: #991b1b; }
+    .pay-paid    { background: #d1fae5; color: #065f46; }
+    .pay-refunded{ background: #e0e7ff; color: #3730a3; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen" x-data="adminApp()" x-init="init()">
+
+  <!-- LOGIN -->
+  <div x-show="!session" class="min-h-screen flex items-center justify-center px-4">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 w-full max-w-sm">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-teal-500 flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <div>
+          <p class="font-bold text-gray-900">Connect Clinic</p>
+          <p class="text-xs text-gray-400">Admin portal</p>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+        <input x-model="loginEmail" type="email" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-300" placeholder="admin@connectclinic.co.nz" @keydown.enter="login()" />
+      </div>
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
+        <input x-model="loginPassword" type="password" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-300" @keydown.enter="login()" />
+      </div>
+      <p x-show="loginError" x-text="loginError" class="text-red-500 text-sm mb-4"></p>
+      <button @click="login()" :disabled="loginLoading" class="w-full bg-cyan-500 hover:bg-cyan-600 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition text-sm">
+        <span x-text="loginLoading ? 'Signing in...' : 'Sign in'"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div x-show="session">
+
+    <!-- Top nav -->
+    <nav class="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-teal-500 flex items-center justify-center">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <span class="font-bold text-gray-900">Connect Clinic</span>
+        <span class="text-gray-300 text-xs">|</span>
+        <span class="text-sm text-gray-500">Admin</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="text-sm text-gray-400" x-text="session?.user?.email"></span>
+        <button @click="signOut()" class="text-sm text-gray-500 hover:text-red-500 transition">Sign out</button>
+      </div>
+    </nav>
+
+    <!-- Stats bar -->
+    <div class="max-w-7xl mx-auto px-6 py-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-xl border border-gray-100 p-5">
+          <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1">Total bookings</p>
+          <p class="text-3xl font-bold text-gray-900" x-text="bookings.length"></p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 p-5">
+          <p class="text-xs text-amber-500 font-medium uppercase tracking-wide mb-1">Pending</p>
+          <p class="text-3xl font-bold text-amber-600" x-text="bookings.filter(b => b.status === 'pending').length"></p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 p-5">
+          <p class="text-xs text-green-500 font-medium uppercase tracking-wide mb-1">Confirmed</p>
+          <p class="text-3xl font-bold text-green-600" x-text="bookings.filter(b => b.status === 'confirmed').length"></p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 p-5">
+          <p class="text-xs text-blue-500 font-medium uppercase tracking-wide mb-1">Completed</p>
+          <p class="text-3xl font-bold text-blue-600" x-text="bookings.filter(b => b.status === 'completed').length"></p>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex gap-1 mb-6 bg-gray-100 rounded-xl p-1 w-fit">
+        <button @click="activeTab = 'bookings'" :class="activeTab === 'bookings' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 rounded-lg text-sm font-medium transition">
+          Bookings
+        </button>
+        <button @click="activeTab = 'referrals'; loadReferrals()" :class="activeTab === 'referrals' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 rounded-lg text-sm font-medium transition">
+          GP Referrals
+        </button>
+        <button @click="activeTab = 'patients'; loadPatients()" :class="activeTab === 'patients' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 rounded-lg text-sm font-medium transition">
+          Patients
+        </button>
+      </div>
+
+      <!-- BOOKINGS TAB -->
+      <div x-show="activeTab === 'bookings'">
+        <!-- Filters -->
+        <div class="flex flex-wrap gap-3 mb-4 items-center">
+          <select x-model="filterStatus" class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-300 bg-white">
+            <option value="">All statuses</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <select x-model="filterPayment" class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-300 bg-white">
+            <option value="">All payments</option>
+            <option value="unpaid">Unpaid</option>
+            <option value="paid">Paid</option>
+            <option value="refunded">Refunded</option>
+          </select>
+          <button @click="loadBookings()" class="ml-auto text-sm text-cyan-600 hover:text-cyan-700 font-medium flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Refresh
+          </button>
+        </div>
+
+        <div x-show="loading" class="text-center py-20 text-gray-400">Loading bookings...</div>
+
+        <div x-show="!loading && filteredBookings.length === 0" class="text-center py-20 text-gray-400">No bookings found.</div>
+
+        <div x-show="!loading && filteredBookings.length > 0" class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 border-b border-gray-100">
+                <tr>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Patient</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Service</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Status</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Payment</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Date</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50">
+                <template x-for="booking in filteredBookings" :key="booking.id">
+                  <tr class="hover:bg-gray-50 transition">
+                    <td class="px-5 py-4">
+                      <p class="font-semibold text-gray-900" x-text="booking.patient_name || 'Unknown'"></p>
+                      <p class="text-xs text-gray-400" x-text="booking.email || ''"></p>
+                      <p class="text-xs text-gray-400" x-text="booking.phone || ''"></p>
+                    </td>
+                    <td class="px-5 py-4">
+                      <p class="font-medium text-gray-700" x-text="booking.service"></p>
+                      <p class="text-xs text-gray-400 mt-0.5" x-text="booking.reason ? booking.reason.substring(0,60) + (booking.reason.length > 60 ? '...' : '') : ''"></p>
+                    </td>
+                    <td class="px-5 py-4">
+                      <select
+                        :value="booking.status"
+                        @change="updateBooking(booking.id, 'status', $event.target.value)"
+                        :class="'status-' + booking.status"
+                        class="text-xs font-semibold px-2.5 py-1.5 rounded-full border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                      </select>
+                    </td>
+                    <td class="px-5 py-4">
+                      <select
+                        :value="booking.payment_status"
+                        @change="updateBooking(booking.id, 'payment_status', $event.target.value)"
+                        :class="'pay-' + booking.payment_status"
+                        class="text-xs font-semibold px-2.5 py-1.5 rounded-full border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                      >
+                        <option value="unpaid">Unpaid</option>
+                        <option value="paid">Paid</option>
+                        <option value="refunded">Refunded</option>
+                      </select>
+                    </td>
+                    <td class="px-5 py-4 text-xs text-gray-400" x-text="new Date(booking.created_at).toLocaleDateString('en-NZ', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})"></td>
+                    <td class="px-5 py-4">
+                      <button @click="viewBooking(booking)" class="text-cyan-600 hover:text-cyan-700 text-xs font-medium">View</button>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- GP REFERRALS TAB -->
+      <div x-show="activeTab === 'referrals'">
+        <div x-show="loadingReferrals" class="text-center py-20 text-gray-400">Loading referrals...</div>
+        <div x-show="!loadingReferrals && referrals.length === 0" class="text-center py-20 text-gray-400">No referrals yet.</div>
+        <div x-show="!loadingReferrals && referrals.length > 0" class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 border-b border-gray-100">
+                <tr>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Referrer</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Patient</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Reason</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Status</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Date</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50">
+                <template x-for="ref in referrals" :key="ref.id">
+                  <tr class="hover:bg-gray-50 transition">
+                    <td class="px-5 py-4">
+                      <p class="font-semibold text-gray-900" x-text="ref.referrer_name"></p>
+                      <p class="text-xs text-gray-400" x-text="ref.referrer_email"></p>
+                    </td>
+                    <td class="px-5 py-4">
+                      <p class="font-medium text-gray-700" x-text="ref.patient_name"></p>
+                      <p class="text-xs text-gray-400" x-text="ref.patient_contact || ''"></p>
+                    </td>
+                    <td class="px-5 py-4 text-xs text-gray-500 max-w-xs" x-text="(ref.referral_reason || '').substring(0,80)"></td>
+                    <td class="px-5 py-4">
+                      <select
+                        :value="ref.status"
+                        @change="updateReferral(ref.id, $event.target.value)"
+                        class="text-xs font-semibold px-2.5 py-1.5 rounded-full border border-gray-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="booked">Booked</option>
+                        <option value="completed">Completed</option>
+                      </select>
+                    </td>
+                    <td class="px-5 py-4 text-xs text-gray-400" x-text="new Date(ref.created_at).toLocaleDateString('en-NZ', {day:'numeric',month:'short'})"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PATIENTS TAB -->
+      <div x-show="activeTab === 'patients'">
+        <div x-show="loadingPatients" class="text-center py-20 text-gray-400">Loading patients...</div>
+        <div x-show="!loadingPatients && patients.length === 0" class="text-center py-20 text-gray-400">No patients yet.</div>
+        <div x-show="!loadingPatients && patients.length > 0" class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 border-b border-gray-100">
+                <tr>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Name</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Contact</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">DOB</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Medications</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Registered</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50">
+                <template x-for="p in patients" :key="p.id">
+                  <tr class="hover:bg-gray-50 transition">
+                    <td class="px-5 py-4">
+                      <p class="font-semibold text-gray-900" x-text="p.first_name + ' ' + p.last_name"></p>
+                      <p class="text-xs text-gray-400" x-text="p.gender || ''"></p>
+                    </td>
+                    <td class="px-5 py-4">
+                      <p class="text-gray-700" x-text="p.email || ''"></p>
+                      <p class="text-xs text-gray-400" x-text="p.phone || ''"></p>
+                    </td>
+                    <td class="px-5 py-4 text-xs text-gray-500" x-text="p.date_of_birth ? new Date(p.date_of_birth).toLocaleDateString('en-NZ') : ''"></td>
+                    <td class="px-5 py-4 text-xs text-gray-500 max-w-xs" x-text="(p.current_medications || 'None listed').substring(0,60)"></td>
+                    <td class="px-5 py-4 text-xs text-gray-400" x-text="new Date(p.created_at).toLocaleDateString('en-NZ', {day:'numeric',month:'short',year:'numeric'})"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOKING DETAIL MODAL -->
+  <div x-show="selectedBooking" @click.self="selectedBooking = null" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div x-show="selectedBooking" class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-8 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-start justify-between mb-6">
+        <h3 class="text-lg font-bold text-gray-900">Booking details</h3>
+        <button @click="selectedBooking = null" class="text-gray-400 hover:text-gray-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <template x-if="selectedBooking">
+        <div class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div><p class="text-xs text-gray-400 mb-0.5">Patient</p><p class="font-semibold" x-text="selectedBooking.patient_name || 'N/A'"></p></div>
+            <div><p class="text-xs text-gray-400 mb-0.5">Service</p><p class="font-semibold" x-text="selectedBooking.service"></p></div>
+            <div><p class="text-xs text-gray-400 mb-0.5">Email</p><p class="text-sm" x-text="selectedBooking.email || 'N/A'"></p></div>
+            <div><p class="text-xs text-gray-400 mb-0.5">Phone</p><p class="text-sm" x-text="selectedBooking.phone || 'N/A'"></p></div>
+            <div><p class="text-xs text-gray-400 mb-0.5">Booking status</p>
+              <span :class="'status-' + selectedBooking.status" class="text-xs font-semibold px-2 py-1 rounded-full" x-text="selectedBooking.status"></span>
+            </div>
+            <div><p class="text-xs text-gray-400 mb-0.5">Payment</p>
+              <span :class="'pay-' + selectedBooking.payment_status" class="text-xs font-semibold px-2 py-1 rounded-full" x-text="selectedBooking.payment_status"></span>
+            </div>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 mb-1">Reason for booking</p>
+            <p class="text-sm text-gray-700 bg-gray-50 rounded-lg p-3" x-text="selectedBooking.reason || 'Not provided'"></p>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><p class="text-xs text-gray-400 mb-0.5">Booked</p><p class="text-sm" x-text="new Date(selectedBooking.created_at).toLocaleString('en-NZ')"></p></div>
+            <div><p class="text-xs text-gray-400 mb-0.5">Booking ID</p><p class="text-xs text-gray-500 font-mono" x-text="selectedBooking.id.substring(0,8) + '...'"></p></div>
+          </div>
+          <div class="pt-4 flex gap-3">
+            <a :href="'mailto:' + selectedBooking.email + '?subject=Connect+Clinic+Appointment+Confirmation'" class="flex-1 text-center bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2.5 rounded-xl text-sm transition">
+              Email patient
+            </a>
+            <button @click="selectedBooking = null" class="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 font-semibold py-2.5 rounded-xl text-sm transition">
+              Close
+            </button>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <script>
+    // ── CONFIGURATION ────────────────────────────────────────────────
+    // Replace these with your real Supabase project details
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';         // e.g. https://xxxx.supabase.co
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Settings → API → anon public
+    // ────────────────────────────────────────────────────────────────
+
+    function adminApp() {
+      return {
+        supabase: null,
+        session: null,
+        loginEmail: '',
+        loginPassword: '',
+        loginError: '',
+        loginLoading: false,
+        activeTab: 'bookings',
+        bookings: [],
+        referrals: [],
+        patients: [],
+        loading: false,
+        loadingReferrals: false,
+        loadingPatients: false,
+        filterStatus: '',
+        filterPayment: '',
+        selectedBooking: null,
+
+        get filteredBookings() {
+          return this.bookings.filter(b => {
+            if (this.filterStatus && b.status !== this.filterStatus) return false;
+            if (this.filterPayment && b.payment_status !== this.filterPayment) return false;
+            return true;
+          });
+        },
+
+        async init() {
+          if (SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+            console.warn('Connect Clinic Admin: Set your Supabase URL and anon key in admin.html');
+            return;
+          }
+          this.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          const { data: { session } } = await this.supabase.auth.getSession();
+          this.session = session;
+          if (session) await this.loadBookings();
+          this.supabase.auth.onAuthStateChange((_event, session) => {
+            this.session = session;
+            if (session) this.loadBookings();
+          });
+        },
+
+        async login() {
+          this.loginError = '';
+          this.loginLoading = true;
+          const { data, error } = await this.supabase.auth.signInWithPassword({
+            email: this.loginEmail,
+            password: this.loginPassword,
+          });
+          this.loginLoading = false;
+          if (error) {
+            this.loginError = error.message;
+          } else {
+            this.session = data.session;
+            await this.loadBookings();
+          }
+        },
+
+        async signOut() {
+          await this.supabase.auth.signOut();
+          this.session = null;
+          this.bookings = [];
+        },
+
+        async loadBookings() {
+          this.loading = true;
+          const { data, error } = await this.supabase
+            .from('pending_bookings')
+            .select('*')
+            .order('created_at', { ascending: false });
+          this.loading = false;
+          if (!error) this.bookings = data || [];
+        },
+
+        async loadReferrals() {
+          this.loadingReferrals = true;
+          const { data, error } = await this.supabase
+            .from('gp_referrals')
+            .select('*')
+            .order('created_at', { ascending: false });
+          this.loadingReferrals = false;
+          if (!error) this.referrals = data || [];
+        },
+
+        async loadPatients() {
+          this.loadingPatients = true;
+          const { data, error } = await this.supabase
+            .from('patients')
+            .select('*')
+            .order('created_at', { ascending: false });
+          this.loadingPatients = false;
+          if (!error) this.patients = data || [];
+        },
+
+        async updateBooking(id, field, value) {
+          await this.supabase
+            .from('bookings')
+            .update({ [field]: value })
+            .eq('id', id);
+          const booking = this.bookings.find(b => b.id === id);
+          if (booking) booking[field] = value;
+        },
+
+        async updateReferral(id, status) {
+          await this.supabase
+            .from('gp_referrals')
+            .update({ status })
+            .eq('id', id);
+          const ref = this.referrals.find(r => r.id === id);
+          if (ref) ref.status = status;
+        },
+
+        viewBooking(booking) {
+          this.selectedBooking = booking;
+        },
+      };
+    }
+  </script>
+</body>
+</html>
