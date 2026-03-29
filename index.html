@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Connect Clinic — Real healthcare, wherever you are</title>
-  <meta name="description" content="See an NZ-registered GP today from your phone or computer. Repeat scripts, sick notes, Wegovy, dietician support — fast telehealth from Auckland." />
-  <meta property="og:title" content="Connect Clinic — Real healthcare, wherever you are" />
-  <meta property="og:description" content="NZ-registered GP available for telehealth. Repeat prescriptions, sick notes, Wegovy assessments and more." />
+  <title>Connect Clinic — Telehealth GP, Auckland NZ</title>
+  <meta name="description" content="See an NZ-registered GP today from your phone or computer. Repeat prescriptions, medical certificates, Wegovy assessments — professional telehealth from Auckland." />
+  <meta property="og:title" content="Connect Clinic — Telehealth GP" />
+  <meta property="og:description" content="NZ-registered GP available for telehealth. Repeat prescriptions, medical certificates, Wegovy assessments and more." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://connectclinic.co.nz" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
 
     /* Hero */
     .hero-bg {
@@ -76,14 +76,73 @@
 
     /* Misc */
     html { scroll-behavior: smooth; }
-    .faq-item { border-bottom: 1px solid #f3f4f6; }
+    .faq-item { border-bottom: 1px solid rgba(255,255,255,0.07); }
     .glass { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
     .text-gradient { background: linear-gradient(135deg, #38bdf8 0%, #34d399 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .section-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
     input, select, textarea { transition: border-color 0.15s, box-shadow 0.15s; }
+    select option { background-color: #0f172a; color: #e2e8f0; }
+    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) opacity(0.5); }
+
+    /* ── Scroll animations ─────────────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1);
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up.delay-1 { transition-delay: 0.08s; }
+    .fade-up.delay-2 { transition-delay: 0.16s; }
+    .fade-up.delay-3 { transition-delay: 0.24s; }
+    .fade-up.delay-4 { transition-delay: 0.32s; }
+    .fade-up.delay-5 { transition-delay: 0.40s; }
+    .fade-up.delay-6 { transition-delay: 0.48s; }
+
+    /* Hero text reveal */
+    .hero-reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      animation: heroReveal 0.8s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    .hero-reveal.d1 { animation-delay: 0.1s; }
+    .hero-reveal.d2 { animation-delay: 0.25s; }
+    .hero-reveal.d3 { animation-delay: 0.4s; }
+    .hero-reveal.d4 { animation-delay: 0.55s; }
+    @keyframes heroReveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Floating orb in hero */
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    @keyframes floatOrb {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-20px) scale(1.05); }
+    }
+    .orb-1 { animation: floatOrb 8s ease-in-out infinite; }
+    .orb-2 { animation: floatOrb 11s ease-in-out infinite 1.5s; }
+
+    /* Number counter shimmer */
+    .stat-num { transition: color 0.3s; }
+    .stat-num:hover { color: #22d3ee; }
+
+    /* Trust bar ticker */
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-track { display: flex; animation: ticker 28s linear infinite; width: max-content; }
+    .ticker-track:hover { animation-play-state: paused; }
   </style>
 </head>
-<body class="bg-white text-gray-900" x-data="{
+<body class="bg-[#050d1a] text-white" x-data="{
   mobileMenu: false,
   bookingService: '',
   submitted: false,
@@ -195,10 +254,18 @@
   <!-- NAV -->
   <nav class="sticky top-0 z-50 sticky-nav">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-teal-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        </div>
+      <div class="flex items-center gap-2.5">
+        <svg class="w-8 h-8 flex-shrink-0" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="nb" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#07101E"/><stop offset="100%" stop-color="#0B1A30"/></linearGradient>
+            <linearGradient id="na" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#14B8A6"/></linearGradient>
+          </defs>
+          <rect width="200" height="200" rx="48" fill="url(#nb)"/>
+          <path d="M128 58 A52 52 0 1 0 128 142" stroke="url(#na)" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <circle cx="128" cy="58" r="9" fill="#22D3EE"/>
+          <circle cx="128" cy="142" r="9" fill="#14B8A6"/>
+          <path d="M128 100 L148 100 L155 82 L163 118 L170 100 L185 100" stroke="#22D3EE" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
         <span class="font-bold text-base text-white tracking-tight">Connect Clinic</span>
       </div>
       <div class="hidden md:flex items-center gap-7 text-sm font-medium text-gray-400">
@@ -213,124 +280,132 @@
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
     </div>
-    <div x-show="mobileMenu" class="md:hidden px-4 pb-4 flex flex-col gap-3 text-sm font-medium border-t border-gray-100 pt-3">
-      <a href="#services" @click="mobileMenu=false" class="hover:text-sky-600">Services</a>
-      <a href="#pricing" @click="mobileMenu=false" class="hover:text-sky-600">Pricing</a>
-      <a href="#about" @click="mobileMenu=false" class="hover:text-sky-600">About</a>
-      <a href="#faq" @click="mobileMenu=false" class="hover:text-sky-600">FAQ</a>
-      <a href="#refer" @click="mobileMenu=false" class="hover:text-sky-600">Refer a patient</a>
-      <a href="#book" @click="mobileMenu=false" class="bg-sky-500 text-white px-4 py-2 rounded-lg text-center">Book now</a>
+    <div x-show="mobileMenu" class="md:hidden px-4 pb-4 flex flex-col gap-3 text-sm font-medium border-t border-white/10 pt-3">
+      <a href="#services" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Services</a>
+      <a href="#pricing" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Pricing</a>
+      <a href="#about" @click="mobileMenu=false" class="text-gray-300 hover:text-white">About</a>
+      <a href="#faq" @click="mobileMenu=false" class="text-gray-300 hover:text-white">FAQ</a>
+      <a href="#refer" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Refer a patient</a>
+      <a href="#book" @click="mobileMenu=false" class="bg-cyan-500 text-white px-4 py-2 rounded-lg text-center">Book now</a>
     </div>
   </nav>
 
   <!-- HERO -->
   <section class="hero-bg hero-grid text-white py-28 px-4 relative overflow-hidden">
+    <!-- Animated background orbs -->
+    <div class="hero-orb orb-1 w-96 h-96 bg-cyan-500/10" style="top:-60px;left:-80px;"></div>
+    <div class="hero-orb orb-2 w-80 h-80 bg-teal-500/8" style="bottom:0;right:-60px;"></div>
     <div class="max-w-5xl mx-auto relative z-10 text-center">
-      <div class="inline-flex items-center gap-1 glass rounded-full px-4 py-2 text-xs text-emerald-300 font-semibold mb-8 pulse-dot">
-        NZ-registered doctors available now
+      <div class="hero-reveal d1 inline-flex items-center gap-1 glass rounded-full px-4 py-2 text-xs text-emerald-300 font-semibold mb-8 pulse-dot">
+        NZ-registered GP available now
       </div>
       <h1 class="text-6xl md:text-7xl font-black leading-[1.05] tracking-tight mb-6">
-        Real healthcare,<br />
-        <span class="text-gradient">wherever you are.</span>
+        <span class="hero-reveal d2 block">Professional healthcare,</span>
+        <span class="hero-reveal d3 block text-gradient">from wherever you are.</span>
       </h1>
-      <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-        See an NZ GP by video today. Repeat scripts, sick notes, Wegovy — sorted in minutes, not weeks. From <span class="text-white font-semibold">$35.</span>
+      <p class="hero-reveal d4 text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+        Consult an NZ-registered GP by video today. Repeat prescriptions, medical certificates, and specialist referrals — from <span class="text-white font-semibold">$35.</span>
       </p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center mb-12">
+      <div class="hero-reveal d4 flex flex-col sm:flex-row gap-3 justify-center mb-14">
         <a href="#book" class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold px-8 py-4 rounded-xl transition text-base shadow-2xl shadow-cyan-500/30">
-          Book a consult
+          Request a consultation
         </a>
-        <a href="#pricing" class="glass text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/10 transition text-base">
-          See pricing
+        <a href="#services" class="glass text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/10 transition text-base">
+          View services
         </a>
       </div>
-      <div class="flex flex-wrap justify-center gap-10 text-center">
-        <div><div class="text-2xl font-black text-white">$55</div><div class="text-xs text-gray-500 mt-0.5">General consult</div></div>
+      <div class="hero-reveal d4 flex flex-wrap justify-center gap-10 text-center border-t border-white/8 pt-10">
+        <div class="stat-num"><div class="text-2xl font-black text-white">$55</div><div class="text-xs text-gray-500 mt-0.5">General consultation</div></div>
         <div class="w-px bg-white/10 hidden sm:block"></div>
-        <div><div class="text-2xl font-black text-white">Same day</div><div class="text-xs text-gray-500 mt-0.5">Appointments</div></div>
+        <div class="stat-num"><div class="text-2xl font-black text-white">Same day</div><div class="text-xs text-gray-500 mt-0.5">Appointments available</div></div>
         <div class="w-px bg-white/10 hidden sm:block"></div>
-        <div><div class="text-2xl font-black text-white">NZ-wide</div><div class="text-xs text-gray-500 mt-0.5">Available anywhere</div></div>
+        <div class="stat-num"><div class="text-2xl font-black text-white">NZ-wide</div><div class="text-xs text-gray-500 mt-0.5">Available nationwide</div></div>
         <div class="w-px bg-white/10 hidden sm:block"></div>
-        <div><div class="text-2xl font-black text-white">4 roles</div><div class="text-xs text-gray-500 mt-0.5">GPs, nurses, dieticians, coaches</div></div>
+        <div class="stat-num"><div class="text-2xl font-black text-white">FRNZCGP</div><div class="text-xs text-gray-500 mt-0.5">Fellow-qualified GP</div></div>
       </div>
     </div>
   </section>
 
-  <!-- TRUST
-
-  <!-- TRUST BAR -->
-  <section class="bg-gray-950 border-y border-white/5 py-4 px-4">
-    <div class="max-w-5xl mx-auto flex flex-wrap justify-center gap-7 text-xs text-gray-500 font-medium">
-      <span class="flex items-center gap-2"><svg class="w-5 h-5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>FRNZCGP-qualified GP</span>
-      <span class="flex items-center gap-2"><svg class="w-5 h-5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Prescriptions to your pharmacy</span>
-      <span class="flex items-center gap-2"><svg class="w-5 h-5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Sick notes and medical certs</span>
-      <span class="flex items-center gap-2"><svg class="w-5 h-5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Secure and confidential</span>
-      <span class="flex items-center gap-2"><svg class="w-5 h-5 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Pasifika and Pacific health focus</span>
+    <!-- TRUST BAR (scrolling ticker) -->
+  <section class="bg-[#030a15] border-y border-white/5 py-3 overflow-hidden">
+    <div class="ticker-track gap-0 text-xs text-gray-500 font-medium">
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>FRNZCGP-qualified GP</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Electronic prescriptions to any NZ pharmacy</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Medical certificates issued same day</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Confidential &amp; HIPC-compliant</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Pasifika health expertise</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Same-day appointments available</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>FRNZCGP-qualified GP</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Electronic prescriptions to any NZ pharmacy</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Medical certificates issued same day</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Confidential &amp; HIPC-compliant</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Pasifika health expertise</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Same-day appointments available</span>
     </div>
   </section>
 
   <!-- SERVICES -->
-  <section id="services" class="py-20 px-4 bg-white">
+  <section id="services" class="py-20 px-4 bg-gray-900/40">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-14">
-        <span class="section-label text-cyan-500">What we treat</span>
-        <h2 class="text-4xl font-bold mt-2 text-gray-900">Services designed for real life</h2>
-        <p class="text-gray-500 mt-3 max-w-xl mx-auto">Can't get into your GP? Can't take time off work? We've got you covered.</p>
+        <span class="section-label fade-up text-cyan-500">What we treat</span>
+        <h2 class="text-4xl font-bold mt-2 text-white">Clinical services, when and where you need them</h2>
+        <p class="text-gray-400 mt-3 max-w-xl mx-auto">Comprehensive telehealth care from an NZ-registered GP — available nationwide.</p>
       </div>
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        <div class="service-card bg-gradient-to-br from-sky-50 to-sky-100 rounded-2xl p-6 border border-sky-100 cursor-pointer" @click="bookingService='Repeat Prescription'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
+        <div class="service-card fade-up delay-1 bg-sky-950/40 rounded-2xl p-6 border border-sky-500/20 cursor-pointer hover:border-sky-400/40 transition-all" @click="bookingService='Repeat Prescription'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
           <div class="w-12 h-12 bg-sky-500 rounded-xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           </div>
-          <h3 class="text-lg font-bold text-gray-900 mb-2">Repeat Prescriptions</h3>
-          <p class="text-gray-600 text-sm">Already on a regular medication? Skip the waiting room. We'll review and send your script directly to your pharmacy.</p>
-          <div class="mt-4 text-sky-600 text-sm font-semibold">Book now &rarr;</div>
+          <h3 class="text-lg font-bold text-white mb-2">Repeat Prescriptions</h3>
+          <p class="text-gray-400 text-sm">Already on a regular medication? Skip the waiting room. We'll review and send your script directly to your pharmacy.</p>
+          <div class="mt-4 text-sky-400 text-sm font-semibold">Book now &rarr;</div>
         </div>
 
-        <div class="service-card bg-gradient-to-br from-teal-50 to-teal-100 rounded-2xl p-6 border border-teal-100 cursor-pointer" @click="bookingService='Acute Illness Consult'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
+        <div class="service-card fade-up delay-2 bg-teal-950/40 rounded-2xl p-6 border border-teal-500/20 cursor-pointer hover:border-teal-400/40 transition-all" @click="bookingService='Acute Illness Consult'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
           <div class="w-12 h-12 bg-teal-500 rounded-xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
           </div>
-          <h3 class="text-lg font-bold text-gray-900 mb-2">Acute Illness Review</h3>
-          <p class="text-gray-600 text-sm">Feeling unwell and can't get in to see anyone? Our doctor assesses your symptoms and advises on treatment — all from home.</p>
-          <div class="mt-4 text-teal-600 text-sm font-semibold">Book now &rarr;</div>
+          <h3 class="text-lg font-bold text-white mb-2">Acute Illness Review</h3>
+          <p class="text-gray-400 text-sm">Feeling unwell and can't get in to see anyone? Our doctor assesses your symptoms and advises on treatment — all from home.</p>
+          <div class="mt-4 text-teal-400 text-sm font-semibold">Book now &rarr;</div>
         </div>
 
-        <div class="service-card bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-2xl p-6 border border-indigo-100 cursor-pointer" @click="bookingService='Sick Note / Medical Certificate'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
+        <div class="service-card fade-up delay-3 bg-indigo-950/40 rounded-2xl p-6 border border-indigo-500/20 cursor-pointer hover:border-indigo-400/40 transition-all" @click="bookingService='Medical Certificate'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
           <div class="w-12 h-12 bg-indigo-500 rounded-xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
           </div>
-          <h3 class="text-lg font-bold text-gray-900 mb-2">Sick Notes and Medical Certs</h3>
-          <p class="text-gray-600 text-sm">Need time off work? We issue official NZ medical certificates quickly. No need to drag yourself to a clinic when you're unwell.</p>
-          <div class="mt-4 text-indigo-600 text-sm font-semibold">Book now &rarr;</div>
+          <h3 class="text-lg font-bold text-white mb-2">Medical Certificates</h3>
+          <p class="text-gray-400 text-sm">Require documentation for employment, study, or insurance? We issue official NZ medical certificates following a telehealth clinical assessment.</p>
+          <div class="mt-4 text-indigo-400 text-sm font-semibold">Book now &rarr;</div>
         </div>
 
-        <div class="service-card bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border border-purple-100 cursor-pointer" @click="bookingService='Wegovy / Weight Management Assessment'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
+        <div class="service-card fade-up delay-4 bg-purple-950/40 rounded-2xl p-6 border border-purple-500/20 cursor-pointer hover:border-purple-400/40 transition-all" @click="bookingService='Wegovy / Weight Management Assessment'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
           <div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
           </div>
-          <h3 class="text-lg font-bold text-gray-900 mb-2">Wegovy Eligibility Assessment</h3>
-          <p class="text-gray-600 text-sm">Interested in Wegovy for weight management? We assess your eligibility, explain the programme, and guide your next steps — all online.</p>
-          <div class="mt-4 text-purple-600 text-sm font-semibold">Find out if you qualify &rarr;</div>
+          <h3 class="text-lg font-bold text-white mb-2">Wegovy Eligibility Assessment</h3>
+          <p class="text-gray-400 text-sm">Interested in Wegovy for weight management? We assess your eligibility, explain the programme, and guide your next steps — all online.</p>
+          <div class="mt-4 text-purple-400 text-sm font-semibold">Find out if you qualify &rarr;</div>
         </div>
 
-        <div class="service-card bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-6 border border-orange-100 cursor-pointer" @click="bookingService='General Telehealth Consult'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
+        <div class="service-card fade-up delay-5 bg-orange-950/30 rounded-2xl p-6 border border-orange-500/20 cursor-pointer hover:border-orange-400/40 transition-all" @click="bookingService='General Telehealth Consult'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
           <div class="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
           </div>
-          <h3 class="text-lg font-bold text-gray-900 mb-2">General Telehealth Consult</h3>
-          <p class="text-gray-600 text-sm">Health question, skin concern, mental health check-in, or anything else — see a doctor face-to-face over video from wherever you are.</p>
-          <div class="mt-4 text-orange-600 text-sm font-semibold">Book now &rarr;</div>
+          <h3 class="text-lg font-bold text-white mb-2">General Telehealth Consult</h3>
+          <p class="text-gray-400 text-sm">Health question, skin concern, mental health check-in, or anything else — see a doctor face-to-face over video from wherever you are.</p>
+          <div class="mt-4 text-orange-400 text-sm font-semibold">Book now &rarr;</div>
         </div>
 
-        <div class="service-card bg-gradient-to-br from-rose-50 to-rose-100 rounded-2xl p-6 border border-rose-100 cursor-pointer" @click="bookingService='Second Opinion / Condition Review'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
+        <div class="service-card fade-up delay-6 bg-rose-950/40 rounded-2xl p-6 border border-rose-500/20 cursor-pointer hover:border-rose-400/40 transition-all" @click="bookingService='Second Opinion / Condition Review'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
           <div class="w-12 h-12 bg-rose-500 rounded-xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
           </div>
-          <h3 class="text-lg font-bold text-gray-900 mb-2">Second Opinion</h3>
-          <p class="text-gray-600 text-sm">Want a second opinion on a diagnosis or treatment plan? We review your notes and provide independent clinical recommendations.</p>
-          <div class="mt-4 text-rose-600 text-sm font-semibold">Get a second opinion &rarr;</div>
+          <h3 class="text-lg font-bold text-white mb-2">Second Opinion</h3>
+          <p class="text-gray-400 text-sm">Want a second opinion on a diagnosis or treatment plan? We review your notes and provide independent clinical recommendations.</p>
+          <div class="mt-4 text-rose-400 text-sm font-semibold">Get a second opinion &rarr;</div>
         </div>
 
       </div>
@@ -338,129 +413,129 @@
   </section>
 
   <!-- HOW IT WORKS -->
-  <section id="how-it-works" class="py-20 px-4 bg-slate-50">
+  <section id="how-it-works" class="py-20 px-4 bg-[#050d1a]">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-14">
-        <span class="section-label text-cyan-500">Simple process</span>
-        <h2 class="text-4xl font-bold mt-2">How it works</h2>
-        <p class="text-gray-500 mt-3">From booking to sorted in three simple steps.</p>
+        <span class="section-label fade-up text-cyan-500">Simple process</span>
+        <h2 class="text-4xl font-bold mt-2 text-white">How it works</h2>
+        <p class="text-gray-400 mt-3">From booking to clinical outcome in three steps.</p>
       </div>
       <div class="grid md:grid-cols-3 gap-8 relative">
-        <div class="hidden md:block absolute top-10 left-1/3 right-1/3 h-0.5 bg-sky-200"></div>
-        <div class="text-center">
-          <div class="w-20 h-20 bg-sky-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+        <div class="hidden md:block absolute top-10 left-1/3 right-1/3 h-0.5 bg-cyan-500/30"></div>
+        <div class="text-center fade-up delay-1">
+          <div class="w-20 h-20 bg-sky-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-sky-500/20">
             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
           </div>
-          <h3 class="text-lg font-bold mb-2">1. Book online</h3>
-          <p class="text-gray-600 text-sm">Choose your service and fill in a short form. We'll confirm your appointment time by email or phone — usually within a few hours.</p>
+          <h3 class="text-lg font-bold mb-2 text-white">1. Book online</h3>
+          <p class="text-gray-400 text-sm">Choose your service and fill in a short form. We'll confirm your appointment time by email or phone — usually within a few hours.</p>
         </div>
-        <div class="text-center">
-          <div class="w-20 h-20 bg-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+        <div class="text-center fade-up delay-2">
+          <div class="w-20 h-20 bg-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-teal-500/20">
             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
           </div>
-          <h3 class="text-lg font-bold mb-2">2. See the doctor</h3>
-          <p class="text-gray-600 text-sm">Connect with Dr Katoa via video call at your scheduled time. No waiting room, no travel — just a proper consultation.</p>
+          <h3 class="text-lg font-bold mb-2 text-white">2. See the doctor</h3>
+          <p class="text-gray-400 text-sm">Connect with Dr Katoa via video call at your scheduled time. No waiting room, no travel — just a proper consultation.</p>
         </div>
-        <div class="text-center">
-          <div class="w-20 h-20 bg-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+        <div class="text-center fade-up delay-3">
+          <div class="w-20 h-20 bg-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-500/20">
             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </div>
-          <h3 class="text-lg font-bold mb-2">3. Get sorted</h3>
-          <p class="text-gray-600 text-sm">Prescriptions sent to your pharmacy. Certificates emailed. Referrals arranged. All done from your couch.</p>
+          <h3 class="text-lg font-bold mb-2 text-white">3. Receive your care</h3>
+          <p class="text-gray-400 text-sm">Prescriptions sent electronically to your pharmacy. Medical certificates and referral letters issued promptly by email.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- PRICING -->
-  <section id="pricing" class="py-20 px-4 bg-white">
+  <section id="pricing" class="py-20 px-4 bg-gray-900/40">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-14">
-        <span class="section-label text-cyan-500">Transparent pricing</span>
-        <h2 class="text-4xl font-bold mt-2 text-gray-900">Simple, upfront fees</h2>
-        <p class="text-gray-500 mt-3 max-w-xl mx-auto">No hidden costs. Pay only for what you need. All consultations include follow-up notes sent to you by email.</p>
+        <span class="section-label fade-up text-cyan-500">Transparent pricing</span>
+        <h2 class="text-4xl font-bold mt-2 text-white">Simple, upfront fees</h2>
+        <p class="text-gray-400 mt-3 max-w-xl mx-auto">No hidden costs. Pay only for what you need. All consultations include follow-up notes sent to you by email.</p>
       </div>
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <div class="pricing-card rounded-2xl border border-gray-100 p-6">
-          <div class="text-sky-600 font-semibold text-sm mb-1">Repeat Prescription</div>
-          <div class="text-3xl font-extrabold text-gray-900 mb-1">$35<span class="text-lg font-normal text-gray-400"> + script fee</span></div>
-          <p class="text-gray-500 text-sm">Script sent direct to your pharmacy. No consultation needed for stable conditions.</p>
+        <div class="pricing-card fade-up rounded-2xl border border-white/10 bg-white/5 p-6">
+          <div class="text-sky-400 font-semibold text-sm mb-1">Repeat Prescription</div>
+          <div class="text-3xl font-extrabold text-white mb-1">$35<span class="text-lg font-normal text-gray-500"> + script fee</span></div>
+          <p class="text-gray-400 text-sm">Script sent direct to your pharmacy. No consultation needed for stable conditions.</p>
         </div>
-        <div class="pricing-card rounded-2xl border border-gray-100 p-6">
-          <div class="text-indigo-600 font-semibold text-sm mb-1">Sick Note</div>
-          <div class="text-3xl font-extrabold text-gray-900 mb-1">$35</div>
-          <p class="text-gray-500 text-sm">Official NZ medical certificate emailed to you within hours of your consult.</p>
+        <div class="pricing-card fade-up rounded-2xl border border-white/10 bg-white/5 p-6">
+          <div class="text-indigo-400 font-semibold text-sm mb-1">Medical Certificate</div>
+          <div class="text-3xl font-extrabold text-white mb-1">$35</div>
+          <p class="text-gray-400 text-sm">Official NZ medical certificate issued following telehealth clinical assessment. Emailed directly to you.</p>
         </div>
-        <div class="rounded-2xl border border-sky-100 bg-sky-50 p-6 hover:shadow-md transition relative">
-          <div class="absolute top-4 right-4 bg-sky-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">Popular</div>
-          <div class="text-sky-600 font-semibold text-sm mb-1">General Consult</div>
-          <div class="text-3xl font-extrabold text-gray-900 mb-1">$55</div>
-          <p class="text-gray-500 text-sm">Full video consultation with Dr Katoa. Acute illness, skin concerns, mental health check-in, and more.</p>
+        <div class="rounded-2xl border border-cyan-500/40 bg-cyan-500/10 p-6 hover:bg-cyan-500/15 transition relative">
+          <div class="absolute top-4 right-4 bg-cyan-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">Popular</div>
+          <div class="text-cyan-400 font-semibold text-sm mb-1">General Consult</div>
+          <div class="text-3xl font-extrabold text-white mb-1">$55</div>
+          <p class="text-gray-400 text-sm">Full video consultation with Dr Katoa. Acute illness, skin concerns, mental health check-in, and more.</p>
         </div>
-        <div class="pricing-card rounded-2xl border border-gray-100 p-6">
-          <div class="text-purple-600 font-semibold text-sm mb-1">Wegovy Assessment</div>
-          <div class="text-3xl font-extrabold text-gray-900 mb-1">$120</div>
-          <p class="text-gray-500 text-sm">Full eligibility assessment, programme explanation, and prescription if suitable.</p>
+        <div class="pricing-card fade-up rounded-2xl border border-white/10 bg-white/5 p-6">
+          <div class="text-purple-400 font-semibold text-sm mb-1">Wegovy Assessment</div>
+          <div class="text-3xl font-extrabold text-white mb-1">$120</div>
+          <p class="text-gray-400 text-sm">Full eligibility assessment, programme explanation, and prescription if suitable.</p>
         </div>
-        <div class="pricing-card rounded-2xl border border-gray-100 p-6">
-          <div class="text-teal-600 font-semibold text-sm mb-1">Dietician Consult</div>
-          <div class="text-3xl font-extrabold text-gray-900 mb-1">$95</div>
-          <p class="text-gray-500 text-sm">Personalised dietary plan from our registered dietician, with clinical notes sent to your GP.</p>
+        <div class="pricing-card fade-up rounded-2xl border border-white/10 bg-white/5 p-6">
+          <div class="text-teal-400 font-semibold text-sm mb-1">Dietician Consult</div>
+          <div class="text-3xl font-extrabold text-white mb-1">$95</div>
+          <p class="text-gray-400 text-sm">Personalised dietary plan from our registered dietician, with clinical notes sent to your GP.</p>
         </div>
-        <div class="pricing-card rounded-2xl border border-gray-100 p-6">
-          <div class="text-rose-600 font-semibold text-sm mb-1">Second Opinion</div>
-          <div class="text-3xl font-extrabold text-gray-900 mb-1">$85</div>
-          <p class="text-gray-500 text-sm">Independent clinical review of your diagnosis or treatment plan, with written summary.</p>
+        <div class="pricing-card fade-up rounded-2xl border border-white/10 bg-white/5 p-6">
+          <div class="text-rose-400 font-semibold text-sm mb-1">Second Opinion</div>
+          <div class="text-3xl font-extrabold text-white mb-1">$85</div>
+          <p class="text-gray-400 text-sm">Independent clinical review of your diagnosis or treatment plan, with written summary.</p>
         </div>
       </div>
-      <p class="text-center text-gray-400 text-sm mt-8">Payment by card at time of booking. Not currently subsidised — no Community Services Card required. Have a question? <a href="mailto:connectclinic@outlook.com" class="text-sky-600 hover:underline">Email us</a>.</p>
+      <p class="text-center text-gray-500 text-sm mt-8">Payment by card at time of booking. Not currently subsidised — no Community Services Card required. Have a question? <a href="mailto:connectclinic@outlook.com" class="text-cyan-400 hover:underline">Email us</a>.</p>
     </div>
   </section>
 
   <!-- ABOUT -->
-  <section id="about" class="py-20 px-4 bg-slate-50">
+  <section id="about" class="py-20 px-4 bg-[#050d1a]">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-14">
-        <span class="section-label text-cyan-500">Our team</span>
-        <h2 class="text-4xl font-bold mt-2 text-gray-900">Real clinicians, NZ-wide</h2>
-        <p class="text-gray-500 mt-3 max-w-xl mx-auto">Connect Clinic brings together a multi-disciplinary team of NZ-registered clinicians available across New Zealand.</p>
+        <span class="section-label fade-up text-cyan-500">Our team</span>
+        <h2 class="text-4xl font-bold mt-2 text-white">Real clinicians, NZ-wide</h2>
+        <p class="text-gray-400 mt-3 max-w-xl mx-auto">Connect Clinic brings together a multi-disciplinary team of NZ-registered clinicians available across New Zealand.</p>
       </div>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div class="bg-white rounded-2xl p-6 border border-gray-100 text-center hover:shadow-md transition">
-          <div class="w-14 h-14 bg-sky-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <svg class="w-7 h-7 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        <div class="bg-white/5 rounded-2xl p-6 border border-white/10 text-center hover:bg-white/8 transition">
+          <div class="w-14 h-14 bg-sky-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
           </div>
-          <h3 class="font-bold text-gray-900 mb-1">General Practitioners</h3>
-          <p class="text-gray-500 text-sm">MCNZ-registered GPs for consultations, prescriptions, and referrals.</p>
+          <h3 class="font-bold text-white mb-1">General Practitioners</h3>
+          <p class="text-gray-400 text-sm">MCNZ-registered GPs for consultations, prescriptions, and referrals.</p>
         </div>
-        <div class="bg-white rounded-2xl p-6 border border-gray-100 text-center hover:shadow-md transition">
-          <div class="w-14 h-14 bg-teal-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <svg class="w-7 h-7 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+        <div class="bg-white/5 rounded-2xl p-6 border border-white/10 text-center hover:bg-white/8 transition">
+          <div class="w-14 h-14 bg-teal-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
           </div>
-          <h3 class="font-bold text-gray-900 mb-1">Registered Nurses</h3>
-          <p class="text-gray-500 text-sm">NCNZ-registered nurses for triage, health assessments, and follow-up care.</p>
+          <h3 class="font-bold text-white mb-1">Registered Nurses</h3>
+          <p class="text-gray-400 text-sm">NCNZ-registered nurses for triage, health assessments, and follow-up care.</p>
         </div>
-        <div class="bg-white rounded-2xl p-6 border border-gray-100 text-center hover:shadow-md transition">
-          <div class="w-14 h-14 bg-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <div class="bg-white/5 rounded-2xl p-6 border border-white/10 text-center hover:bg-white/8 transition">
+          <div class="w-14 h-14 bg-indigo-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
           </div>
-          <h3 class="font-bold text-gray-900 mb-1">Dieticians</h3>
-          <p class="text-gray-500 text-sm">NZ-registered dieticians for personalised nutrition and weight management plans.</p>
+          <h3 class="font-bold text-white mb-1">Dieticians</h3>
+          <p class="text-gray-400 text-sm">NZ-registered dieticians for personalised nutrition and weight management plans.</p>
         </div>
-        <div class="bg-white rounded-2xl p-6 border border-gray-100 text-center hover:shadow-md transition">
-          <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <div class="bg-white/5 rounded-2xl p-6 border border-white/10 text-center hover:bg-white/8 transition">
+          <div class="w-14 h-14 bg-purple-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
           </div>
-          <h3 class="font-bold text-gray-900 mb-1">Health Coaches</h3>
-          <p class="text-gray-500 text-sm">Certified health coaches supporting lifestyle change, chronic condition management, and wellbeing.</p>
+          <h3 class="font-bold text-white mb-1">Health Coaches</h3>
+          <p class="text-gray-400 text-sm">Certified health coaches supporting lifestyle change, chronic condition management, and wellbeing.</p>
         </div>
       </div>
-      <p class="text-center text-gray-400 text-sm mt-8">All clinicians are NZ-registered and operating under New Zealand Medical Council and Nursing Council standards.</p>
+      <p class="text-center text-gray-500 text-sm mt-8">All clinicians are NZ-registered and operating under New Zealand Medical Council and Nursing Council standards.</p>
     </div>
   </section>
 
   <!-- DIETICIAN -->
-  <section id="dietician" class="py-20 px-4 bg-white">
+  <section id="dietician" class="py-20 px-4 bg-gray-900/40">
     <div class="max-w-6xl mx-auto">
       <div class="bg-gradient-to-br from-teal-500 to-sky-600 rounded-3xl p-10 md:p-14 text-white relative overflow-hidden">
         <div class="absolute right-0 top-0 w-64 h-64 bg-white/5 rounded-full -translate-y-16 translate-x-16"></div>
@@ -476,7 +551,7 @@
               <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>Clinical recommendations sent to your GP</span></li>
               <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>Ideal alongside Wegovy or weight management consults</span></li>
             </ul>
-            <a href="#book" @click="bookingService='Dietician Consultation'" class="inline-block bg-white text-teal-600 font-bold px-6 py-3 rounded-xl hover:bg-teal-50 transition">
+            <a href="#book" @click="bookingService='Dietician Consultation'" class="inline-block bg-white/15 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/25 transition border border-white/20">
               Book a dietician consult — $95
             </a>
           </div>
@@ -506,60 +581,60 @@
   </section>
 
   <!-- FAQ -->
-  <section id="faq" class="py-20 px-4 bg-slate-50">
+  <section id="faq" class="py-20 px-4 bg-[#050d1a]">
     <div class="max-w-3xl mx-auto">
       <div class="text-center mb-14">
-        <span class="section-label text-cyan-500">Common questions</span>
-        <h2 class="text-4xl font-bold mt-2 text-gray-900">Frequently asked questions</h2>
+        <span class="section-label fade-up text-cyan-500">Common questions</span>
+        <h2 class="text-4xl font-bold mt-2 text-white">Frequently asked questions</h2>
       </div>
-      <div class="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-100">
+      <div class="bg-white/5 rounded-2xl border border-white/10 divide-y divide-white/7">
 
         <div class="faq-item p-6 cursor-pointer" @click="openFaq = openFaq === 1 ? null : 1">
           <div class="flex justify-between items-center">
-            <h3 class="font-semibold text-gray-900">Do I need to be enrolled at Connect Clinic?</h3>
+            <h3 class="font-semibold text-white">Do I need to be enrolled at Connect Clinic?</h3>
             <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform" :class="openFaq === 1 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </div>
-          <div x-show="openFaq === 1" class="mt-3 text-gray-600 text-sm">No. Connect Clinic is a telehealth service — you don't need to leave your current GP. We see patients for specific needs like repeat scripts, sick notes, or assessments. For ongoing care we recommend staying enrolled with a regular practice.</div>
+          <div x-show="openFaq === 1" class="mt-3 text-gray-400 text-sm">No. Connect Clinic is a telehealth service — you don't need to leave your current GP. We see patients for specific needs like repeat prescriptions, medical certificates, or assessments. For ongoing care we recommend staying enrolled with a regular practice.</div>
         </div>
 
         <div class="faq-item p-6 cursor-pointer" @click="openFaq = openFaq === 2 ? null : 2">
           <div class="flex justify-between items-center">
-            <h3 class="font-semibold text-gray-900">How quickly can I get an appointment?</h3>
+            <h3 class="font-semibold text-white">How quickly can I get an appointment?</h3>
             <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform" :class="openFaq === 2 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </div>
-          <div x-show="openFaq === 2" class="mt-3 text-gray-600 text-sm">We aim to confirm appointments within a few hours of your booking request. Same-day consultations are often available. We'll contact you by email or phone to confirm your time.</div>
+          <div x-show="openFaq === 2" class="mt-3 text-gray-400 text-sm">We aim to confirm appointments within a few hours of your booking request. Same-day consultations are often available. We'll contact you by email or phone to confirm your time.</div>
         </div>
 
         <div class="faq-item p-6 cursor-pointer" @click="openFaq = openFaq === 3 ? null : 3">
           <div class="flex justify-between items-center">
-            <h3 class="font-semibold text-gray-900">Is this covered by ACC or a Community Services Card?</h3>
+            <h3 class="font-semibold text-white">Is this covered by ACC or a Community Services Card?</h3>
             <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform" :class="openFaq === 3 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </div>
-          <div x-show="openFaq === 3" class="mt-3 text-gray-600 text-sm">Connect Clinic is currently a private pay service and is not subsidised. Our fees are listed upfront so there are no surprises. ACC claims for injury-related consults may be available — ask us when you book.</div>
+          <div x-show="openFaq === 3" class="mt-3 text-gray-400 text-sm">Connect Clinic is currently a private pay service and is not subsidised. Our fees are listed upfront so there are no surprises. ACC claims for injury-related consults may be available — ask us when you book.</div>
         </div>
 
         <div class="faq-item p-6 cursor-pointer" @click="openFaq = openFaq === 4 ? null : 4">
           <div class="flex justify-between items-center">
-            <h3 class="font-semibold text-gray-900">What do I need for the video call?</h3>
+            <h3 class="font-semibold text-white">What do I need for the video call?</h3>
             <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform" :class="openFaq === 4 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </div>
-          <div x-show="openFaq === 4" class="mt-3 text-gray-600 text-sm">Just your phone, tablet, or computer with a camera and internet connection. We'll send you a link before your appointment — no app download required. Just click and you're in.</div>
+          <div x-show="openFaq === 4" class="mt-3 text-gray-400 text-sm">Just your phone, tablet, or computer with a camera and internet connection. We'll send you a link before your appointment — no app download required. Just click and you're in.</div>
         </div>
 
         <div class="faq-item p-6 cursor-pointer" @click="openFaq = openFaq === 5 ? null : 5">
           <div class="flex justify-between items-center">
-            <h3 class="font-semibold text-gray-900">Can you prescribe medications?</h3>
+            <h3 class="font-semibold text-white">Can you prescribe medications?</h3>
             <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform" :class="openFaq === 5 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </div>
-          <div x-show="openFaq === 5" class="mt-3 text-gray-600 text-sm">Yes. As a fully registered NZ GP, Dr Katoa can prescribe most medications. Prescriptions are sent electronically directly to your chosen pharmacy. Some controlled substances may require an in-person visit.</div>
+          <div x-show="openFaq === 5" class="mt-3 text-gray-400 text-sm">Yes. As a fully registered NZ GP, Dr Katoa can prescribe most medications. Prescriptions are sent electronically directly to your chosen pharmacy. Some controlled substances may require an in-person visit.</div>
         </div>
 
         <div class="p-6 cursor-pointer" @click="openFaq = openFaq === 6 ? null : 6">
           <div class="flex justify-between items-center">
-            <h3 class="font-semibold text-gray-900">Is my information kept private?</h3>
+            <h3 class="font-semibold text-white">Is my information kept private?</h3>
             <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform" :class="openFaq === 6 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </div>
-          <div x-show="openFaq === 6" class="mt-3 text-gray-600 text-sm">Absolutely. All consultations are confidential and managed in accordance with the NZ Health Information Privacy Code. Your records are stored securely and not shared without your consent.</div>
+          <div x-show="openFaq === 6" class="mt-3 text-gray-400 text-sm">Absolutely. All consultations are confidential and managed in accordance with the NZ Health Information Privacy Code. Your records are stored securely and not shared without your consent.</div>
         </div>
 
       </div>
@@ -567,59 +642,59 @@
   </section>
 
   <!-- BOOKING FORM -->
-  <section id="book" class="py-20 px-4 bg-white">
+  <section id="book" class="py-20 px-4 bg-gray-900/40">
     <div class="max-w-2xl mx-auto">
       <div class="text-center mb-10">
-        <span class="section-label text-cyan-500">Get started</span>
-        <h2 class="text-4xl font-bold mt-2">Book a consult</h2>
-        <p class="text-gray-500 mt-3">Answer a few quick questions to make sure we're the right service for you.</p>
+        <span class="section-label fade-up text-cyan-500">Get started</span>
+        <h2 class="text-4xl font-bold mt-2 text-white">Book a consult</h2>
+        <p class="text-gray-400 mt-3">Answer a few quick questions to make sure we're the right service for you.</p>
       </div>
 
       <!-- SCREENING GATE -->
       <div x-show="screenStep === 'questions' && !submitted">
-        <div class="bg-gray-50 rounded-2xl border border-gray-100 p-8">
+        <div class="bg-white/5 rounded-2xl border border-white/10 p-8">
           <div class="flex items-center gap-3 mb-6">
-            <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="w-10 h-10 bg-amber-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
             <div>
-              <p class="font-bold text-gray-900 text-sm">Quick eligibility check</p>
-              <p class="text-gray-500 text-xs mt-0.5">Tick any that apply to you right now. This helps us make sure you get the right care.</p>
+              <p class="font-bold text-white text-sm">Quick eligibility check</p>
+              <p class="text-gray-400 text-xs mt-0.5">Tick any that apply to you right now. This helps us make sure you get the right care.</p>
             </div>
           </div>
 
           <div class="space-y-3 mb-8">
-            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-red-200 hover:bg-red-50 transition" :class="screenAnswers.emergency ? 'border-red-300 bg-red-50' : ''">
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:border-red-500/40 hover:bg-red-950/30 transition" :class="screenAnswers.emergency ? 'border-red-300 bg-red-50' : ''">
               <input type="checkbox" x-model="screenAnswers.emergency" class="mt-0.5 accent-red-500 w-4 h-4 flex-shrink-0" />
-              <span class="text-sm text-gray-700">I think I may be having a <strong>medical emergency</strong> (e.g. unconscious, severe bleeding, unable to breathe)</span>
+              <span class="text-sm text-gray-300">I think I may be having a <strong>medical emergency</strong> (e.g. unconscious, severe bleeding, unable to breathe)</span>
             </label>
-            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-red-200 hover:bg-red-50 transition" :class="screenAnswers.chest ? 'border-red-300 bg-red-50' : ''">
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:border-red-500/40 hover:bg-red-950/30 transition" :class="screenAnswers.chest ? 'border-red-300 bg-red-50' : ''">
               <input type="checkbox" x-model="screenAnswers.chest" class="mt-0.5 accent-red-500 w-4 h-4 flex-shrink-0" />
-              <span class="text-sm text-gray-700">I have <strong>chest pain, shortness of breath, or stroke symptoms</strong> right now (facial drooping, arm weakness, slurred speech)</span>
+              <span class="text-sm text-gray-300">I have <strong>chest pain, shortness of breath, or stroke symptoms</strong> right now (facial drooping, arm weakness, slurred speech)</span>
             </label>
-            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-orange-200 hover:bg-orange-50 transition" :class="screenAnswers.mentalCrisis ? 'border-orange-300 bg-orange-50' : ''">
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:border-orange-500/40 hover:bg-orange-950/30 transition" :class="screenAnswers.mentalCrisis ? 'border-orange-300 bg-orange-50' : ''">
               <input type="checkbox" x-model="screenAnswers.mentalCrisis" class="mt-0.5 accent-orange-500 w-4 h-4 flex-shrink-0" />
-              <span class="text-sm text-gray-700">I am experiencing a <strong>mental health crisis</strong> or having thoughts of self-harm or suicide</span>
+              <span class="text-sm text-gray-300">I am experiencing a <strong>mental health crisis</strong> or having thoughts of self-harm or suicide</span>
             </label>
-            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-amber-200 hover:bg-amber-50 transition" :class="screenAnswers.under16 ? 'border-amber-300 bg-amber-50' : ''">
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:border-amber-500/40 hover:bg-amber-950/30 transition" :class="screenAnswers.under16 ? 'border-amber-300 bg-amber-50' : ''">
               <input type="checkbox" x-model="screenAnswers.under16" class="mt-0.5 accent-amber-500 w-4 h-4 flex-shrink-0" />
-              <span class="text-sm text-gray-700">The patient is <strong>under 16 years old</strong> and no parent or guardian is present</span>
+              <span class="text-sm text-gray-300">The patient is <strong>under 16 years old</strong> and no parent or guardian is present</span>
             </label>
-            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-amber-200 hover:bg-amber-50 transition" :class="screenAnswers.overseas ? 'border-amber-300 bg-amber-50' : ''">
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:border-amber-500/40 hover:bg-amber-950/30 transition" :class="screenAnswers.overseas ? 'border-amber-300 bg-amber-50' : ''">
               <input type="checkbox" x-model="screenAnswers.overseas" class="mt-0.5 accent-amber-500 w-4 h-4 flex-shrink-0" />
-              <span class="text-sm text-gray-700">I am <strong>not currently in New Zealand</strong></span>
+              <span class="text-sm text-gray-300">I am <strong>not currently in New Zealand</strong></span>
             </label>
-            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-amber-200 hover:bg-amber-50 transition" :class="screenAnswers.controlled ? 'border-amber-300 bg-amber-50' : ''">
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:border-amber-500/40 hover:bg-amber-950/30 transition" :class="screenAnswers.controlled ? 'border-amber-300 bg-amber-50' : ''">
               <input type="checkbox" x-model="screenAnswers.controlled" class="mt-0.5 accent-amber-500 w-4 h-4 flex-shrink-0" />
-              <span class="text-sm text-gray-700">I am seeking a prescription for a <strong>controlled drug</strong> (opioid painkillers, benzodiazepines, stimulants such as Ritalin)</span>
+              <span class="text-sm text-gray-300">I am seeking a prescription for a <strong>controlled drug</strong> (opioid painkillers, benzodiazepines, stimulants such as Ritalin)</span>
             </label>
-            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-amber-200 hover:bg-amber-50 transition" :class="screenAnswers.physical ? 'border-amber-300 bg-amber-50' : ''">
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:border-amber-500/40 hover:bg-amber-950/30 transition" :class="screenAnswers.physical ? 'border-amber-300 bg-amber-50' : ''">
               <input type="checkbox" x-model="screenAnswers.physical" class="mt-0.5 accent-amber-500 w-4 h-4 flex-shrink-0" />
-              <span class="text-sm text-gray-700">My concern requires a <strong>physical examination</strong> (e.g. wound, lump, eye or ear problem that must be looked at in person)</span>
+              <span class="text-sm text-gray-300">My concern requires a <strong>physical examination</strong> (e.g. wound, lump, eye or ear problem that must be looked at in person)</span>
             </label>
-            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-amber-200 hover:bg-amber-50 transition" :class="screenAnswers.pregnant ? 'border-amber-300 bg-amber-50' : ''">
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:border-amber-500/40 hover:bg-amber-950/30 transition" :class="screenAnswers.pregnant ? 'border-amber-300 bg-amber-50' : ''">
               <input type="checkbox" x-model="screenAnswers.pregnant" class="mt-0.5 accent-amber-500 w-4 h-4 flex-shrink-0" />
-              <span class="text-sm text-gray-700">I am <strong>pregnant</strong> and my concern is directly related to my pregnancy</span>
+              <span class="text-sm text-gray-300">I am <strong>pregnant</strong> and my concern is directly related to my pregnancy</span>
             </label>
           </div>
 
@@ -645,38 +720,38 @@
       <!-- BOOKING FORM (shown after screening) -->
       <div x-show="(screenStep === 'form' || screenStep === 'questions') && !submitted">
         <div x-show="screenStep === 'form'" class="mb-4">
-          <button @click="screenStep = 'questions'" class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition">
+          <button @click="screenStep = 'questions'" class="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
             Back to eligibility check
           </button>
         </div>
       </div>
 
-      <div x-show="screenStep === 'form' && !submitted" class="bg-gray-50 rounded-2xl border border-gray-100 p-8">
+      <div x-show="screenStep === 'form' && !submitted" class="bg-white/5 rounded-2xl border border-white/10 p-8">
         <form
           method="POST"
           @submit.prevent="submitBooking($el)"
         >
           <!-- Personal details -->
-          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Your details</p>
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Your details</p>
           <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">First name</label>
-              <input type="text" name="first_name" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" />
+              <label class="block text-sm font-medium text-gray-300 mb-1">First name</label>
+              <input type="text" name="first_name" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Last name</label>
-              <input type="text" name="last_name" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" />
+              <label class="block text-sm font-medium text-gray-300 mb-1">Last name</label>
+              <input type="text" name="last_name" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" />
             </div>
           </div>
           <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Date of birth</label>
-              <input type="date" name="date_of_birth" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" />
+              <label class="block text-sm font-medium text-gray-300 mb-1">Date of birth</label>
+              <input type="date" name="date_of_birth" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
-              <select name="gender" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300">
+              <label class="block text-sm font-medium text-gray-300 mb-1">Gender</label>
+              <select name="gender" class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50">
                 <option value="">Prefer not to say</option>
                 <option>Male</option>
                 <option>Female</option>
@@ -686,28 +761,28 @@
             </div>
           </div>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Current address</label>
-            <input type="text" name="address" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="Street address, suburb, city" />
+            <label class="block text-sm font-medium text-gray-300 mb-1">Current address</label>
+            <input type="text" name="address" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" placeholder="Street address, suburb, city" />
           </div>
           <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
-              <input type="email" name="email" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" />
+              <label class="block text-sm font-medium text-gray-300 mb-1">Email address</label>
+              <input type="email" name="email" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Phone number</label>
-              <input type="tel" name="phone" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="+64" />
+              <label class="block text-sm font-medium text-gray-300 mb-1">Phone number</label>
+              <input type="tel" name="phone" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" placeholder="+64" />
             </div>
           </div>
 
           <!-- Appointment details -->
           <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3 mt-6">Appointment details</p>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Service needed</label>
-            <select name="service" x-model="bookingService" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300">
+            <label class="block text-sm font-medium text-gray-300 mb-1">Service needed</label>
+            <select name="service" x-model="bookingService" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50">
               <option value="">Select a service...</option>
               <option>Repeat Prescription — $35</option>
-              <option>Sick Note / Medical Certificate — $35</option>
+              <option>Medical Certificate — $35</option>
               <option>General Telehealth Consult — $55</option>
               <option>Acute Illness Review — $55</option>
               <option>Wegovy / Weight Management Assessment — $120</option>
@@ -716,24 +791,24 @@
             </select>
           </div>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Main reason for booking</label>
-            <textarea name="reason" rows="3" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="e.g. need a repeat for my blood pressure medication, been unwell for 3 days with a cough and fever..."></textarea>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Main reason for booking</label>
+            <textarea name="reason" rows="3" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" placeholder="e.g. need a repeat for my blood pressure medication, been unwell for 3 days with a cough and fever..."></textarea>
           </div>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Current medications <span class="text-gray-400 font-normal">(if any)</span></label>
-            <input type="text" name="current_medications" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="e.g. metformin 500mg, ramipril 5mg" />
+            <label class="block text-sm font-medium text-gray-300 mb-1">Current medications <span class="text-gray-400 font-normal">(if any)</span></label>
+            <input type="text" name="current_medications" class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" placeholder="e.g. metformin 500mg, ramipril 5mg" />
           </div>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Allergies <span class="text-gray-400 font-normal">(if any)</span></label>
-            <input type="text" name="allergies" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="e.g. penicillin" />
+            <label class="block text-sm font-medium text-gray-300 mb-1">Allergies <span class="text-gray-400 font-normal">(if any)</span></label>
+            <input type="text" name="allergies" class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" placeholder="e.g. penicillin" />
           </div>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Preferred pharmacy <span class="text-gray-400 font-normal">(for prescriptions)</span></label>
-            <input type="text" name="preferred_pharmacy" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="e.g. Unichem Birkenhead, Auckland" />
+            <label class="block text-sm font-medium text-gray-300 mb-1">Preferred pharmacy <span class="text-gray-400 font-normal">(for prescriptions)</span></label>
+            <input type="text" name="preferred_pharmacy" class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" placeholder="e.g. Unichem Birkenhead, Auckland" />
           </div>
           <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Referral code <span class="text-gray-400 font-normal">(if referred by a GP or clinic)</span></label>
-            <input type="text" name="referral_code" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300" placeholder="e.g. REFGP001" />
+            <label class="block text-sm font-medium text-gray-300 mb-1">Referral code <span class="text-gray-400 font-normal">(if referred by a GP or clinic)</span></label>
+            <input type="text" name="referral_code" class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" placeholder="e.g. REFGP001" />
           </div>
           <button type="submit" :disabled="submitting" class="w-full bg-sky-500 hover:bg-sky-600 disabled:opacity-60 text-white font-bold py-3.5 rounded-xl transition text-base">
             <span x-text="submitting ? 'Submitting...' : 'Request appointment'"></span>
@@ -742,12 +817,12 @@
         </form>
       </div>
 
-      <div x-show="submitted" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
-        <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg class="w-8 h-8 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+      <div x-show="submitted" class="bg-white/5 rounded-2xl border border-white/10 p-12 text-center">
+        <div class="w-16 h-16 bg-teal-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
         </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-2">Request received!</h3>
-        <p class="text-gray-500 mb-4">One last step — pay now to secure your appointment. We'll confirm your time by email.</p>
+        <h3 class="text-xl font-bold text-white mb-2">Request received!</h3>
+        <p class="text-gray-400 mb-4">One last step — pay now to secure your appointment. We'll confirm your time by email.</p>
         <a x-show="stripeUrl" :href="stripeUrl" class="inline-block bg-sky-500 hover:bg-sky-600 text-white font-bold px-8 py-3.5 rounded-xl transition text-base mb-4">
           Pay now to confirm
         </a>
@@ -757,45 +832,45 @@
   </section>
 
   <!-- GP REFERRAL -->
-  <section id="refer" class="py-20 px-4 bg-gray-50">
+  <section id="refer" class="py-20 px-4 bg-[#050d1a]">
     <div class="max-w-2xl mx-auto">
       <div class="text-center mb-10">
-        <span class="section-label text-indigo-400">For healthcare providers</span>
-        <h2 class="text-4xl font-bold mt-2">Refer a patient</h2>
-        <p class="text-gray-500 mt-3">GP, specialist, or allied health provider? Refer directly to Connect Clinic for fast telehealth follow-up.</p>
+        <span class="section-label fade-up text-indigo-400">For healthcare providers</span>
+        <h2 class="text-4xl font-bold mt-2 text-white">Refer a patient</h2>
+        <p class="text-gray-400 mt-3">GP, specialist, or allied health provider? Refer directly to Connect Clinic for fast telehealth follow-up.</p>
       </div>
 
-      <div x-show="!referralSubmitted" class="bg-white rounded-2xl border border-gray-100 p-8">
+      <div x-show="!referralSubmitted" class="bg-white/5 rounded-2xl border border-white/10 p-8">
         <form
           method="POST"
           @submit.prevent="submitReferral($el)"
         >
           <input type="hidden" name="form_type" value="gp-referral" />
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Your name and clinic</label>
-            <input type="text" name="referrer_name" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="Dr Smith, Auckland Family Practice" />
+            <label class="block text-sm font-medium text-gray-300 mb-1">Your name and clinic</label>
+            <input type="text" name="referrer_name" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50" placeholder="Dr Smith, Auckland Family Practice" />
           </div>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Your email</label>
-            <input type="email" name="referrer_email" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+            <label class="block text-sm font-medium text-gray-300 mb-1">Your email</label>
+            <input type="email" name="referrer_email" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
           </div>
           <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Patient name</label>
-              <input type="text" name="patient_name" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+              <label class="block text-sm font-medium text-gray-300 mb-1">Patient name</label>
+              <input type="text" name="patient_name" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Patient DOB</label>
-              <input type="date" name="patient_dob" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+              <label class="block text-sm font-medium text-gray-300 mb-1">Patient DOB</label>
+              <input type="date" name="patient_dob" class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
             </div>
           </div>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Patient contact (phone or email)</label>
-            <input type="text" name="patient_contact" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+            <label class="block text-sm font-medium text-gray-300 mb-1">Patient contact (phone or email)</label>
+            <input type="text" name="patient_contact" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
           </div>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Referral reason</label>
-            <select name="referral_reason" required class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300">
+            <label class="block text-sm font-medium text-gray-300 mb-1">Referral reason</label>
+            <select name="referral_reason" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
               <option value="">Select...</option>
               <option>Repeat prescription management</option>
               <option>Wegovy / weight management assessment</option>
@@ -806,8 +881,8 @@
             </select>
           </div>
           <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Clinical notes / context</label>
-            <textarea name="clinical_notes" rows="4" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="Relevant history, current medications, reason for referral..."></textarea>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Clinical notes / context</label>
+            <textarea name="clinical_notes" rows="4" class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50" placeholder="Relevant history, current medications, reason for referral..."></textarea>
           </div>
           <button type="submit" :disabled="submitting" class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-bold py-3.5 rounded-xl transition text-base">
             <span x-text="submitting ? 'Submitting...' : 'Submit referral'"></span>
@@ -815,12 +890,12 @@
         </form>
       </div>
 
-      <div x-show="referralSubmitted" class="bg-white rounded-2xl border border-gray-100 p-12 text-center">
-        <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+      <div x-show="referralSubmitted" class="bg-white/5 rounded-2xl border border-white/10 p-12 text-center">
+        <div class="w-16 h-16 bg-indigo-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
         </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-2">Referral received!</h3>
-        <p class="text-gray-500">We'll contact the patient and send you a copy of the consultation notes.</p>
+        <h3 class="text-xl font-bold text-white mb-2">Referral received!</h3>
+        <p class="text-gray-400">We'll contact the patient and send you a copy of the consultation notes.</p>
       </div>
     </div>
   </section>
@@ -829,7 +904,7 @@
   <section class="py-20 px-4 bg-gray-950 text-white">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-14">
-        <span class="section-label text-cyan-500">Why choose us</span>
+        <span class="section-label fade-up text-cyan-500">Why choose us</span>
         <h2 class="text-4xl font-bold mt-2">How we compare</h2>
         <p class="text-gray-400 mt-3 max-w-xl mx-auto">Same NZ-registered doctors. Better value.</p>
       </div>
@@ -840,9 +915,7 @@
               <th class="text-left p-4 text-gray-400 font-medium w-1/3">Service</th>
               <th class="p-4 text-center">
                 <div class="inline-flex items-center gap-1.5 bg-cyan-500/20 border border-cyan-500/30 rounded-lg px-3 py-1.5">
-                  <div class="w-4 h-4 bg-gradient-to-br from-cyan-400 to-teal-500 rounded flex items-center justify-center">
-                    <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                  </div>
+                  <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="8" fill="url(#lg1)"/><path d="M24 11.5A9.5 9.5 0 1 0 24 24.5" stroke="white" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="24" cy="11.5" r="3" fill="white"/><circle cx="24" cy="24.5" r="3" fill="white"/></svg>
                   <span class="text-cyan-300 font-bold text-xs">Connect Clinic</span>
                 </div>
               </th>
@@ -867,7 +940,7 @@
               <td class="p-4 text-center text-gray-500">Included</td>
             </tr>
             <tr class="hover:bg-white/3 transition">
-              <td class="p-4 text-gray-300">Sick note</td>
+              <td class="p-4 text-gray-300">Medical certificate</td>
               <td class="p-4 text-center font-bold text-cyan-400">$35</td>
               <td class="p-4 text-center text-gray-500">~$49+</td>
               <td class="p-4 text-center text-gray-500">Included</td>
@@ -919,9 +992,17 @@
       <div class="grid md:grid-cols-3 gap-8 mb-8">
         <div>
           <div class="flex items-center gap-2 mb-3">
-            <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-sky-500 to-teal-500 flex items-center justify-center">
-              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            </div>
+            <svg class="w-7 h-7 flex-shrink-0" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="fb" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#07101E"/><stop offset="100%" stop-color="#0B1A30"/></linearGradient>
+                <linearGradient id="fa" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#14B8A6"/></linearGradient>
+              </defs>
+              <rect width="200" height="200" rx="48" fill="url(#fb)"/>
+              <path d="M128 58 A52 52 0 1 0 128 142" stroke="url(#fa)" stroke-width="14" stroke-linecap="round" fill="none"/>
+              <circle cx="128" cy="58" r="9" fill="#22D3EE"/>
+              <circle cx="128" cy="142" r="9" fill="#14B8A6"/>
+              <path d="M128 100 L148 100 L155 82 L163 118 L170 100 L185 100" stroke="#22D3EE" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
             <span class="font-bold text-white text-base">Connect Clinic</span>
           </div>
           <p class="text-sm">Real healthcare, wherever you are. Auckland GP available for telehealth consultations across New Zealand.</p>
@@ -931,7 +1012,7 @@
           <ul class="space-y-1.5 text-sm">
             <li><a href="#book" class="hover:text-white transition">Repeat Prescriptions</a></li>
             <li><a href="#book" class="hover:text-white transition">Acute Illness</a></li>
-            <li><a href="#book" class="hover:text-white transition">Sick Notes</a></li>
+            <li><a href="#book" class="hover:text-white transition">Medical Certificates</a></li>
             <li><a href="#book" class="hover:text-white transition">Wegovy Assessment</a></li>
             <li><a href="#dietician" class="hover:text-white transition">Dietician</a></li>
           </ul>
@@ -957,7 +1038,7 @@
   <div class="fixed bottom-0 left-0 right-0 z-40 md:hidden p-4 bg-gray-950/90 backdrop-blur-lg border-t border-white/10">
     <a href="#book" class="flex items-center justify-center gap-2 w-full bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-cyan-500/30 text-base">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-      Book a consult — from $35
+      Request a consultation — from $35
     </a>
   </div>
   <!-- Add bottom padding on mobile so content isn't hidden behind sticky CTA -->
@@ -973,7 +1054,7 @@
     //    Payment Links → + New → set price → copy URL
     const STRIPE_LINKS = {
       'Repeat Prescription — $35':                  'YOUR_STRIPE_LINK_REPEAT_SCRIPT',
-      'Sick Note / Medical Certificate — $35':      'YOUR_STRIPE_LINK_SICK_NOTE',
+      'Medical Certificate — $35':      'YOUR_STRIPE_LINK_SICK_NOTE',
       'General Telehealth Consult — $55':           'YOUR_STRIPE_LINK_CONSULT',
       'Acute Illness Review — $55':                 'YOUR_STRIPE_LINK_ACUTE',
       'Wegovy / Weight Management Assessment — $120': 'YOUR_STRIPE_LINK_WEGOVY',
@@ -993,5 +1074,19 @@
       if (!v.startsWith('YOUR_')) window._stripeLinks[k] = v;
     }
   </script>
+
+  <!-- Scroll animations -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+
 </body>
 </html>
