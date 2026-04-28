@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Connect Clinic — Telehealth GP, Auckland NZ</title>
-  <meta name="description" content="See an NZ-registered GP today from your phone or computer. Repeat prescriptions, medical certificates, Wegovy assessments — professional telehealth from Auckland." />
-  <meta property="og:title" content="Connect Clinic — Telehealth GP" />
-  <meta property="og:description" content="NZ-registered GP available for telehealth. Repeat prescriptions, medical certificates, Wegovy assessments and more." />
+  <title>Connect Clinic — Pasifika preventive telehealth, NZ</title>
+  <meta name="description" content="Pasifika-focused preventive telehealth for Aotearoa. GP + health coach, evidence-led care for mental wellbeing, lifestyle change, and early intervention. Tongan, Samoan, English." />
+  <meta property="og:title" content="Connect Clinic — Pasifika preventive telehealth" />
+  <meta property="og:description" content="GP + health coach telehealth for Pacific NZ. Mental wellbeing, lifestyle change, early intervention. Evidence-led. In your language." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://connectclinic.co.nz" />
   <meta name="keywords" content="telehealth GP New Zealand, online doctor NZ, repeat prescription online NZ, medical certificate online, Wegovy NZ, GLP-1 NZ, telehealth Auckland" />
@@ -170,6 +170,14 @@
 </head>
 <body class="bg-[#050d1a] text-white" x-data="{
   mobileMenu: false,
+  greetings: [
+    {hi: 'Kia ora', sub: 'Welcome to Connect Clinic'},
+    {hi: 'Mālō e lelei', sub: 'Talitali fiefia ki he Connect Clinic'},
+    {hi: 'Tālofa lava', sub: 'Afio mai i le Connect Clinic'},
+    {hi: 'Kia orana', sub: 'Welcome to Connect Clinic'},
+    {hi: 'Mauri', sub: 'Welcome to Connect Clinic'}
+  ],
+  greetingIdx: 0,
   bookingService: '',
   bookingRef: '',
   submitted: false,
@@ -319,7 +327,8 @@
       <div class="hidden md:flex items-center gap-7 text-sm font-medium text-gray-400">
         <a href="#services" class="hover:text-white transition-colors">Services</a>
         <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
-        <a href="#about" class="hover:text-white transition-colors">About</a>
+        <a href="#coach" class="hover:text-white transition-colors">Our Approach</a>
+        <a href="#about" class="hover:text-white transition-colors">Team</a>
         <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
         <a href="patient-guide.html" class="hover:text-white transition-colors">Patient Guide</a>
         <a href="#refer" class="hover:text-white transition-colors">Refer</a>
@@ -332,7 +341,8 @@
     <div x-show="mobileMenu" class="md:hidden px-4 pb-4 flex flex-col gap-3 text-sm font-medium border-t border-white/10 pt-3">
       <a href="#services" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Services</a>
       <a href="#pricing" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Pricing</a>
-      <a href="#about" @click="mobileMenu=false" class="text-gray-300 hover:text-white">About</a>
+      <a href="#coach" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Our Approach</a>
+      <a href="#about" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Team</a>
       <a href="#faq" @click="mobileMenu=false" class="text-gray-300 hover:text-white">FAQ</a>
       <a href="patient-guide.html" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Patient Guide</a>
       <a href="#refer" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Refer a patient</a>
@@ -346,15 +356,22 @@
     <div class="hero-orb orb-1 w-96 h-96 bg-cyan-500/10" style="top:-60px;left:-80px;"></div>
     <div class="hero-orb orb-2 w-80 h-80 bg-teal-500/8" style="bottom:0;right:-60px;"></div>
     <div class="max-w-5xl mx-auto relative z-10 text-center">
+      <div class="hero-reveal d1 mb-6"
+           x-init="setInterval(() => greetingIdx = (greetingIdx + 1) % greetings.length, 3200)">
+        <div class="text-3xl md:text-4xl font-bold text-white/90 mb-1 transition-all duration-500"
+             :key="greetingIdx"
+             x-text="greetings[greetingIdx].hi"></div>
+        <div class="text-sm text-emerald-300/80 font-medium tracking-wide" x-text="greetings[greetingIdx].sub"></div>
+      </div>
       <div class="hero-reveal d1 inline-flex items-center gap-1 glass rounded-full px-4 py-2 text-xs text-emerald-300 font-semibold mb-8 pulse-dot">
-        NZ-registered GP available now
+        Pasifika &amp; Māori preventive telehealth — GP + coach
       </div>
       <h1 class="text-6xl md:text-7xl font-black leading-[1.05] tracking-tight mb-6">
-        <span class="hero-reveal d2 block">Professional healthcare,</span>
-        <span class="hero-reveal d3 block text-gradient">from wherever you are.</span>
+        <span class="hero-reveal d2 block">Healthcare that catches</span>
+        <span class="hero-reveal d3 block text-gradient">things early.</span>
       </h1>
       <p class="hero-reveal d4 text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-        Consult an NZ-registered GP by video today. Repeat prescriptions, medical certificates, and specialist referrals — from <span class="text-white font-semibold">$35.</span>
+        Pasifika-focused telehealth for Aotearoa. A GP and a health coach, working together for your mental wellbeing, lifestyle, and early intervention — in English, Lea Faka-Tonga, or Gagana Sāmoa. Consults from <span class="text-white font-semibold">$35.</span>
       </p>
       <div class="hero-reveal d4 flex flex-col sm:flex-row gap-3 justify-center mb-14">
         <a href="#book" class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold px-8 py-4 rounded-xl transition text-base shadow-2xl shadow-cyan-500/30">
@@ -829,8 +846,9 @@
   <section id="about" class="py-20 px-4 bg-[#030a15]">
     <div class="max-w-5xl mx-auto">
       <div class="mb-14">
-        <span class="section-label fade-up text-cyan-500">Your doctor</span>
-        <h2 class="text-4xl font-bold mt-2 text-white">Meet Dr Francis Katoa</h2>
+        <span class="section-label fade-up text-cyan-500">Your team</span>
+        <h2 class="text-4xl font-bold mt-2 text-white">Meet Dr Francis Katoa &amp; Warren Aseloka</h2>
+        <p class="text-gray-400 mt-3 max-w-2xl">A GP and a health coach, working as a pair. Most clinics give you one or the other. Pacific NZ outcomes show that's why prescriptions don't become change.</p>
       </div>
       <div class="grid md:grid-cols-2 gap-12 items-start">
         <!-- Left: bio text -->
@@ -894,45 +912,176 @@
     </div>
   </section>
 
-  <!-- DIETICIAN -->
-  <section id="dietician" class="py-20 px-4 bg-gray-900/40">
+  <!-- HEALTH COACH (the differentiator: GP + Coach hybrid) -->
+  <section id="coach" class="py-20 px-4 bg-gray-900/40">
     <div class="max-w-6xl mx-auto">
       <div class="bg-gradient-to-br from-teal-500 to-sky-600 rounded-3xl p-10 md:p-14 text-white relative overflow-hidden">
         <div class="absolute right-0 top-0 w-64 h-64 bg-white/5 rounded-full -translate-y-16 translate-x-16"></div>
         <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
         <div class="relative z-10 grid md:grid-cols-2 gap-10 items-center">
           <div>
-            <span class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">Dietician Support</span>
-            <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-4">Expert dietary guidance, connected to your care</h2>
-            <p class="text-teal-100 mb-6">Our registered dietician reviews your clinical notes and builds a personalised dietary plan — whether you're managing weight, a chronic condition, or just want to feel better.</p>
+            <span class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">Our Difference: GP + Coach</span>
+            <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-4">A doctor diagnoses. A coach helps you change.</h2>
+            <p class="text-teal-100 mb-6">Most clinics stop at the prescription. We don't. <span class="text-white font-semibold">Warren Aseloka</span>, our health coach, walks alongside you between consults — building habits, removing barriers, keeping the changes that move the numbers. Pacific and Māori-led behaviour change, plain-language, evidence-based.</p>
             <ul class="space-y-3 mb-8">
-              <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>Reviews your health history and doctor notes</span></li>
-              <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>Creates a personalised meal and lifestyle plan</span></li>
-              <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>Clinical recommendations sent to your GP</span></li>
-              <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>Ideal alongside Wegovy or weight management consults</span></li>
+              <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>1:1 coaching for diabetes, weight, mental wellbeing, alcohol, smoking</span></li>
+              <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>Goals tracked between GP visits, fed back into your record</span></li>
+              <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>Whānau-centred — fits Pacific and Māori households, shift work, faith rhythms</span></li>
+              <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>Bridges the diagnosis-to-action gap that drives equity outcomes</span></li>
             </ul>
-            <a href="#book" @click="bookingService='Dietician Consultation — $95'" class="inline-block bg-white/15 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/25 transition border border-white/20">
-              Book a dietician consult — $95
+            <a href="#book" @click="bookingService='Health Coaching session — $65'" class="inline-block bg-white/15 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/25 transition border border-white/20">
+              Book a coaching session — $65
             </a>
           </div>
           <div class="hidden md:flex justify-center">
             <div class="grid grid-cols-2 gap-4">
               <div class="bg-white/15 rounded-2xl p-5 text-center">
-                <div class="text-3xl font-extrabold text-white mb-1">100%</div>
-                <div class="text-teal-100 text-xs">Personalised plans</div>
+                <div class="text-3xl font-extrabold text-white mb-1">58%</div>
+                <div class="text-teal-100 text-xs">T2DM risk reduction with structured coaching (DPP, NEJM 2002)</div>
               </div>
               <div class="bg-white/15 rounded-2xl p-5 text-center">
-                <div class="text-3xl font-extrabold text-white mb-1">NZ</div>
-                <div class="text-teal-100 text-xs">Registered dietician</div>
+                <div class="text-3xl font-extrabold text-white mb-1">3×</div>
+                <div class="text-teal-100 text-xs">Pacific NZ T2DM rate vs European — where coaching matters most</div>
               </div>
               <div class="bg-white/15 rounded-2xl p-5 text-center">
                 <div class="text-3xl font-extrabold text-white mb-1">GP</div>
-                <div class="text-teal-100 text-xs">Coordinated care</div>
+                <div class="text-teal-100 text-xs">Coordinated with your doctor every step</div>
               </div>
               <div class="bg-white/15 rounded-2xl p-5 text-center">
-                <div class="text-3xl font-extrabold text-white mb-1">48h</div>
-                <div class="text-teal-100 text-xs">Turnaround</div>
+                <div class="text-3xl font-extrabold text-white mb-1">2.4×</div>
+                <div class="text-teal-100 text-xs">Māori suicide rate vs non-Māori — where early intervention matters</div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- EVIDENCE -->
+  <section id="evidence" class="py-24 px-4 relative overflow-hidden" style="background:radial-gradient(ellipse 70% 90% at 50% 0%, rgba(20,184,166,0.08), transparent 60%), #030a15;">
+    <div class="max-w-6xl mx-auto relative z-10">
+      <div class="text-center mb-14">
+        <span class="section-label fade-up text-emerald-400">The evidence</span>
+        <h2 class="text-4xl md:text-5xl font-bold mt-2 text-white">Why this model. Why now.</h2>
+        <p class="text-gray-400 mt-3 max-w-2xl mx-auto">Three numbers explain the whole reason Connect Clinic exists. Each one is a closeable gap. Each one is what we work on every day.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-5">
+        <!-- Stat 1 -->
+        <div class="fade-up delay-1 relative bg-gradient-to-br from-rose-950/60 to-[#0a1525] border border-rose-500/20 rounded-3xl p-7 overflow-hidden">
+          <div class="absolute -top-12 -right-12 w-48 h-48 bg-rose-500/10 rounded-full blur-3xl"></div>
+          <div class="relative">
+            <div class="text-7xl font-black bg-gradient-to-br from-rose-300 to-rose-500 bg-clip-text text-transparent">5.5</div>
+            <div class="text-rose-300/90 text-sm font-bold uppercase tracking-wider mb-3">years</div>
+            <h3 class="text-white font-bold text-lg mb-2">Pacific life expectancy gap</h3>
+            <p class="text-gray-400 text-sm leading-relaxed mb-4">Pacific peoples in NZ live 5.5 fewer years than NZ Europeans. The gap is closable, and prevention is where it closes.</p>
+            <p class="text-xs text-gray-600 italic">Te Mana Ola — Pacific Health Strategy, MoH 2023</p>
+          </div>
+        </div>
+
+        <!-- Stat 2 -->
+        <div class="fade-up delay-2 relative bg-gradient-to-br from-amber-950/60 to-[#0a1525] border border-amber-500/20 rounded-3xl p-7 overflow-hidden">
+          <div class="absolute -top-12 -right-12 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl"></div>
+          <div class="relative">
+            <div class="text-7xl font-black bg-gradient-to-br from-amber-300 to-amber-500 bg-clip-text text-transparent">3×</div>
+            <div class="text-amber-300/90 text-sm font-bold uppercase tracking-wider mb-3">national rate</div>
+            <h3 class="text-white font-bold text-lg mb-2">Pasifika type 2 diabetes</h3>
+            <p class="text-gray-400 text-sm leading-relaxed mb-4">~15% of Pasifika adults vs ~5% of all New Zealanders. Lifestyle change with a coach prevents up to 58% of new cases (DPP, NEJM).</p>
+            <p class="text-xs text-gray-600 italic">BMC Health Services Research 2022 · Diabetes Prevention Program, NEJM 2002</p>
+          </div>
+        </div>
+
+        <!-- Stat 3 -->
+        <div class="fade-up delay-3 relative bg-gradient-to-br from-cyan-950/60 to-[#0a1525] border border-cyan-500/20 rounded-3xl p-7 overflow-hidden">
+          <div class="absolute -top-12 -right-12 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl"></div>
+          <div class="relative">
+            <div class="text-7xl font-black bg-gradient-to-br from-cyan-300 to-cyan-500 bg-clip-text text-transparent">35%</div>
+            <div class="text-cyan-300/90 text-sm font-bold uppercase tracking-wider mb-3">Pacific 65+</div>
+            <h3 class="text-white font-bold text-lg mb-2">Living with multimorbidity</h3>
+            <p class="text-gray-400 text-sm leading-relaxed mb-4">35% of Pacific peoples 65+ have multiple long-term conditions, vs 15% of Europeans. GP + coach beats GP alone for staying ahead of compounding diagnoses.</p>
+            <p class="text-xs text-gray-600 italic">Health &amp; Independence Report, MoH 2024 · Te Tumu Waiora evaluation, Te Pou</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Evidence stack callout -->
+      <div class="fade-up mt-10 bg-white/[0.03] border border-white/10 rounded-2xl p-6 md:p-8">
+        <div class="grid md:grid-cols-3 gap-6">
+          <div>
+            <h4 class="text-white font-bold mb-2 flex items-center gap-2">
+              <span class="w-7 h-7 bg-emerald-500/20 rounded-lg flex items-center justify-center text-emerald-400">📚</span>
+              Te Tumu Waiora
+            </h4>
+            <p class="text-gray-400 text-sm leading-relaxed">NZ's integrated primary mental health model. Health-coach-in-GP increased access for "young people, Māori and Pacific" — the three groups traditional services miss.</p>
+          </div>
+          <div>
+            <h4 class="text-white font-bold mb-2 flex items-center gap-2">
+              <span class="w-7 h-7 bg-cyan-500/20 rounded-lg flex items-center justify-center text-cyan-400">🌊</span>
+              OL@-OR@ Pacific study
+            </h4>
+            <p class="text-gray-400 text-sm leading-relaxed">HRC-funded, Pacific-led behaviour change trial. mHealth + community navigators, designed with Pacific families. Connect Clinic is the next iteration: 1:1 telehealth + coach.</p>
+          </div>
+          <div>
+            <h4 class="text-white font-bold mb-2 flex items-center gap-2">
+              <span class="w-7 h-7 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400">📈</span>
+              Whānau Ora
+            </h4>
+            <p class="text-gray-400 text-sm leading-relaxed">Whānau-led, outcome-funded. Pacific Whānau Ora (Cause Collective) commissions providers like us. Our outcomes report aligns with their indicators by design.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIRITI / MANAAKITANGA COMMITMENT -->
+  <section id="commitment" class="py-20 px-4 relative overflow-hidden" style="background:linear-gradient(135deg,#050d1a 0%,#0a1525 100%);">
+    <!-- Subtle Pacific-inspired background pattern (siapo/tapa motif) -->
+    <svg class="absolute inset-0 w-full h-full opacity-[0.04] pointer-events-none" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="tapa" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+          <path d="M40 5 L75 40 L40 75 L5 40 Z M40 20 L60 40 L40 60 L20 40 Z" fill="none" stroke="#22d3ee" stroke-width="1"/>
+          <circle cx="40" cy="40" r="3" fill="#14b8a6"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#tapa)"/>
+    </svg>
+    <div class="max-w-5xl mx-auto relative z-10">
+      <div class="grid md:grid-cols-2 gap-10 items-start">
+        <div>
+          <span class="section-label text-cyan-400">Our commitment</span>
+          <h2 class="text-3xl md:text-4xl font-bold mt-2 text-white mb-5">Built on manaakitanga, talanoa, and Te Tiriti.</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">Connect Clinic exists because Pacific and Māori whānau in Aotearoa have been told to fit into a system that wasn't designed around them. We're a Pacific-led GP-and-coach pair who flipped that. The system fits around you.</p>
+          <p class="text-gray-300 leading-relaxed">We honour Te Tiriti o Waitangi as the foundation of healthcare in Aotearoa. We work in partnership with iwi, hapū, and Pacific community providers. We hold ourselves accountable to whānau-led outcomes, not just visit counts.</p>
+        </div>
+        <div class="space-y-3">
+          <div class="bg-white/[0.04] border border-white/10 rounded-xl p-5 flex gap-4">
+            <div class="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0 text-cyan-400 font-black">🤝</div>
+            <div>
+              <h4 class="text-white font-bold text-sm mb-1">Manaakitanga</h4>
+              <p class="text-gray-400 text-sm">Care that lifts up whānau, never strips dignity. The way you're spoken to matters as much as the prescription.</p>
+            </div>
+          </div>
+          <div class="bg-white/[0.04] border border-white/10 rounded-xl p-5 flex gap-4">
+            <div class="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center flex-shrink-0 text-emerald-400 font-black">💬</div>
+            <div>
+              <h4 class="text-white font-bold text-sm mb-1">Talanoa</h4>
+              <p class="text-gray-400 text-sm">Real conversation, in your language. We slow down and listen — that's where the diagnosis actually lives.</p>
+            </div>
+          </div>
+          <div class="bg-white/[0.04] border border-white/10 rounded-xl p-5 flex gap-4">
+            <div class="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0 text-purple-400 font-black">⚖️</div>
+            <div>
+              <h4 class="text-white font-bold text-sm mb-1">Te Tiriti partnership</h4>
+              <p class="text-gray-400 text-sm">Tino rangatiratanga over your own health. We support, we don't dictate. Outcomes are yours and your whānau's.</p>
+            </div>
+          </div>
+          <div class="bg-white/[0.04] border border-white/10 rounded-xl p-5 flex gap-4">
+            <div class="w-10 h-10 bg-amber-500/20 rounded-lg flex items-center justify-center flex-shrink-0 text-amber-400 font-black">🌿</div>
+            <div>
+              <h4 class="text-white font-bold text-sm mb-1">Hauora — full health</h4>
+              <p class="text-gray-400 text-sm">Te Whare Tapa Whā: physical, mental, whānau, and spiritual. We don't treat one wall and ignore the other three.</p>
             </div>
           </div>
         </div>
@@ -1399,7 +1548,7 @@
               <span class="text-[0.65rem] text-gray-500 font-medium tracking-wider uppercase block mt-0.5">Limited</span>
             </div>
           </div>
-          <p class="text-gray-500 text-sm leading-relaxed mb-5">Real healthcare, wherever you are. NZ-registered GP available for telehealth across New Zealand.</p>
+          <p class="text-gray-500 text-sm leading-relaxed mb-5">Pasifika and Māori-focused preventive telehealth. GP + health coach, evidence-led, in your language. Auckland-based, serving NZ-wide.</p>
           <!-- Credential badges -->
           <div class="flex flex-wrap gap-2">
             <span class="inline-flex items-center gap-1 text-[0.65rem] font-semibold text-teal-400 bg-teal-400/10 border border-teal-400/20 rounded-full px-2.5 py-1">FRNZCGP</span>
@@ -1417,7 +1566,7 @@
             <li><a href="#book" class="hover:text-cyan-400 transition-colors">Medical Certificates</a></li>
             <li><a href="#book" class="hover:text-cyan-400 transition-colors">Wegovy Assessment</a></li>
             <li><a href="#book" class="hover:text-cyan-400 transition-colors">Second Opinion</a></li>
-            <li><a href="#book" class="hover:text-cyan-400 transition-colors">Dietician Consult</a></li>
+            <li><a href="#coach" class="hover:text-cyan-400 transition-colors">Health Coaching</a></li>
           </ul>
         </div>
 
@@ -1469,8 +1618,8 @@
       <!-- Bottom legal bar -->
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-gray-600">
         <div class="space-y-1">
-          <p class="font-medium text-gray-500">Connect Clinic Limited - Name reserved, incorporation pending</p>
-          <p>Trading as Connect Clinic. Dr Francis Katoa MBChB, FRNZCGP. NZ Medical Council registration current.</p>
+          <p class="font-medium text-gray-300">Connect Clinic Limited &middot; Incorporated 29 April 2026, Auckland NZ</p>
+          <p>Registered office: 26 Whakahui Lane, Mangere Bridge, Auckland 2022. Dr Francis Katoa MBChB, FRNZCGP &middot; NZ Medical Council registered.</p>
         </div>
         <div class="text-right space-y-1 shrink-0">
           <p>&copy; 2026 Connect Clinic Limited. All rights reserved.</p>
