@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mahino · Connect Clinic</title>
+  <meta name="description" content="Mahino — Pasifika medication literacy. Snap a photo of your script, get a plain-language explanation in English, Lea Faka-Tonga, or Gagana Sāmoa. On-device, free." />
+  <link rel="canonical" href="https://connectclinic.co.nz/mahino.html" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Mahino · Pasifika medication literacy" />
+  <meta property="og:description" content="Snap a photo of your script. Get a plain-language explanation in English, Lea Faka-Tonga, or Gagana Sāmoa. On-device, free." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://connectclinic.co.nz/mahino.html" />
+  <meta property="og:image" content="https://connectclinic.co.nz/assets/mahino/AppIcon-1024.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+    .hero-bg { background: #050d1a; position: relative; }
+    .hero-bg::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 30% 50%, rgba(14,116,144,0.25) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 20%, rgba(56,189,248,0.15) 0%, transparent 50%);
+    }
+    .pill-grad { background: linear-gradient(135deg, #48bcd3 0%, #10b981 100%); }
+    .glass { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+    .text-gradient { background: linear-gradient(135deg, #38bdf8 0%, #34d399 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .phone-shot {
+      border-radius: 36px;
+      box-shadow: 0 20px 80px -20px rgba(8,145,178,0.4), 0 8px 30px -10px rgba(0,0,0,0.6);
+      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+    }
+    .phone-shot:hover { transform: translateY(-6px); }
+  </style>
+</head>
+<body class="bg-[#050d1a] text-white">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 backdrop-blur bg-[rgba(5,13,26,0.85)] border-b border-white/5">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2.5">
+        <svg class="w-7 h-7" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="nb" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#07101E"/><stop offset="100%" stop-color="#0B1A30"/></linearGradient>
+            <linearGradient id="na" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#14B8A6"/></linearGradient>
+          </defs>
+          <rect width="200" height="200" rx="48" fill="url(#nb)"/>
+          <path d="M128 58 A52 52 0 1 0 128 142" stroke="url(#na)" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <circle cx="128" cy="58" r="9" fill="#22D3EE"/>
+          <circle cx="128" cy="142" r="9" fill="#14B8A6"/>
+          <path d="M128 100 L148 100 L155 82 L163 118 L170 100 L185 100" stroke="#22D3EE" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span class="font-bold text-base text-white">Connect Clinic</span>
+      </a>
+      <a href="/#apps" class="text-sm text-cyan-400 hover:text-cyan-300 transition-colors">← Back to apps</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero-bg py-20 md:py-28 px-4 relative overflow-hidden">
+    <div class="max-w-6xl mx-auto relative z-10">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+
+        <!-- Left: copy + CTAs -->
+        <div>
+          <div class="inline-flex items-center gap-2 mb-5">
+            <img src="/assets/mahino/AppIcon-1024.png" alt="Mahino app icon" class="w-16 h-16 rounded-2xl shadow-lg" />
+            <div>
+              <div class="text-xs text-emerald-300 font-bold uppercase tracking-widest">Connect Clinic Build wing</div>
+              <div class="text-2xl font-black text-white">Mahino</div>
+            </div>
+          </div>
+
+          <h1 class="text-4xl md:text-6xl font-black leading-[1.05] tracking-tight mb-5">
+            <span class="block">Talanoa about your medication,</span>
+            <span class="block text-gradient">in your language.</span>
+          </h1>
+
+          <p class="text-lg text-gray-400 mb-8 leading-relaxed">
+            Snap a photo of your script. Mahino reads the medication name, then explains it in plain language in
+            <span class="text-white font-semibold">English</span>,
+            <span class="text-white font-semibold">Lea Faka-Tonga</span>, or
+            <span class="text-white font-semibold">Gagana Sāmoa</span>. On-device. Free. No account.
+          </p>
+
+          <div class="flex flex-wrap gap-3 mb-10">
+            <a href="mailto:connectclinic@outlook.com?subject=TestFlight%20me%20on%20Mahino"
+               class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold px-6 py-3.5 rounded-xl transition shadow-lg shadow-cyan-500/30">
+              Be the first to test &rarr;
+            </a>
+            <a href="#how" class="border border-white/20 hover:border-white/40 text-gray-300 hover:text-white font-semibold px-6 py-3.5 rounded-xl transition">
+              How it works
+            </a>
+          </div>
+
+          <!-- Status badge -->
+          <div class="glass inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm">
+            <span class="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+            <span class="text-amber-300 font-semibold">TestFlight invites opening soon</span>
+          </div>
+        </div>
+
+        <!-- Right: app screenshots -->
+        <div class="grid grid-cols-2 gap-4">
+          <img src="/assets/mahino/screenshot-1-welcome.png" alt="Mahino welcome screen" class="phone-shot w-full" loading="lazy" />
+          <img src="/assets/mahino/screenshot-3-match.png" alt="Mahino match result for Metformin" class="phone-shot w-full mt-12" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section id="how" class="py-20 px-4 bg-[#030a14]">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="text-xs font-bold uppercase tracking-widest text-cyan-400">How it works</span>
+        <h2 class="text-3xl md:text-4xl font-bold mt-2 text-white">Three taps. No upload.</h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6">
+          <div class="w-10 h-10 rounded-full pill-grad flex items-center justify-center font-black text-white mb-4">1</div>
+          <h3 class="text-white font-bold text-lg mb-2">Snap your script</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Open Mahino, point your camera at the medication name. Apple Vision OCR reads it on your phone. The photo never leaves your device.</p>
+        </div>
+        <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6">
+          <div class="w-10 h-10 rounded-full pill-grad flex items-center justify-center font-black text-white mb-4">2</div>
+          <h3 class="text-white font-bold text-lg mb-2">Confirm the match</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Mahino fuzzy-matches the OCR text against 41 of the most-prescribed NZ medications. Confidence shown. Pick yours if there's more than one option.</p>
+        </div>
+        <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6">
+          <div class="w-10 h-10 rounded-full pill-grad flex items-center justify-center font-black text-white mb-4">3</div>
+          <h3 class="text-white font-bold text-lg mb-2">Read it in your language</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Four sections: what it's for, how to take it, what to watch for, and when to call your GP. Tap the language pill any time. Audio for English on launch.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREENSHOT GALLERY -->
+  <section class="py-20 px-4 bg-[#050d1a]">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">A look inside</span>
+        <h2 class="text-3xl md:text-4xl font-bold mt-2 text-white">Built for whānau, in their language.</h2>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <figure class="space-y-2">
+          <img src="/assets/mahino/screenshot-1-welcome.png" alt="Mahino welcome screen with privacy promise" class="phone-shot w-full" loading="lazy" />
+          <figcaption class="text-xs text-gray-500 text-center">Welcome &middot; on-device promise</figcaption>
+        </figure>
+        <figure class="space-y-2">
+          <img src="/assets/mahino/screenshot-2-scan.png" alt="Mahino scanning a prescription with cyan guide overlay" class="phone-shot w-full" loading="lazy" />
+          <figcaption class="text-xs text-gray-500 text-center">Scan a script</figcaption>
+        </figure>
+        <figure class="space-y-2">
+          <img src="/assets/mahino/screenshot-3-match.png" alt="Match result for Metformin showing 94% confidence" class="phone-shot w-full" loading="lazy" />
+          <figcaption class="text-xs text-gray-500 text-center">Match result</figcaption>
+        </figure>
+        <figure class="space-y-2">
+          <img src="/assets/mahino/screenshot-4-tongan.png" alt="Metformin detail page rendered in Lea Faka-Tonga" class="phone-shot w-full" loading="lazy" />
+          <figcaption class="text-xs text-gray-500 text-center">Lea Faka-Tonga</figcaption>
+        </figure>
+        <figure class="space-y-2">
+          <img src="/assets/mahino/screenshot-5-library.png" alt="Mahino library of 41 medications with privacy promise" class="phone-shot w-full" loading="lazy" />
+          <figcaption class="text-xs text-gray-500 text-center">Library &middot; 41 meds</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY PROMISE -->
+  <section class="py-20 px-4 bg-[#030a14]">
+    <div class="max-w-3xl mx-auto text-center">
+      <span class="text-xs font-bold uppercase tracking-widest text-cyan-400">Why it's private by default</span>
+      <h2 class="text-3xl md:text-4xl font-bold mt-2 mb-6 text-white">Your photo never leaves your phone.</h2>
+      <p class="text-gray-400 leading-relaxed mb-8">
+        Mahino uses Apple Vision on your device to read your script. The photo is processed in memory and discarded as soon as the medication name is found. No accounts, no analytics, no cloud, no contact with our servers. We don't even know you're using Mahino.
+      </p>
+      <div class="grid md:grid-cols-3 gap-4 text-left">
+        <div class="bg-white/[0.04] border border-white/10 rounded-xl p-5">
+          <div class="text-cyan-300 text-xs font-bold uppercase tracking-wider mb-2">No upload</div>
+          <p class="text-gray-400 text-sm">Photos and OCR text never leave the device.</p>
+        </div>
+        <div class="bg-white/[0.04] border border-white/10 rounded-xl p-5">
+          <div class="text-emerald-300 text-xs font-bold uppercase tracking-wider mb-2">No account</div>
+          <p class="text-gray-400 text-sm">No login, no email, no tracking ID.</p>
+        </div>
+        <div class="bg-white/[0.04] border border-white/10 rounded-xl p-5">
+          <div class="text-purple-300 text-xs font-bold uppercase tracking-wider mb-2">Free</div>
+          <p class="text-gray-400 text-sm">Built by Connect Clinic Limited and given out free.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRANSLATIONS NOTE -->
+  <section class="py-16 px-4 bg-[#050d1a]">
+    <div class="max-w-3xl mx-auto">
+      <div class="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-6">
+        <h3 class="text-amber-300 font-bold mb-3 flex items-center gap-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+          Tongan and Samoan content is in draft
+        </h3>
+        <p class="text-gray-300 text-sm leading-relaxed mb-3">
+          The English content has been reviewed by a GP. The Tongan and Samoan translations are working drafts pending fluent-speaker review.
+          You'll see a "draft translation" banner inside the app on any medication that hasn't been validated yet.
+        </p>
+        <p class="text-gray-400 text-sm leading-relaxed">
+          If you're a fluent Tongan or Samoan speaker (clinical background helpful but not required) and want to help us validate, we'd value your time.
+          <a href="mailto:connectclinic@outlook.com?subject=Mahino%20translation%20review" class="text-amber-300 hover:text-amber-200 font-semibold">Get in touch</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 px-4 bg-gradient-to-br from-cyan-900/40 to-emerald-900/40">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Be the first to test Mahino.</h2>
+      <p class="text-gray-300 mb-8">TestFlight invites are opening soon. Pop us an email and we'll send the invite the moment the build is live.</p>
+      <a href="mailto:connectclinic@outlook.com?subject=TestFlight%20me%20on%20Mahino" class="inline-block bg-white text-[#050d1a] font-bold px-8 py-4 rounded-xl hover:bg-cyan-100 transition text-base shadow-lg">
+        Email connectclinic@outlook.com
+      </a>
+    </div>
+  </section>
+
+  <footer class="border-t border-white/5 py-10 px-4 text-center text-xs text-gray-600">
+    <p>Mahino is built by Connect Clinic Limited. <a href="/" class="hover:text-cyan-400">Back to home</a> · <a href="/privacy.html" class="hover:text-cyan-400">Privacy</a> · <a href="/terms.html" class="hover:text-cyan-400">Terms</a></p>
+    <p class="mt-2">Information only — not medical advice. Always check with your GP, nurse, or pharmacist.</p>
+  </footer>
+
+</body>
+</html>

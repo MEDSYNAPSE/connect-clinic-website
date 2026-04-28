@@ -52,6 +52,12 @@
     <priority>0.95</priority>
   </url>
   <url>
+    <loc>https://connectclinic.co.nz/mahino.html</loc>
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://connectclinic.co.nz/patient-guide.html</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>monthly</changefreq>
