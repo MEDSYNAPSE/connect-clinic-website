@@ -8,11 +8,11 @@
   <meta property="og:title" content="Connect Clinic — A clinic that ships software" />
   <meta property="og:description" content="Two wings, one mission. Pacific GP+Coach telehealth + open-evidence apps + Pacific health research pipeline. Pacific and Māori-focused, Aotearoa NZ." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://connectclinic.co.nz" />
+  <meta property="og:url" content="https://connectclinic.co.nz/" />
   <meta name="keywords" content="telehealth GP New Zealand, online doctor NZ, repeat prescription online NZ, medical certificate online, Wegovy NZ, GLP-1 NZ, telehealth Auckland" />
   <meta name="author" content="Dr Francis Katoa, Connect Clinic" />
-  <meta property="og:image" content="https://kraftinacos.github.io/connect-clinic-website/assets/logo-full-dark.png" />
-  <link rel="canonical" href="https://connectclinic.nz" />
+  <meta property="og:image" content="https://medsynapse.github.io/connect-clinic-website/assets/og-image.png" />
+  <link rel="canonical" href="https://connectclinic.co.nz/" />
   <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">
@@ -20,8 +20,8 @@
     "@context": "https://schema.org",
     "@type": "MedicalBusiness",
     "name": "Connect Clinic",
-    "description": "Telehealth GP practice providing repeat prescriptions, medical certificates, and general health consultations across New Zealand.",
-    "url": "https://connectclinic.nz",
+    "description": "A Pacific GP-led telehealth clinic running a Care wing (GP plus Health Coach via Elixir PMS) and a Build & Research wing (mobile health apps and Pacific health research). Serving Pacific peoples and Māori across Aotearoa New Zealand.",
+    "url": "https://connectclinic.co.nz",
     "telephone": "+6498735039",
     "email": "connectclinic@outlook.com",
     "medicalSpecialty": "General Practice",
@@ -286,8 +286,9 @@
         });
       }
 
-      // 5. Set Stripe URL based on service selected
-      this.stripeUrl = window._stripeLinks[d.service] || '';
+      // 5. Set Stripe URL based on service selected (fall back gracefully if no link yet)
+      const link = window._stripeLinks[d.service] || '';
+      this.stripeUrl = (link && !link.startsWith('YOUR_STRIPE_LINK')) ? link : '';
       this.submitted = true;
     } catch(e) {
       console.error(e);
