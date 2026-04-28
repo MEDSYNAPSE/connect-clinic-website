@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Connect Clinic — Pasifika preventive telehealth, NZ</title>
-  <meta name="description" content="Pasifika-focused preventive telehealth for Aotearoa. GP + health coach, evidence-led care for mental wellbeing, lifestyle change, and early intervention. Tongan, Samoan, English." />
-  <meta property="og:title" content="Connect Clinic — Pasifika preventive telehealth" />
-  <meta property="og:description" content="GP + health coach telehealth for Pacific NZ. Mental wellbeing, lifestyle change, early intervention. Evidence-led. In your language." />
+  <title>Connect Clinic — Pasifika preventive telehealth + research, NZ</title>
+  <meta name="description" content="A clinic that ships software. Care wing: Pacific GP + health coach for mental wellbeing, lifestyle, early intervention. Build &amp; Research wing: Mahino, Talanoa, Malo apps + HRC research pipeline + open philanthropic funding." />
+  <meta property="og:title" content="Connect Clinic — A clinic that ships software" />
+  <meta property="og:description" content="Two wings, one mission. Pacific GP+Coach telehealth + open-evidence apps + Pacific health research pipeline. Pacific and Māori-focused, Aotearoa NZ." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://connectclinic.co.nz" />
   <meta name="keywords" content="telehealth GP New Zealand, online doctor NZ, repeat prescription online NZ, medical certificate online, Wegovy NZ, GLP-1 NZ, telehealth Auckland" />
@@ -343,12 +343,13 @@
         <span class="font-bold text-base text-white tracking-tight">Connect Clinic</span>
       </div>
       <div class="hidden md:flex items-center gap-7 text-sm font-medium text-gray-400">
-        <a href="#programs" class="hover:text-white transition-colors">Programmes</a>
-        <a href="#coach" class="hover:text-white transition-colors">Approach</a>
-        <a href="#evidence" class="hover:text-white transition-colors">Evidence</a>
-        <a href="#apps" class="hover:text-white transition-colors">Apps</a>
-        <a href="#about" class="hover:text-white transition-colors">Team</a>
-        <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
+        <a href="#care-wing" class="hover:text-white transition-colors">Care</a>
+        <a href="#programs" class="hover:text-cyan-400 transition-colors text-cyan-400/80">↳ Programmes</a>
+        <a href="#about" class="hover:text-cyan-400 transition-colors text-cyan-400/80">↳ Team</a>
+        <span class="text-white/20">·</span>
+        <a href="#build-wing" class="hover:text-white transition-colors">Build &amp; Research</a>
+        <a href="#apps" class="hover:text-emerald-400 transition-colors text-emerald-400/80">↳ Apps</a>
+        <a href="#research" class="hover:text-emerald-400 transition-colors text-emerald-400/80">↳ Research</a>
         <a href="patient-guide.html" class="hover:text-white transition-colors">Patient Guide</a>
         <a href="#refer" class="hover:text-white transition-colors">Refer</a>
         <a href="#book" class="bg-cyan-500 hover:bg-cyan-400 text-white px-5 py-2 rounded-lg transition font-semibold text-sm shadow-lg shadow-cyan-500/25">Book now</a>
@@ -358,12 +359,15 @@
       </button>
     </div>
     <div x-show="mobileMenu" class="md:hidden px-4 pb-4 flex flex-col gap-3 text-sm font-medium border-t border-white/10 pt-3">
-      <a href="#programs" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Programmes</a>
-      <a href="#coach" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Approach</a>
-      <a href="#evidence" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Evidence</a>
-      <a href="#apps" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Apps</a>
-      <a href="#about" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Team</a>
-      <a href="#pricing" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Pricing</a>
+      <div class="text-cyan-400 text-xs font-black uppercase tracking-widest pt-2">Care</div>
+      <a href="#about" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">Team — Francis &amp; Warren</a>
+      <a href="#programs" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">12-week programmes</a>
+      <a href="#coach" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">GP + Coach approach</a>
+      <a href="#pricing" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">Pricing</a>
+      <div class="text-emerald-400 text-xs font-black uppercase tracking-widest pt-3">Build &amp; Research</div>
+      <a href="#apps" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">Apps — Mahino · Talanoa · Malo</a>
+      <a href="#research" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">Research pipeline</a>
+      <a href="#evidence" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">Evidence</a>
       <a href="patient-guide.html" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Patient Guide</a>
       <a href="#refer" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Refer a patient</a>
       <a href="#book" @click="mobileMenu=false" class="bg-cyan-500 text-white px-4 py-2 rounded-lg text-center">Book now</a>
@@ -426,13 +430,13 @@
       </p>
       <div class="hero-reveal d4 flex flex-col sm:flex-row gap-3 justify-center mb-14">
         <a href="#book" class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold px-8 py-4 rounded-xl transition text-base shadow-2xl shadow-cyan-500/30">
-          Request a consultation
+          Book a consult — Care wing
+        </a>
+        <a href="#build-wing" class="bg-emerald-500 hover:bg-emerald-400 text-white font-bold px-8 py-4 rounded-xl transition text-base shadow-2xl shadow-emerald-500/30">
+          Partner with us — Build &amp; Research
         </a>
         <a href="patient-guide.html" class="border border-white/20 hover:border-white/40 text-gray-300 hover:text-white font-semibold px-8 py-4 rounded-xl transition text-base">
           Patient guide
-        </a>
-        <a href="#services" class="glass text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/10 transition text-base">
-          View services
         </a>
       </div>
       <div class="hero-reveal d4 flex flex-wrap justify-center gap-8 sm:gap-12 text-center border-t border-white/[0.08] pt-10">
@@ -487,6 +491,58 @@
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Te Tumu Waiora &amp; Diabetes Prevention Program evidence base</span>
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Same-day appointments NZ-wide</span>
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Apps built with whānau, not on whānau</span>
+    </div>
+  </section>
+
+
+  <!-- TWO PILLARS — site architecture: Clinical wing + Build & Research wing -->
+  <section id="pillars" class="py-20 px-4 relative overflow-hidden" style="background:linear-gradient(180deg,#030a14 0%,#050d1a 100%);">
+    <div class="max-w-6xl mx-auto relative z-10">
+      <div class="text-center mb-10">
+        <span class="section-label fade-up text-cyan-400">Two pillars, one mission</span>
+        <h2 class="text-4xl md:text-5xl font-bold mt-2 text-white">A clinic that ships software.</h2>
+        <p class="text-gray-400 mt-3 max-w-2xl mx-auto">Connect Clinic runs as two wings. <span class="text-white font-semibold">Care</span> sees patients. <span class="text-white font-semibold">Build &amp; Research</span> ships apps and runs trials. They feed each other — better evidence, better care.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-5 fade-up">
+        <!-- CARE WING -->
+        <a href="#care-wing" class="group relative bg-gradient-to-br from-cyan-950/60 to-[#0a1525] border border-cyan-500/25 hover:border-cyan-400/60 rounded-3xl p-8 transition-all overflow-hidden block">
+          <div class="absolute -top-12 -right-12 w-56 h-56 bg-cyan-500/10 rounded-full blur-3xl group-hover:bg-cyan-500/20 transition-all"></div>
+          <div class="relative">
+            <span class="inline-block bg-cyan-500/20 text-cyan-300 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full mb-5">Wing 01 · Care</span>
+            <h3 class="text-3xl md:text-4xl font-black text-white mb-3">Clinical</h3>
+            <p class="text-cyan-300/80 text-sm font-semibold mb-5">Dr Francis Katoa &amp; Warren Aseloka</p>
+            <p class="text-gray-300 leading-relaxed mb-6">A Pacific GP and a Pacific health coach, working as a pair. Telehealth via Elixir PMS. 12-week programmes for mental wellbeing, lifestyle, early intervention. In your language.</p>
+            <ul class="space-y-2 text-sm text-gray-400 mb-6">
+              <li class="flex items-start gap-2"><span class="text-cyan-400 mt-0.5">▸</span><span>Hauora Hinengaro · Mate Huka · Whakaora Wawe (12-wk programmes)</span></li>
+              <li class="flex items-start gap-2"><span class="text-cyan-400 mt-0.5">▸</span><span>One-off consults: scripts, certificates, GLP-1 assessment</span></li>
+              <li class="flex items-start gap-2"><span class="text-cyan-400 mt-0.5">▸</span><span>Coordinated GP + coach record-keeping in Elixir</span></li>
+            </ul>
+            <span class="inline-flex items-center gap-2 text-cyan-400 font-bold group-hover:gap-3 transition-all">
+              See clinical wing <span class="text-xl">→</span>
+            </span>
+          </div>
+        </a>
+
+        <!-- BUILD WING -->
+        <a href="#build-wing" class="group relative bg-gradient-to-br from-emerald-950/60 to-[#0a1525] border border-emerald-500/25 hover:border-emerald-400/60 rounded-3xl p-8 transition-all overflow-hidden block">
+          <div class="absolute -top-12 -right-12 w-56 h-56 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all"></div>
+          <div class="relative">
+            <span class="inline-block bg-emerald-500/20 text-emerald-300 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full mb-5">Wing 02 · Build &amp; Research</span>
+            <h3 class="text-3xl md:text-4xl font-black text-white mb-3">Build &amp; Research</h3>
+            <p class="text-emerald-300/80 text-sm font-semibold mb-5">Apps · Trials · Funding · Open evaluation</p>
+            <p class="text-gray-300 leading-relaxed mb-6">A clinic that ships software. Patient-facing apps in Pacific languages, Pacific-led research partnerships, and a funding pipeline that turns evidence into reach. Not vapourware — already shipping.</p>
+            <ul class="space-y-2 text-sm text-gray-400 mb-6">
+              <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span>Mahino · Talanoa · Malo (in development) — free, on-device</span></li>
+              <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span>HRC 2027 Pacific Projects co-design with Auckland Uni</span></li>
+              <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span>Te Whatu Ora PPDF, Cause Collective, Foundation North pipeline</span></li>
+            </ul>
+            <span class="inline-flex items-center gap-2 text-emerald-400 font-bold group-hover:gap-3 transition-all">
+              See build wing <span class="text-xl">→</span>
+            </span>
+          </div>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -901,6 +957,18 @@
     </div>
   </section>
 
+
+  <!-- ═══════════ CLINICAL WING ═══════════ -->
+  <section id="care-wing" class="pt-12 pb-2 px-4" style="background:linear-gradient(180deg,#050d1a 0%,#0a1525 30%,transparent 100%);">
+    <div class="max-w-6xl mx-auto text-center">
+      <div class="inline-flex items-center gap-3 mb-2">
+        <span class="text-cyan-500 text-xs font-black uppercase tracking-[0.4em]">Wing 01</span>
+        <span class="w-12 h-px bg-cyan-500/40"></span>
+        <span class="text-cyan-400 text-xs font-bold uppercase tracking-widest">Clinical care</span>
+      </div>
+      <p class="text-gray-500 text-sm">The patients-and-providers wing. GP + Coach, programmes, scripts.</p>
+    </div>
+  </section>
   <!-- ABOUT -->
   <section id="about" class="py-20 px-4 bg-[#030a15]">
     <div class="max-w-5xl mx-auto">
@@ -1242,6 +1310,18 @@
     </div>
   </section>
 
+
+  <!-- ═══════════ BUILD & RESEARCH WING ═══════════ -->
+  <section id="build-wing" class="pt-12 pb-2 px-4" style="background:linear-gradient(180deg,transparent 0%,#0a1525 30%,#030a14 100%);">
+    <div class="max-w-6xl mx-auto text-center">
+      <div class="inline-flex items-center gap-3 mb-2">
+        <span class="text-emerald-500 text-xs font-black uppercase tracking-[0.4em]">Wing 02</span>
+        <span class="w-12 h-px bg-emerald-500/40"></span>
+        <span class="text-emerald-400 text-xs font-bold uppercase tracking-widest">Build &amp; Research</span>
+      </div>
+      <p class="text-gray-500 text-sm">A clinic that ships software. Apps, trials, evidence, funding.</p>
+    </div>
+  </section>
   <!-- APPS (the patient-facing toolkit we build) -->
   <section id="apps" class="py-24 px-4 relative overflow-hidden" style="background:radial-gradient(ellipse 80% 70% at 30% 50%, rgba(34,211,238,0.06), transparent), #030a14;">
     <div class="max-w-6xl mx-auto">
@@ -1311,6 +1391,99 @@
       </div>
 
       <p class="fade-up text-center text-gray-500 text-xs mt-8 max-w-2xl mx-auto">Connect Clinic apps are funded by service revenue and grants — not patient data. We don't sell, share, or analytics-track. Open to research partnerships.</p>
+    </div>
+  </section>
+
+
+  <!-- RESEARCH PIPELINE & FUNDING (Build wing) -->
+  <section id="research" class="py-20 px-4 relative overflow-hidden" style="background:#030a14;">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12">
+        <span class="section-label fade-up text-emerald-400">Evidence is the product</span>
+        <h2 class="text-4xl md:text-5xl font-bold mt-2 text-white">Research pipeline &amp; open funding.</h2>
+        <p class="text-gray-400 mt-3 max-w-2xl mx-auto">We don't just deliver care. We measure it, write it up, and share what works. Funders see the same dashboard we do.</p>
+      </div>
+
+      <!-- Research pipeline -->
+      <div class="grid md:grid-cols-3 gap-5 mb-10">
+        <div class="fade-up delay-1 bg-white/[0.03] border border-white/10 rounded-2xl p-6">
+          <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider mb-2">In design</div>
+          <h3 class="text-white font-bold text-lg mb-2">HRC 2027 Pacific Projects</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Pragmatic mixed-methods trial of the GP+Coach telehealth model, partnering with University of Auckland Centre for Pacific and Global Health. Up to $1.2M, 36-month horizon, 300-400 Pacific whānau.</p>
+        </div>
+        <div class="fade-up delay-2 bg-white/[0.03] border border-white/10 rounded-2xl p-6">
+          <div class="text-cyan-400 text-xs font-bold uppercase tracking-wider mb-2">Aligned</div>
+          <h3 class="text-white font-bold text-lg mb-2">Te Tumu Waiora extension</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Building on NZ's evidence base for health-coach-in-GP models, focusing on the Pacific access gap that Te Pou's evaluation explicitly named. Outcomes published in Pacific Health Dialog.</p>
+        </div>
+        <div class="fade-up delay-3 bg-white/[0.03] border border-white/10 rounded-2xl p-6">
+          <div class="text-purple-400 text-xs font-bold uppercase tracking-wider mb-2">Operating</div>
+          <h3 class="text-white font-bold text-lg mb-2">Whānau Ora-aligned reporting</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">All programmes report against the four Whānau Ora outcomes by design. Quarterly outcome packs go to commissioning agencies and our own clinical governance.</p>
+        </div>
+      </div>
+
+      <!-- Funding partners -->
+      <div class="bg-gradient-to-br from-emerald-950/40 to-[#0a1525] border border-emerald-500/20 rounded-3xl p-8 md:p-10 mb-10">
+        <div class="grid md:grid-cols-5 gap-6 items-start">
+          <div class="md:col-span-2">
+            <span class="section-label text-emerald-400">Funding pipeline</span>
+            <h3 class="text-2xl md:text-3xl font-bold text-white mt-2 mb-3">Where the money comes from.</h3>
+            <p class="text-gray-400 text-sm leading-relaxed mb-4">Connect Clinic Limited delivers the clinical service. Connect Clinic Foundation (in formation) raises philanthropic capital and runs research. Two entities, one mission, separated for governance.</p>
+            <p class="text-gray-500 text-xs italic">90-day target: $40-70k secured + $200-400k pipeline.</p>
+          </div>
+          <div class="md:col-span-3 grid grid-cols-2 gap-3">
+            <div class="bg-white/[0.04] border border-white/10 rounded-xl p-4">
+              <div class="text-emerald-300 text-xs font-bold mb-1">Te Whatu Ora PPDF</div>
+              <div class="text-gray-400 text-xs">Pacific Provider Development Fund · ~$200k cycle</div>
+            </div>
+            <div class="bg-white/[0.04] border border-white/10 rounded-xl p-4">
+              <div class="text-cyan-300 text-xs font-bold mb-1">Cause Collective</div>
+              <div class="text-gray-400 text-xs">Tātou Whānau Ora commissioning · $50-300k recurring</div>
+            </div>
+            <div class="bg-white/[0.04] border border-white/10 rounded-xl p-4">
+              <div class="text-purple-300 text-xs font-bold mb-1">Foundation North</div>
+              <div class="text-gray-400 text-xs">Quick Response + Community Grants · auspice partnered</div>
+            </div>
+            <div class="bg-white/[0.04] border border-white/10 rounded-xl p-4">
+              <div class="text-amber-300 text-xs font-bold mb-1">HRC Pacific Health</div>
+              <div class="text-gray-400 text-xs">2027 Pacific Projects · $1.2M with university partner</div>
+            </div>
+            <div class="bg-white/[0.04] border border-white/10 rounded-xl p-4">
+              <div class="text-rose-300 text-xs font-bold mb-1">Le Va</div>
+              <div class="text-gray-400 text-xs">Pacific Suicide Prevention Community Fund · alignment</div>
+            </div>
+            <div class="bg-white/[0.04] border border-white/10 rounded-xl p-4">
+              <div class="text-sky-300 text-xs font-bold mb-1">Spark / One Foundation</div>
+              <div class="text-gray-400 text-xs">Digital equity partnerships · device + connectivity</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Open call for partners -->
+      <div class="grid md:grid-cols-2 gap-5">
+        <div class="fade-up bg-white/[0.04] border border-white/10 hover:border-cyan-400/40 rounded-2xl p-6 transition-all">
+          <h3 class="text-white font-bold text-lg mb-2">For researchers</h3>
+          <p class="text-gray-400 text-sm leading-relaxed mb-4">Pacific health trial site, GP-led, Pacific languages in-house, app team for digital adjuncts. We co-design and we deliver.</p>
+          <a href="mailto:connectclinic@outlook.com?subject=Research%20partnership" class="text-cyan-400 hover:text-cyan-300 text-sm font-semibold">connectclinic@outlook.com →</a>
+        </div>
+        <div class="fade-up bg-white/[0.04] border border-white/10 hover:border-emerald-400/40 rounded-2xl p-6 transition-all">
+          <h3 class="text-white font-bold text-lg mb-2">For funders &amp; philanthropy</h3>
+          <p class="text-gray-400 text-sm leading-relaxed mb-4">Pasifika and Māori preventive impact, transparent outcomes, dual-entity structure built for charitable capital. Talanoa anytime.</p>
+          <a href="mailto:connectclinic@outlook.com?subject=Funding%20conversation" class="text-emerald-400 hover:text-emerald-300 text-sm font-semibold">connectclinic@outlook.com →</a>
+        </div>
+        <div class="fade-up bg-white/[0.04] border border-white/10 hover:border-purple-400/40 rounded-2xl p-6 transition-all">
+          <h3 class="text-white font-bold text-lg mb-2">For engineers</h3>
+          <p class="text-gray-400 text-sm leading-relaxed mb-4">Swift / Pacific-language NLP / on-device ML / privacy-first design. We hire Pacific engineers and we ship every fortnight.</p>
+          <a href="mailto:connectclinic@outlook.com?subject=Engineering%20chat" class="text-purple-400 hover:text-purple-300 text-sm font-semibold">connectclinic@outlook.com →</a>
+        </div>
+        <div class="fade-up bg-white/[0.04] border border-white/10 hover:border-amber-400/40 rounded-2xl p-6 transition-all">
+          <h3 class="text-white font-bold text-lg mb-2">For Pacific &amp; Māori health leaders</h3>
+          <p class="text-gray-400 text-sm leading-relaxed mb-4">If your community needs what we have, let us know. We'll show up. Mana whenua &amp; Pacific community partnerships shape what we build.</p>
+          <a href="mailto:connectclinic@outlook.com?subject=Talanoa" class="text-amber-400 hover:text-amber-300 text-sm font-semibold">connectclinic@outlook.com →</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1773,7 +1946,7 @@
               <span class="text-[0.65rem] text-gray-500 font-medium tracking-wider uppercase block mt-0.5">Limited</span>
             </div>
           </div>
-          <p class="text-gray-500 text-sm leading-relaxed mb-5">Pasifika and Māori-focused preventive telehealth. GP + health coach, evidence-led, in your language. Auckland-based, serving NZ-wide.</p>
+          <p class="text-gray-500 text-sm leading-relaxed mb-5">A clinic that ships software. Pacific GP + Coach telehealth, plus apps and research. Two wings, one mission — Pasifika and Māori health equity. Auckland-based, serving NZ-wide.</p>
           <!-- Credential badges -->
           <div class="flex flex-wrap gap-2">
             <span class="inline-flex items-center gap-1 text-[0.65rem] font-semibold text-teal-400 bg-teal-400/10 border border-teal-400/20 rounded-full px-2.5 py-1">FRNZCGP</span>
@@ -1800,12 +1973,16 @@
         <div>
           <h4 class="text-white font-semibold mb-4 text-sm tracking-wide">Links</h4>
           <ul class="space-y-2.5 text-sm text-gray-500">
-            <li><a href="#programs" class="hover:text-cyan-400 transition-colors">Programmes</a></li>
-            <li><a href="#apps" class="hover:text-cyan-400 transition-colors">Apps</a></li>
+            <li><span class="text-cyan-400 text-xs font-bold uppercase tracking-wider">Care wing</span></li>
             <li><a href="#about" class="hover:text-cyan-400 transition-colors">Team</a></li>
-            <li><a href="#evidence" class="hover:text-cyan-400 transition-colors">Evidence</a></li>
+            <li><a href="#programs" class="hover:text-cyan-400 transition-colors">Programmes</a></li>
             <li><a href="patient-guide.html" class="hover:text-cyan-400 transition-colors">Patient Guide</a></li>
             <li><a href="#refer" class="hover:text-cyan-400 transition-colors">Refer a Patient</a></li>
+            <li class="pt-3"><span class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Build wing</span></li>
+            <li><a href="#apps" class="hover:text-emerald-400 transition-colors">Apps</a></li>
+            <li><a href="#research" class="hover:text-emerald-400 transition-colors">Research pipeline</a></li>
+            <li><a href="#evidence" class="hover:text-emerald-400 transition-colors">Evidence</a></li>
+            <li class="pt-3"><span class="text-gray-600 text-xs font-bold uppercase tracking-wider">Legal</span></li>
             <li><a href="privacy.html" class="hover:text-cyan-400 transition-colors">Privacy</a></li>
             <li><a href="terms.html" class="hover:text-cyan-400 transition-colors">Terms</a></li>
           </ul>
