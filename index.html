@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Connect Clinic — Pasifika preventive telehealth + research, NZ</title>
+  <title>Connect Clinic · Pasifika preventive telehealth + research, NZ</title>
   <meta name="description" content="A clinic that ships software. Care wing: Pacific GP + health coach for mental wellbeing, lifestyle, early intervention. Build &amp; Research wing: Mahino, Talanoa, Malo apps + HRC research pipeline + open philanthropic funding." />
-  <meta property="og:title" content="Connect Clinic — A clinic that ships software" />
+  <meta property="og:title" content="Connect Clinic · A clinic that ships software" />
   <meta property="og:description" content="Two wings, one mission. Pacific GP+Coach telehealth + open-evidence apps + Pacific health research pipeline. Pacific and Māori-focused, Aotearoa NZ." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://connectclinic.co.nz/" />
@@ -119,7 +119,8 @@
     @keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.4); } 50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(16,185,129,0); } }
 
     /* Misc */
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-padding-top: 4rem; scroll-padding-bottom: 6rem; }
+    [x-cloak] { display: none !important; }
     .faq-item { border-bottom: 1px solid rgba(255,255,255,0.07); }
     .glass { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
     .text-gradient { background: linear-gradient(135deg, #38bdf8 0%, #34d399 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
@@ -211,11 +212,11 @@
   get screenFailReason() {
     if (this.screenAnswers.emergency) return { title: 'This is a medical emergency', msg: 'Please call 111 immediately or go to your nearest Emergency Department.', action: 'tel:111', label: 'Call 111 now' };
     if (this.screenAnswers.chest) return { title: 'You may need urgent care', msg: 'Chest pain, difficulty breathing, or stroke symptoms need emergency assessment. Please call 111 or go to ED now.', action: 'tel:111', label: 'Call 111 now' };
-    if (this.screenAnswers.mentalCrisis) return { title: 'Please reach out for immediate support', msg: 'If you are in mental health crisis or having thoughts of suicide, please call or text 1737 — free, 24/7 support from a trained counsellor.', action: 'tel:1737', label: 'Call or text 1737' };
+    if (this.screenAnswers.mentalCrisis) return { title: 'Please reach out for immediate support', msg: 'If you are in mental health crisis or having thoughts of suicide, please call or text 1737, free, 24/7 support from a trained counsellor.', action: 'tel:1737', label: 'Call or text 1737' };
     if (this.screenAnswers.under16) return { title: 'Parental consent required', msg: 'Patients under 16 need a parent or guardian present for the consultation. Please book and note this in your request, or have a parent contact us directly.', action: null, label: null };
     if (this.screenAnswers.overseas) return { title: 'NZ residents only', msg: 'Connect Clinic is only available to patients currently in New Zealand. If you are overseas, please seek care from a local provider.', action: null, label: null };
     if (this.screenAnswers.controlled) return { title: 'In-person assessment required', msg: 'Prescriptions for controlled substances (opioids, benzodiazepines, stimulants) require an in-person assessment. Please visit your regular GP or nearest clinic.', action: null, label: null };
-    if (this.screenAnswers.physical) return { title: 'In-person assessment recommended', msg: 'Your condition may require a physical examination — for example, a wound, lump, ear or eye issue. We recommend seeing a doctor in person. If you are unsure, contact us first.', action: 'mailto:connectclinic@outlook.com', label: 'Ask us first' };
+    if (this.screenAnswers.physical) return { title: 'In-person assessment recommended', msg: 'Your condition may require a physical examination, for example, a wound, lump, ear or eye issue. We recommend seeing a doctor in person. If you are unsure, contact us first.', action: 'mailto:connectclinic@outlook.com', label: 'Ask us first' };
     if (this.screenAnswers.pregnant) return { title: 'Specialist maternity care recommended', msg: 'For pregnancy-related concerns, we recommend contacting your LMC, midwife, or maternity unit. We can assist with non-pregnancy issues during pregnancy.', action: null, label: null };
     return null;
   },
@@ -273,14 +274,14 @@
           method: 'POST',
           headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
           body: JSON.stringify({
-            _subject: 'Connect Clinic — Booking Request Received (' + ref + ')',
+            _subject: 'Connect Clinic, Booking Request Received (' + ref + ')',
             _template: 'table',
             name: patientName,
             booking_reference: ref,
             service_requested: d.service,
             next_step: 'Complete payment to confirm your appointment. Once payment is received, Dr Katoa will confirm your appointment time by email.',
             zoom_link: window._zoomLink,
-            zoom_instructions: 'Your consultation will take place via Zoom video call. Click the link above at your appointment time. No download required — works in any browser.',
+            zoom_instructions: 'Your consultation will take place via Zoom video call. Click the link above at your appointment time. No download required, works in any browser.',
             contact: 'connectclinic@outlook.com | 09 873 5039 ext. 800',
           })
         });
@@ -355,18 +356,19 @@
         <a href="#refer" class="hover:text-white transition-colors">Refer</a>
         <a href="#book" class="bg-cyan-500 hover:bg-cyan-400 text-white px-5 py-2 rounded-lg transition font-semibold text-sm shadow-lg shadow-cyan-500/25">Book now</a>
       </div>
-      <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <button @click="mobileMenu = !mobileMenu" @keydown.escape.window="mobileMenu=false" class="md:hidden p-2" :aria-label="mobileMenu ? 'Close menu' : 'Open menu'" :aria-expanded="mobileMenu">
+        <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
     <div x-show="mobileMenu" class="md:hidden px-4 pb-4 flex flex-col gap-3 text-sm font-medium border-t border-white/10 pt-3">
       <div class="text-cyan-400 text-xs font-black uppercase tracking-widest pt-2">Care</div>
-      <a href="#about" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">Team — Francis &amp; Warren</a>
+      <a href="#about" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">Team, Francis &amp; Warren</a>
       <a href="#programs" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">12-week programmes</a>
       <a href="#coach" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">GP + Coach approach</a>
       <a href="#pricing" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">Pricing</a>
       <div class="text-emerald-400 text-xs font-black uppercase tracking-widest pt-3">Build &amp; Research</div>
-      <a href="#apps" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">Apps — Mahino · Talanoa · Malo</a>
+      <a href="#apps" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">Apps, Mahino · Talanoa · Malo</a>
       <a href="#research" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">Research pipeline</a>
       <a href="#evidence" @click="mobileMenu=false" class="text-gray-300 hover:text-white pl-2">Evidence</a>
       <a href="patient-guide.html" @click="mobileMenu=false" class="text-gray-300 hover:text-white">Patient Guide</a>
@@ -378,7 +380,7 @@
   <!-- HERO -->
   <section class="hero-bg hero-grid text-white py-28 px-4 relative overflow-hidden">
     <!-- Pacific wave + rising sun motif (subtle, ambient) -->
-    <svg class="absolute inset-x-0 bottom-0 w-full opacity-50 pointer-events-none" style="height:280px;" viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <svg aria-hidden="true" class="absolute inset-x-0 bottom-0 w-full opacity-50 pointer-events-none" style="height:280px;" viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="hwave1" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#0891b2" stop-opacity="0.0"/>
@@ -413,28 +415,28 @@
     <div class="hero-orb orb-2 w-80 h-80 bg-teal-500/8" style="bottom:0;right:-60px;"></div>
     <div class="max-w-5xl mx-auto relative z-10 text-center">
       <div class="hero-reveal d1 mb-6"
-           x-init="setInterval(() => greetingIdx = (greetingIdx + 1) % greetings.length, 3200)">
+           x-init="if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(() => greetingIdx = (greetingIdx + 1) % greetings.length, 3200)">
         <div class="text-3xl md:text-4xl font-bold text-white/90 mb-1 transition-all duration-500"
              :key="greetingIdx"
              x-text="greetings[greetingIdx].hi"></div>
         <div class="text-sm text-emerald-300/80 font-medium tracking-wide" x-text="greetings[greetingIdx].sub"></div>
       </div>
       <div class="hero-reveal d1 inline-flex items-center gap-1 glass rounded-full px-4 py-2 text-xs text-emerald-300 font-semibold mb-8 pulse-dot">
-        Pasifika &amp; Māori preventive telehealth — GP + coach
+        Pasifika &amp; Māori preventive telehealth, GP + coach
       </div>
       <h1 class="text-6xl md:text-7xl font-black leading-[1.05] tracking-tight mb-6">
         <span class="hero-reveal d2 block">Healthcare that catches</span>
         <span class="hero-reveal d3 block text-gradient">things early.</span>
       </h1>
       <p class="hero-reveal d4 text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-        Pasifika-focused telehealth for Aotearoa. A GP and a health coach, working together for your mental wellbeing, lifestyle, and early intervention — in English, Lea Faka-Tonga, or Gagana Sāmoa. Consults from <span class="text-white font-semibold">$35.</span>
+        Pasifika-focused telehealth for Aotearoa. A GP and a health coach, working together for your mental wellbeing, lifestyle, and early intervention, in English, Lea Faka-Tonga, or Gagana Sāmoa. Consults from <span class="text-white font-semibold">$35.</span>
       </p>
       <div class="hero-reveal d4 flex flex-col sm:flex-row gap-3 justify-center mb-14">
         <a href="#book" class="bg-cyan-500 hover:bg-cyan-400 text-white font-bold px-8 py-4 rounded-xl transition text-base shadow-2xl shadow-cyan-500/30">
-          Book a consult — Care wing
+          Book a consult, Care wing
         </a>
         <a href="#build-wing" class="bg-emerald-500 hover:bg-emerald-400 text-white font-bold px-8 py-4 rounded-xl transition text-base shadow-2xl shadow-emerald-500/30">
-          Partner with us — Build &amp; Research
+          Partner with us, Build &amp; Research
         </a>
         <a href="patient-guide.html" class="border border-white/20 hover:border-white/40 text-gray-300 hover:text-white font-semibold px-8 py-4 rounded-xl transition text-base">
           Patient guide
@@ -470,13 +472,13 @@
   </section>
 
     <!-- TRUST BAR (scrolling ticker) -->
-  <section class="bg-[#030a15] border-y border-white/5 py-3 overflow-hidden">
+  <section aria-hidden="true" class="bg-[#030a15] border-y border-white/5 py-3 overflow-hidden">
     <div class="ticker-track gap-0 text-xs text-gray-500 font-medium">
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Pacific GP-led, evidence-based</span>
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>GP + Health Coach hybrid model</span>
-      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Te Tiriti partnership — tino rangatiratanga over your health</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Te Tiriti partnership, tino rangatiratanga over your health</span>
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Lea Faka-Tonga · Gagana Sāmoa · te reo welcomed</span>
-      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>On-device privacy — photos &amp; data never leave your phone</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>On-device privacy, photos &amp; data never leave your phone</span>
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Whānau Ora-aligned outcomes</span>
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>FRNZCGP-qualified GP</span>
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Te Tumu Waiora &amp; Diabetes Prevention Program evidence base</span>
@@ -484,9 +486,9 @@
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Apps built with whānau, not on whānau</span>
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Pacific GP-led, evidence-based</span>
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>GP + Health Coach hybrid model</span>
-      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Te Tiriti partnership — tino rangatiratanga over your health</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Te Tiriti partnership, tino rangatiratanga over your health</span>
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Lea Faka-Tonga · Gagana Sāmoa · te reo welcomed</span>
-      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>On-device privacy — photos &amp; data never leave your phone</span>
+      <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>On-device privacy, photos &amp; data never leave your phone</span>
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Whānau Ora-aligned outcomes</span>
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>FRNZCGP-qualified GP</span>
       <span class="flex items-center gap-2 px-8 whitespace-nowrap"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Te Tumu Waiora &amp; Diabetes Prevention Program evidence base</span>
@@ -496,13 +498,13 @@
   </section>
 
 
-  <!-- TWO PILLARS — site architecture: Clinical wing + Build & Research wing -->
+  <!-- TWO PILLARS, site architecture: Clinical wing + Build & Research wing -->
   <section id="pillars" class="py-20 px-4 relative overflow-hidden" style="background:linear-gradient(180deg,#030a14 0%,#050d1a 100%);">
     <div class="max-w-6xl mx-auto relative z-10">
       <div class="text-center mb-10">
         <span class="section-label fade-up text-cyan-400">Two pillars, one mission</span>
         <h2 class="text-4xl md:text-5xl font-bold mt-2 text-white">A clinic that ships software.</h2>
-        <p class="text-gray-400 mt-3 max-w-2xl mx-auto">Connect Clinic runs as two wings. <span class="text-white font-semibold">Care</span> sees patients. <span class="text-white font-semibold">Build &amp; Research</span> ships apps and runs trials. They feed each other — better evidence, better care.</p>
+        <p class="text-gray-400 mt-3 max-w-2xl mx-auto">Connect Clinic runs as two wings. <span class="text-white font-semibold">Care</span> sees patients. <span class="text-white font-semibold">Build &amp; Research</span> ships apps and runs trials. They feed each other, better evidence, better care.</p>
       </div>
 
       <div class="grid md:grid-cols-2 gap-5 fade-up">
@@ -532,9 +534,9 @@
             <span class="inline-block bg-emerald-500/20 text-emerald-300 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full mb-5">Wing 02 · Build &amp; Research</span>
             <h3 class="text-3xl md:text-4xl font-black text-white mb-3">Build &amp; Research</h3>
             <p class="text-emerald-300/80 text-sm font-semibold mb-5">Apps · Trials · Funding · Open evaluation</p>
-            <p class="text-gray-300 leading-relaxed mb-6">A clinic that ships software. Patient-facing apps in Pacific languages, Pacific-led research partnerships, and a funding pipeline that turns evidence into reach. Not vapourware — already shipping.</p>
+            <p class="text-gray-300 leading-relaxed mb-6">A clinic that ships software. Patient-facing apps in Pacific languages, Pacific-led research partnerships, and a funding pipeline that turns evidence into reach. Not vapourware, already shipping.</p>
             <ul class="space-y-2 text-sm text-gray-400 mb-6">
-              <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span>Mahino · Talanoa · Malo (in development) — free, on-device</span></li>
+              <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span>Mahino · Talanoa · Malo (in development), free, on-device</span></li>
               <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span>HRC 2027 Pacific Projects co-design with Auckland Uni</span></li>
               <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span>Te Whatu Ora PPDF, Cause Collective, Foundation North pipeline</span></li>
             </ul>
@@ -557,7 +559,7 @@
       </div>
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        <div class="service-card fade-up delay-1 bg-sky-950/40 rounded-2xl p-6 border border-sky-500/20 cursor-pointer hover:border-sky-400/40 transition-all" @click="bookingService='Repeat Prescription — $35'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
+        <div class="service-card fade-up delay-1 bg-sky-950/40 rounded-2xl p-6 border border-sky-500/20 cursor-pointer hover:border-sky-400/40 transition-all" @click="bookingService='Repeat Prescription, $35'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
           <div class="w-12 h-12 bg-sky-500 rounded-xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           </div>
@@ -566,16 +568,16 @@
           <div class="mt-4 text-sky-400 text-sm font-semibold">Book now &rarr;</div>
         </div>
 
-        <div class="service-card fade-up delay-2 bg-teal-950/40 rounded-2xl p-6 border border-teal-500/20 cursor-pointer hover:border-teal-400/40 transition-all" @click="bookingService='Acute Illness Review — $55'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
+        <div class="service-card fade-up delay-2 bg-teal-950/40 rounded-2xl p-6 border border-teal-500/20 cursor-pointer hover:border-teal-400/40 transition-all" @click="bookingService='Acute Illness Review, $55'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
           <div class="w-12 h-12 bg-teal-500 rounded-xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
           </div>
           <h3 class="text-lg font-bold text-white mb-2">Acute Illness Review</h3>
-          <p class="text-gray-400 text-sm">Feeling unwell and can't get in to see anyone? Our doctor assesses your symptoms and advises on treatment — all from home.</p>
+          <p class="text-gray-400 text-sm">Feeling unwell and can't get in to see anyone? Our doctor assesses your symptoms and advises on treatment, all from home.</p>
           <div class="mt-4 text-teal-400 text-sm font-semibold">Book now &rarr;</div>
         </div>
 
-        <div class="service-card fade-up delay-3 bg-indigo-950/40 rounded-2xl p-6 border border-indigo-500/20 cursor-pointer hover:border-indigo-400/40 transition-all" @click="bookingService='Medical Certificate — $35'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
+        <div class="service-card fade-up delay-3 bg-indigo-950/40 rounded-2xl p-6 border border-indigo-500/20 cursor-pointer hover:border-indigo-400/40 transition-all" @click="bookingService='Medical Certificate, $35'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
           <div class="w-12 h-12 bg-indigo-500 rounded-xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
           </div>
@@ -584,25 +586,25 @@
           <div class="mt-4 text-indigo-400 text-sm font-semibold">Book now &rarr;</div>
         </div>
 
-        <div class="service-card fade-up delay-4 bg-purple-950/40 rounded-2xl p-6 border border-purple-500/20 cursor-pointer hover:border-purple-400/40 transition-all" @click="bookingService='Wegovy / Weight Management Assessment — $120'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
+        <div class="service-card fade-up delay-4 bg-purple-950/40 rounded-2xl p-6 border border-purple-500/20 cursor-pointer hover:border-purple-400/40 transition-all" @click="bookingService='Wegovy / Weight Management Assessment, $120'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
           <div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
           </div>
           <h3 class="text-lg font-bold text-white mb-2">Wegovy Eligibility Assessment</h3>
-          <p class="text-gray-400 text-sm">Interested in Wegovy for weight management? We assess your eligibility, explain the programme, and guide your next steps — all online.</p>
+          <p class="text-gray-400 text-sm">Interested in Wegovy for weight management? We assess your eligibility, explain the programme, and guide your next steps, all online.</p>
           <div class="mt-4 text-purple-400 text-sm font-semibold">Find out if you qualify &rarr;</div>
         </div>
 
-        <div class="service-card fade-up delay-5 bg-orange-950/30 rounded-2xl p-6 border border-orange-500/20 cursor-pointer hover:border-orange-400/40 transition-all" @click="bookingService='General Telehealth Consult — $55'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
+        <div class="service-card fade-up delay-5 bg-orange-950/30 rounded-2xl p-6 border border-orange-500/20 cursor-pointer hover:border-orange-400/40 transition-all" @click="bookingService='General Telehealth Consult, $55'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
           <div class="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
           </div>
           <h3 class="text-lg font-bold text-white mb-2">General Telehealth Consult</h3>
-          <p class="text-gray-400 text-sm">Health question, skin concern, mental health check-in, or anything else — see a doctor face-to-face over video from wherever you are.</p>
+          <p class="text-gray-400 text-sm">Health question, skin concern, mental health check-in, or anything else, see a doctor face-to-face over video from wherever you are.</p>
           <div class="mt-4 text-orange-400 text-sm font-semibold">Book now &rarr;</div>
         </div>
 
-        <div class="service-card fade-up delay-6 bg-rose-950/40 rounded-2xl p-6 border border-rose-500/20 cursor-pointer hover:border-rose-400/40 transition-all" @click="bookingService='Second Opinion / Condition Review — $85'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
+        <div class="service-card fade-up delay-6 bg-rose-950/40 rounded-2xl p-6 border border-rose-500/20 cursor-pointer hover:border-rose-400/40 transition-all" @click="bookingService='Second Opinion / Condition Review, $85'; document.getElementById('book').scrollIntoView({behavior:'smooth'})">
           <div class="w-12 h-12 bg-rose-500 rounded-xl flex items-center justify-center mb-4">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
           </div>
@@ -634,7 +636,7 @@
           </div>
           <div>
             <h3 class="text-lg font-bold text-white mb-2">Book online</h3>
-            <p class="text-gray-400 text-sm leading-relaxed">Choose your service, complete a short health form. Pay securely. We confirm your time by email — usually within a few hours.</p>
+            <p class="text-gray-400 text-sm leading-relaxed">Choose your service, complete a short health form. Pay securely. We confirm your time by email, usually within a few hours.</p>
           </div>
           <div class="w-full pt-3 border-t border-white/[0.06]">
             <div class="flex items-center gap-2 text-xs text-sky-400">
@@ -651,7 +653,7 @@
           </div>
           <div>
             <h3 class="text-lg font-bold text-white mb-2">See Dr Katoa</h3>
-            <p class="text-gray-400 text-sm leading-relaxed">Join the Zoom call at your appointment time. One click — no download required. A proper, thorough clinical consultation.</p>
+            <p class="text-gray-400 text-sm leading-relaxed">Join the Zoom call at your appointment time. One click, no download required. A proper, thorough clinical consultation.</p>
           </div>
           <div class="w-full pt-3 border-t border-white/[0.06]">
             <div class="flex items-center gap-2 text-xs text-teal-400">
@@ -725,12 +727,12 @@
             <tr class="hover:bg-white/[0.02] transition-colors">
               <td class="px-6 py-4 text-gray-400 font-medium">Repeat prescription</td>
               <td class="px-6 py-4 text-center text-gray-500">Book, wait, travel</td>
-              <td class="px-6 py-4 text-center font-semibold text-teal-400" style="background:rgba(8,145,178,0.05);">Online — from $35</td>
+              <td class="px-6 py-4 text-center font-semibold text-teal-400" style="background:rgba(8,145,178,0.05);">Online, from $35</td>
             </tr>
             <tr class="hover:bg-white/[0.02] transition-colors">
               <td class="px-6 py-4 text-gray-400 font-medium">Medical certificate</td>
               <td class="px-6 py-4 text-center text-gray-500">In-person</td>
-              <td class="px-6 py-4 text-center font-semibold text-teal-400" style="background:rgba(8,145,178,0.05);">Issued same day — $35</td>
+              <td class="px-6 py-4 text-center font-semibold text-teal-400" style="background:rgba(8,145,178,0.05);">Issued same day, $35</td>
             </tr>
             <tr class="hover:bg-white/[0.02] transition-colors">
               <td class="px-6 py-4 text-gray-400 font-medium">Prescription delivery</td>
@@ -768,125 +770,28 @@
     </div>
   </section>
 
-  <!-- TESTIMONIALS -->
-  <section id="testimonials" class="py-20 px-4 bg-[#050d1a]">
-    <div class="max-w-6xl mx-auto">
-      <div class="text-center mb-14">
-        <span class="section-label fade-up text-cyan-500">Patient experiences</span>
-        <h2 class="text-4xl font-bold mt-2 text-white">Real patients. Real results.</h2>
-        <p class="text-gray-400 mt-3">Verified feedback from patients across New Zealand.</p>
-      </div>
-      <!-- Star summary bar -->
-      <div class="fade-up flex items-center justify-center gap-4 mb-10">
-        <div class="flex items-center gap-1">
-          <span class="text-amber-400 text-2xl">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+  <!-- OUTCOMES (replaces fictional testimonials, awaiting real reviews) -->
+  <section id="outcomes" class="py-20 px-4 bg-[#050d1a]">
+    <div class="max-w-4xl mx-auto text-center">
+      <span class="section-label fade-up text-cyan-500">What we measure</span>
+      <h2 class="text-4xl font-bold mt-2 text-white">Outcomes published when they exist.</h2>
+      <p class="text-gray-400 mt-4 max-w-2xl mx-auto">We won't put fake testimonials on this page. As patients consent and programmes complete, anonymised outcome data and (with permission) real patient stories will land here. Our standard of evidence is how funders and patients judge us &mdash; we hold ourselves to it.</p>
+      <div class="grid sm:grid-cols-3 gap-4 mt-10 fade-up">
+        <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6">
+          <div class="text-cyan-400 text-xs font-bold uppercase tracking-wider mb-2">Year-1 target</div>
+          <div class="text-3xl font-black text-white mb-1">100</div>
+          <div class="text-gray-500 text-sm">Pacific &amp; M&#257;ori wh&#257;nau through programmes</div>
         </div>
-        <div class="h-6 w-px bg-white/10"></div>
-        <div>
-          <span class="text-white font-bold text-lg">5.0</span>
-          <span class="text-gray-500 text-sm ml-1">average rating</span>
+        <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6">
+          <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider mb-2">Reported quarterly</div>
+          <div class="text-3xl font-black text-white mb-1">HbA1c · K10</div>
+          <div class="text-gray-500 text-sm">Pre / post programme outcomes vs baseline</div>
         </div>
-        <div class="h-6 w-px bg-white/10"></div>
-        <span class="text-gray-500 text-sm">NZ-wide patients</span>
-      </div>
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-
-        <!-- Card 1 -->
-        <div class="fade-up flex flex-col bg-white/[0.04] hover:bg-white/[0.07] transition-colors border border-white/10 rounded-2xl p-6 gap-4">
-          <div class="flex items-start justify-between gap-2">
-            <span class="text-[0.65rem] font-bold text-sky-400 bg-sky-400/10 border border-sky-400/20 rounded-full px-2.5 py-1 uppercase tracking-wider">Repeat Prescription</span>
-            <span class="text-amber-400 text-sm tracking-wide flex-shrink-0">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          </div>
-          <p class="text-gray-300 leading-relaxed flex-1 text-sm">"I'm a shift worker and getting to a GP during business hours is nearly impossible. Had my metformin repeat sorted before my next shift even started. Script was at Chemist Warehouse by 11am."</p>
-          <div class="flex items-center gap-3 pt-2 border-t border-white/[0.06]">
-            <div class="w-8 h-8 rounded-full bg-sky-500/20 flex items-center justify-center text-sky-400 font-bold text-sm flex-shrink-0">S</div>
-            <div>
-              <div class="font-semibold text-white text-sm">Sarah T.</div>
-              <div class="text-gray-600 text-xs">Auckland, shift worker</div>
-            </div>
-          </div>
+        <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6">
+          <div class="text-purple-400 text-xs font-bold uppercase tracking-wider mb-2">Open</div>
+          <div class="text-3xl font-black text-white mb-1">Whānau Ora</div>
+          <div class="text-gray-500 text-sm">Outcome packs to commissioning agencies</div>
         </div>
-
-        <!-- Card 2 -->
-        <div class="fade-up delay-1 flex flex-col bg-white/[0.04] hover:bg-white/[0.07] transition-colors border border-white/10 rounded-2xl p-6 gap-4">
-          <div class="flex items-start justify-between gap-2">
-            <span class="text-[0.65rem] font-bold text-indigo-400 bg-indigo-400/10 border border-indigo-400/20 rounded-full px-2.5 py-1 uppercase tracking-wider">Medical Certificate</span>
-            <span class="text-amber-400 text-sm tracking-wide flex-shrink-0">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          </div>
-          <p class="text-gray-300 leading-relaxed flex-1 text-sm">"Dr Katoa was professional and actually listened to me. The Zoom call took less than 10 minutes and the certificate was in my inbox before the consultation had even ended. My employer was happy."</p>
-          <div class="flex items-center gap-3 pt-2 border-t border-white/[0.06]">
-            <div class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-sm flex-shrink-0">M</div>
-            <div>
-              <div class="font-semibold text-white text-sm">Mele F.</div>
-              <div class="text-gray-600 text-xs">South Auckland</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="fade-up delay-2 flex flex-col bg-white/[0.04] hover:bg-white/[0.07] transition-colors border border-white/10 rounded-2xl p-6 gap-4">
-          <div class="flex items-start justify-between gap-2">
-            <span class="text-[0.65rem] font-bold text-orange-400 bg-orange-400/10 border border-orange-400/20 rounded-full px-2.5 py-1 uppercase tracking-wider">General Consult</span>
-            <span class="text-amber-400 text-sm tracking-wide flex-shrink-0">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          </div>
-          <p class="text-gray-300 leading-relaxed flex-1 text-sm">"As a solo mum I can't easily drag two kids to a GP. Connect Clinic let me see a real doctor from my kitchen while the kids were napping. Exactly what I needed."</p>
-          <div class="flex items-center gap-3 pt-2 border-t border-white/[0.06]">
-            <div class="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 font-bold text-sm flex-shrink-0">A</div>
-            <div>
-              <div class="font-semibold text-white text-sm">Aroha K.</div>
-              <div class="text-gray-600 text-xs">Hamilton, solo parent</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="fade-up delay-1 flex flex-col bg-white/[0.04] hover:bg-white/[0.07] transition-colors border border-white/10 rounded-2xl p-6 gap-4">
-          <div class="flex items-start justify-between gap-2">
-            <span class="text-[0.65rem] font-bold text-purple-400 bg-purple-400/10 border border-purple-400/20 rounded-full px-2.5 py-1 uppercase tracking-wider">Wegovy Assessment</span>
-            <span class="text-amber-400 text-sm tracking-wide flex-shrink-0">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          </div>
-          <p class="text-gray-300 leading-relaxed flex-1 text-sm">"I'd been putting off the Wegovy conversation because I didn't know where to start. Dr Katoa walked me through my eligibility, the dosing schedule, and exactly what to expect. No judgment, no rush."</p>
-          <div class="flex items-center gap-3 pt-2 border-t border-white/[0.06]">
-            <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-sm flex-shrink-0">T</div>
-            <div>
-              <div class="font-semibold text-white text-sm">Tane R.</div>
-              <div class="text-gray-600 text-xs">Wellington</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="fade-up delay-2 flex flex-col bg-white/[0.04] hover:bg-white/[0.07] transition-colors border border-white/10 rounded-2xl p-6 gap-4">
-          <div class="flex items-start justify-between gap-2">
-            <span class="text-[0.65rem] font-bold text-teal-400 bg-teal-400/10 border border-teal-400/20 rounded-full px-2.5 py-1 uppercase tracking-wider">Acute Illness</span>
-            <span class="text-amber-400 text-sm tracking-wide flex-shrink-0">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          </div>
-          <p class="text-gray-300 leading-relaxed flex-1 text-sm">"Got sick on a Tuesday, couldn't get a GP appointment for 3 days. Connect Clinic had me seen in a couple of hours. Prescription was ready at my pharmacy that afternoon. Way better than going to an after-hours clinic."</p>
-          <div class="flex items-center gap-3 pt-2 border-t border-white/[0.06]">
-            <div class="w-8 h-8 rounded-full bg-teal-500/20 flex items-center justify-center text-teal-400 font-bold text-sm flex-shrink-0">J</div>
-            <div>
-              <div class="font-semibold text-white text-sm">James W.</div>
-              <div class="text-gray-600 text-xs">Christchurch</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 6 -->
-        <div class="fade-up delay-3 flex flex-col bg-white/[0.04] hover:bg-white/[0.07] transition-colors border border-white/10 rounded-2xl p-6 gap-4">
-          <div class="flex items-start justify-between gap-2">
-            <span class="text-[0.65rem] font-bold text-rose-400 bg-rose-400/10 border border-rose-400/20 rounded-full px-2.5 py-1 uppercase tracking-wider">Second Opinion</span>
-            <span class="text-amber-400 text-sm tracking-wide flex-shrink-0">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          </div>
-          <p class="text-gray-300 leading-relaxed flex-1 text-sm">"After getting a diagnosis I wasn't sure about, I booked a second opinion with Dr Katoa. He took his time, reviewed everything properly, and explained it all clearly. Gave me real confidence about my next steps."</p>
-          <div class="flex items-center gap-3 pt-2 border-t border-white/[0.06]">
-            <div class="w-8 h-8 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-400 font-bold text-sm flex-shrink-0">L</div>
-            <div>
-              <div class="font-semibold text-white text-sm">Lani V.</div>
-              <div class="text-gray-600 text-xs">North Shore, Auckland</div>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
@@ -922,9 +827,9 @@
           <p class="text-gray-400 text-sm">Full eligibility assessment, programme explanation, and prescription if suitable.</p>
         </div>
         <div class="pricing-card fade-up rounded-2xl border border-white/10 bg-white/5 p-6">
-          <div class="text-teal-400 font-semibold text-sm mb-1">Dietician Consult</div>
+          <div class="text-teal-400 font-semibold text-sm mb-1">Health Coaching</div>
           <div class="text-3xl font-extrabold text-white mb-1">$95</div>
-          <p class="text-gray-400 text-sm">Personalised dietary plan from our registered dietician, with clinical notes sent to your GP.</p>
+          <p class="text-gray-400 text-sm">Personalised dietary plan from our health coach, with clinical notes sent to your GP.</p>
         </div>
         <div class="pricing-card fade-up rounded-2xl border border-white/10 bg-white/5 p-6">
           <div class="text-rose-400 font-semibold text-sm mb-1">Second Opinion</div>
@@ -954,7 +859,7 @@
           </div>
         </div>
       </div>
-      <p class="text-center text-gray-500 text-sm mt-6">Payment by card at time of booking. Private service — not Pharmac subsidised. Have a question? <a href="mailto:connectclinic@outlook.com" class="text-cyan-400 hover:underline">Email us</a>.</p>
+      <p class="text-center text-gray-500 text-sm mt-6">Payment by card at time of booking. Private service, not Pharmac subsidised. Have a question? <a href="mailto:connectclinic@outlook.com" class="text-cyan-400 hover:underline">Email us</a>.</p>
     </div>
   </section>
 
@@ -981,11 +886,11 @@
       <div class="grid md:grid-cols-2 gap-12 items-start">
         <!-- Left: bio text -->
         <div class="fade-up space-y-6">
-          <p class="text-gray-300 leading-relaxed">Dr Francis Katoa is an FRNZCGP-qualified General Practitioner with experience across community health, telehealth, weight management, and Pasifika health. He is a Fellow of the Royal New Zealand College of General Practitioners and brings a genuine commitment to accessible, high-quality care for all New Zealanders.</p>
-          <p class="text-gray-300 leading-relaxed">Connect Clinic was built on a simple idea: that every New Zealander deserves timely access to a real GP — without the wait, without the travel.</p>
+          <p class="text-gray-300 leading-relaxed">Dr Francis Katoa is a Tongan-NZ GP, FRNZCGP-qualified, with practice across community health, telehealth, weight management, and Pasifika health. RNZCGP Pasifika NAC representative.</p>
+          <p class="text-gray-300 leading-relaxed">Connect Clinic was built on a simple idea: that every New Zealander deserves timely access to a real GP, without the wait, without the travel.</p>
           <blockquote class="border-l-4 border-cyan-500 pl-4 italic text-gray-300">
             "Healthcare should fit around your life, not the other way around."
-            <span class="block not-italic font-semibold text-white mt-2 text-sm">— Dr Francis Katoa</span>
+            <span class="block not-italic font-semibold text-white mt-2 text-sm">– Dr Francis Katoa</span>
           </blockquote>
         </div>
         <!-- Right: credential cards -->
@@ -1050,15 +955,15 @@
           <div>
             <span class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">Our Difference: GP + Coach</span>
             <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-4">A doctor diagnoses. A coach helps you change.</h2>
-            <p class="text-teal-100 mb-6">Most clinics stop at the prescription. We don't. <span class="text-white font-semibold">Warren Aseloka</span>, our health coach, walks alongside you between consults — building habits, removing barriers, keeping the changes that move the numbers. Pacific and Māori-led behaviour change, plain-language, evidence-based.</p>
+            <p class="text-teal-100 mb-6">Most clinics stop at the prescription. We don't. <span class="text-white font-semibold">Warren Aseloka</span>, our health coach, walks alongside you between consults, building habits, removing barriers, keeping the changes that move the numbers. Pacific and Māori-led behaviour change, plain-language, evidence-based.</p>
             <ul class="space-y-3 mb-8">
               <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>1:1 coaching for diabetes, weight, mental wellbeing, alcohol, smoking</span></li>
               <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>Goals tracked between GP visits, fed back into your record</span></li>
-              <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>Whānau-centred — fits Pacific and Māori households, shift work, faith rhythms</span></li>
+              <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>Whānau-centred, fits Pacific and Māori households, shift work, faith rhythms</span></li>
               <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal-200 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span>Bridges the diagnosis-to-action gap that drives equity outcomes</span></li>
             </ul>
-            <a href="#book" @click="bookingService='Health Coaching session — $65'" class="inline-block bg-white/15 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/25 transition border border-white/20">
-              Book a coaching session — $65
+            <a href="#book" @click="bookingService='Health Coaching session, $65'" class="inline-block bg-white/15 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/25 transition border border-white/20">
+              Book a coaching session, $65
             </a>
           </div>
           <div class="hidden md:flex justify-center">
@@ -1069,7 +974,7 @@
               </div>
               <div class="bg-white/15 rounded-2xl p-5 text-center">
                 <div class="text-3xl font-extrabold text-white mb-1">3×</div>
-                <div class="text-teal-100 text-xs">Pacific NZ T2DM rate vs European — where coaching matters most</div>
+                <div class="text-teal-100 text-xs">Pacific NZ T2DM rate vs European, where coaching matters most</div>
               </div>
               <div class="bg-white/15 rounded-2xl p-5 text-center">
                 <div class="text-3xl font-extrabold text-white mb-1">GP</div>
@@ -1077,7 +982,7 @@
               </div>
               <div class="bg-white/15 rounded-2xl p-5 text-center">
                 <div class="text-3xl font-extrabold text-white mb-1">2.4×</div>
-                <div class="text-teal-100 text-xs">Māori suicide rate vs non-Māori — where early intervention matters</div>
+                <div class="text-teal-100 text-xs">Māori suicide rate vs non-Māori, where early intervention matters</div>
               </div>
             </div>
           </div>
@@ -1105,7 +1010,7 @@
             <div class="text-rose-300/90 text-sm font-bold uppercase tracking-wider mb-3">years</div>
             <h3 class="text-white font-bold text-lg mb-2">Pacific life expectancy gap</h3>
             <p class="text-gray-400 text-sm leading-relaxed mb-4">Pacific peoples in NZ live 5.5 fewer years than NZ Europeans. The gap is closable, and prevention is where it closes.</p>
-            <p class="text-xs text-gray-600 italic">Te Mana Ola — Pacific Health Strategy, MoH 2023</p>
+            <p class="text-xs text-gray-600 italic">Te Mana Ola, Pacific Health Strategy, MoH 2023</p>
           </div>
         </div>
 
@@ -1142,7 +1047,7 @@
               <span class="w-7 h-7 bg-emerald-500/20 rounded-lg flex items-center justify-center text-emerald-400">📚</span>
               Te Tumu Waiora
             </h4>
-            <p class="text-gray-400 text-sm leading-relaxed">NZ's integrated primary mental health model. Health-coach-in-GP increased access for "young people, Māori and Pacific" — the three groups traditional services miss.</p>
+            <p class="text-gray-400 text-sm leading-relaxed">NZ's integrated primary mental health model. Health-coach-in-GP increased access for "young people, Māori and Pacific", the three groups traditional services miss.</p>
           </div>
           <div>
             <h4 class="text-white font-bold mb-2 flex items-center gap-2">
@@ -1166,7 +1071,7 @@
   <!-- TIRITI / MANAAKITANGA COMMITMENT -->
   <section id="commitment" class="py-20 px-4 relative overflow-hidden" style="background:linear-gradient(135deg,#050d1a 0%,#0a1525 100%);">
     <!-- Subtle Pacific-inspired background pattern (siapo/tapa motif) -->
-    <svg class="absolute inset-0 w-full h-full opacity-[0.04] pointer-events-none" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <svg aria-hidden="true" class="absolute inset-0 w-full h-full opacity-[0.04] pointer-events-none" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="tapa" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
           <path d="M40 5 L75 40 L40 75 L5 40 Z M40 20 L60 40 L40 60 L20 40 Z" fill="none" stroke="#22d3ee" stroke-width="1"/>
@@ -1195,7 +1100,7 @@
             <div class="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center flex-shrink-0 text-emerald-400 font-black">💬</div>
             <div>
               <h4 class="text-white font-bold text-sm mb-1">Talanoa</h4>
-              <p class="text-gray-400 text-sm">Real conversation, in your language. We slow down and listen — that's where the diagnosis actually lives.</p>
+              <p class="text-gray-400 text-sm">Real conversation, in your language. We slow down and listen, that's where the diagnosis actually lives.</p>
             </div>
           </div>
           <div class="bg-white/[0.04] border border-white/10 rounded-xl p-5 flex gap-4">
@@ -1208,7 +1113,7 @@
           <div class="bg-white/[0.04] border border-white/10 rounded-xl p-5 flex gap-4">
             <div class="w-10 h-10 bg-amber-500/20 rounded-lg flex items-center justify-center flex-shrink-0 text-amber-400 font-black">🌿</div>
             <div>
-              <h4 class="text-white font-bold text-sm mb-1">Hauora — full health</h4>
+              <h4 class="text-white font-bold text-sm mb-1">Hauora, full health</h4>
               <p class="text-gray-400 text-sm">Te Whare Tapa Whā: physical, mental, whānau, and spiritual. We don't treat one wall and ignore the other three.</p>
             </div>
           </div>
@@ -1224,7 +1129,7 @@
       <div class="text-center mb-14">
         <span class="section-label fade-up text-emerald-400">Structured pathways</span>
         <h2 class="text-4xl md:text-5xl font-bold mt-2 text-white">12-week programmes that move the numbers.</h2>
-        <p class="text-gray-400 mt-3 max-w-2xl mx-auto">Three pathways. Each one pairs a GP for the clinical work with a coach for the day-to-day. Outcomes tracked, reported back to whānau, designed with Pacific and Māori in mind from day one.</p>
+        <p class="text-gray-400 mt-3 max-w-2xl mx-auto">Three pathways. Each one pairs a GP for the clinical work with a coach for the day-to-day. Outcomes tracked, reported back to whānau. Built for Pacific and Māori use cases from day one.</p>
       </div>
 
       <div class="grid md:grid-cols-3 gap-6">
@@ -1237,7 +1142,7 @@
             </div>
             <h3 class="text-2xl font-black text-white mb-1">Hauora Hinengaro</h3>
             <p class="text-purple-300/70 text-sm font-semibold mb-4">Wellbeing of the mind</p>
-            <p class="text-gray-300 text-sm leading-relaxed mb-5">For low mood, anxiety, stress, sleep — at the start, before crisis. GP screening + coaching + safety planning. Pacific and Māori frameworks (Fonofale, Te Whare Tapa Whā) built in.</p>
+            <p class="text-gray-300 text-sm leading-relaxed mb-5">For low mood, anxiety, stress, sleep, at the start, before crisis. GP screening + coaching + safety planning. Pacific and Māori frameworks (Fonofale, Te Whare Tapa Whā) built in.</p>
             <ul class="space-y-2 text-sm text-gray-400 mb-6">
               <li class="flex items-start gap-2"><span class="text-purple-400 mt-0.5">▸</span><span>Week 1: GP assessment + culturally safe screening</span></li>
               <li class="flex items-start gap-2"><span class="text-purple-400 mt-0.5">▸</span><span>Weeks 2-11: weekly coach session, 30 min</span></li>
@@ -1249,7 +1154,7 @@
                 <div class="text-2xl font-black text-white">$420</div>
                 <div class="text-xs text-gray-500">12 weeks · weekly</div>
               </div>
-              <a href="#book" @click="bookingService='Hauora Hinengaro 12-week programme — $420'" class="bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 text-purple-300 text-sm font-bold px-4 py-2 rounded-lg transition">Start →</a>
+              <a href="#book" @click="bookingService='Hauora Hinengaro 12-week programme, $420'" class="bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 text-purple-300 text-sm font-bold px-4 py-2 rounded-lg transition">Start →</a>
             </div>
           </div>
         </div>
@@ -1262,7 +1167,7 @@
               <span class="text-amber-300 text-xs font-bold uppercase tracking-wider">Lifestyle &amp; metabolic</span>
             </div>
             <h3 class="text-2xl font-black text-white mb-1">Mate Huka</h3>
-            <p class="text-amber-300/70 text-sm font-semibold mb-4">Sugar sickness — diabetes &amp; pre-diabetes</p>
+            <p class="text-amber-300/70 text-sm font-semibold mb-4">Sugar sickness, diabetes &amp; pre-diabetes</p>
             <p class="text-gray-300 text-sm leading-relaxed mb-5">For prediabetes, T2DM, weight, and metabolic risk. GP labs + medication review + a coach who knows Pacific kai, shift work, and how to make changes that stick around the table.</p>
             <ul class="space-y-2 text-sm text-gray-400 mb-6">
               <li class="flex items-start gap-2"><span class="text-amber-400 mt-0.5">▸</span><span>Week 1: GP labs (HbA1c, lipids, BP) + plan</span></li>
@@ -1275,7 +1180,7 @@
                 <div class="text-2xl font-black text-white">$480</div>
                 <div class="text-xs text-gray-500">12 weeks · weekly</div>
               </div>
-              <a href="#book" @click="bookingService='Mate Huka 12-week programme — $480'" class="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-300 text-sm font-bold px-4 py-2 rounded-lg transition">Start →</a>
+              <a href="#book" @click="bookingService='Mate Huka 12-week programme, $480'" class="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-300 text-sm font-bold px-4 py-2 rounded-lg transition">Start →</a>
             </div>
           </div>
         </div>
@@ -1289,7 +1194,7 @@
             </div>
             <h3 class="text-2xl font-black text-white mb-1">Whakaora Wawe</h3>
             <p class="text-emerald-300/70 text-sm font-semibold mb-4">Catching things early</p>
-            <p class="text-gray-300 text-sm leading-relaxed mb-5">For whānau with risk factors — family history, "borderline" results, or that gut feeling something's off. GP screen + coach scaffolding to act on what we find.</p>
+            <p class="text-gray-300 text-sm leading-relaxed mb-5">For whānau with risk factors, family history, "borderline" results, or that gut feeling something's off. GP screen + coach scaffolding to act on what we find.</p>
             <ul class="space-y-2 text-sm text-gray-400 mb-6">
               <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span>Comprehensive GP screen: CV risk, gout, mental health</span></li>
               <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span>Whānau-wide risk mapping (consent-based)</span></li>
@@ -1301,13 +1206,13 @@
                 <div class="text-2xl font-black text-white">$520</div>
                 <div class="text-xs text-gray-500">12 weeks · screen + scaffold</div>
               </div>
-              <a href="#book" @click="bookingService='Whakaora Wawe 12-week programme — $520'" class="bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/30 text-emerald-300 text-sm font-bold px-4 py-2 rounded-lg transition">Start →</a>
+              <a href="#book" @click="bookingService='Whakaora Wawe 12-week programme, $520'" class="bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/30 text-emerald-300 text-sm font-bold px-4 py-2 rounded-lg transition">Start →</a>
             </div>
           </div>
         </div>
       </div>
 
-      <p class="fade-up text-center text-gray-500 text-xs mt-8 max-w-2xl mx-auto">Programmes priced for whānau without insurance cover. Subsidies available through partner providers — ask us about Cause Collective Tātou Whānau Ora and Pacific Provider Development Fund pathways.</p>
+      <p class="fade-up text-center text-gray-500 text-xs mt-8 max-w-2xl mx-auto">Programmes priced for whānau without insurance cover. Subsidies available through partner providers, ask us about Cause Collective Tātou Whānau Ora and Pacific Provider Development Fund pathways.</p>
     </div>
   </section>
 
@@ -1328,8 +1233,8 @@
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-14">
         <span class="section-label fade-up text-cyan-400">The patient toolkit</span>
-        <h2 class="text-4xl md:text-5xl font-bold mt-2 text-white">We don't just see patients. We build for them.</h2>
-        <p class="text-gray-400 mt-3 max-w-2xl mx-auto">A clinic that ships software. Apps designed with Pacific and Māori whānau, in their languages, used in our consults and given out for free.</p>
+        <h2 class="text-4xl md:text-5xl font-bold mt-2 text-white">A clinic that builds.</h2>
+        <p class="text-gray-400 mt-3 max-w-2xl mx-auto">A clinic that ships software. Apps in Pacific languages, used in our consults, given out for free. We test with whānau, not on whānau.</p>
       </div>
 
       <div class="grid md:grid-cols-3 gap-5">
@@ -1363,7 +1268,7 @@
               <p class="text-emerald-300/80 text-xs font-semibold">Pasifika language learning</p>
             </div>
           </div>
-          <p class="text-gray-300 text-sm leading-relaxed mb-4">Learn or revive your Pacific language — Tongan, Samoan, Niuean, Cook Islands Māori, Fijian. 1,400+ phrases, mascots, lessons. For tagata Pasifika reconnecting, and clinicians serving them.</p>
+          <p class="text-gray-300 text-sm leading-relaxed mb-4">Learn or revive your Pacific language, Tongan, Samoan, Niuean, Cook Islands Māori, Fijian. 1,400+ phrases, mascots, lessons. For tagata Pasifika reconnecting, and clinicians serving them.</p>
           <div class="flex flex-wrap gap-2 text-xs">
             <span class="bg-emerald-500/15 text-emerald-300 px-2.5 py-1 rounded-full font-semibold">iOS · TestFlight</span>
             <span class="bg-cyan-500/15 text-cyan-300 px-2.5 py-1 rounded-full font-semibold">5 languages</span>
@@ -1391,7 +1296,7 @@
         </div>
       </div>
 
-      <p class="fade-up text-center text-gray-500 text-xs mt-8 max-w-2xl mx-auto">Connect Clinic apps are funded by service revenue and grants — not patient data. We don't sell, share, or analytics-track. Open to research partnerships.</p>
+      <p class="fade-up text-center text-gray-500 text-xs mt-8 max-w-2xl mx-auto">Connect Clinic apps are funded by service revenue and grants, not patient data. We don't sell, share, or analytics-track. Open to research partnerships.</p>
     </div>
   </section>
 
@@ -1402,7 +1307,7 @@
       <div class="text-center mb-12">
         <span class="section-label fade-up text-emerald-400">Evidence is the product</span>
         <h2 class="text-4xl md:text-5xl font-bold mt-2 text-white">Research pipeline &amp; open funding.</h2>
-        <p class="text-gray-400 mt-3 max-w-2xl mx-auto">We don't just deliver care. We measure it, write it up, and share what works. Funders see the same dashboard we do.</p>
+        <p class="text-gray-400 mt-3 max-w-2xl mx-auto">We deliver care, measure it, write it up. Funders see what we measure, in plain numbers.</p>
       </div>
 
       <!-- Research pipeline -->
@@ -1466,7 +1371,7 @@
       <div class="grid md:grid-cols-2 gap-5">
         <div class="fade-up bg-white/[0.04] border border-white/10 hover:border-cyan-400/40 rounded-2xl p-6 transition-all">
           <h3 class="text-white font-bold text-lg mb-2">For researchers</h3>
-          <p class="text-gray-400 text-sm leading-relaxed mb-4">Pacific health trial site, GP-led, Pacific languages in-house, app team for digital adjuncts. We co-design and we deliver.</p>
+          <p class="text-gray-400 text-sm leading-relaxed mb-4">Pacific health trial site, GP-led, Pacific languages in-house, app team for digital adjuncts. Open to co-design from the start.</p>
           <a href="mailto:connectclinic@outlook.com?subject=Research%20partnership" class="text-cyan-400 hover:text-cyan-300 text-sm font-semibold">connectclinic@outlook.com →</a>
         </div>
         <div class="fade-up bg-white/[0.04] border border-white/10 hover:border-emerald-400/40 rounded-2xl p-6 transition-all">
@@ -1481,7 +1386,7 @@
         </div>
         <div class="fade-up bg-white/[0.04] border border-white/10 hover:border-amber-400/40 rounded-2xl p-6 transition-all">
           <h3 class="text-white font-bold text-lg mb-2">For Pacific &amp; Māori health leaders</h3>
-          <p class="text-gray-400 text-sm leading-relaxed mb-4">If your community needs what we have, let us know. We'll show up. Mana whenua &amp; Pacific community partnerships shape what we build.</p>
+          <p class="text-gray-400 text-sm leading-relaxed mb-4">If your community needs what we have, let us know. We'll show up. Open to partnership with mana whenua and Pacific community providers — those relationships shape what we build over time.</p>
           <a href="mailto:connectclinic@outlook.com?subject=Talanoa" class="text-amber-400 hover:text-amber-300 text-sm font-semibold">connectclinic@outlook.com →</a>
         </div>
       </div>
@@ -1502,7 +1407,7 @@
             <h3 class="font-semibold text-white">Do I need to be enrolled at Connect Clinic?</h3>
             <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform" :class="openFaq === 1 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </div>
-          <div x-show="openFaq === 1" class="mt-3 text-gray-400 text-sm">No. Connect Clinic is a telehealth service — you don't need to leave your current GP. We see patients for specific needs like repeat prescriptions, medical certificates, or assessments. For ongoing care we recommend staying enrolled with a regular practice.</div>
+          <div x-show="openFaq === 1" class="mt-3 text-gray-400 text-sm">No. Connect Clinic is a telehealth service, you don't need to leave your current GP. We see patients for specific needs like repeat prescriptions, medical certificates, or assessments. For ongoing care we recommend staying enrolled with a regular practice.</div>
         </div>
 
         <div class="faq-item p-6 cursor-pointer" @click="openFaq = openFaq === 2 ? null : 2">
@@ -1518,7 +1423,7 @@
             <h3 class="font-semibold text-white">Is this covered by ACC or a Community Services Card?</h3>
             <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform" :class="openFaq === 3 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </div>
-          <div x-show="openFaq === 3" class="mt-3 text-gray-400 text-sm">Connect Clinic is currently a private pay service and is not subsidised. Our fees are listed upfront so there are no surprises. ACC claims for injury-related consults may be available — ask us when you book.</div>
+          <div x-show="openFaq === 3" class="mt-3 text-gray-400 text-sm">Connect Clinic is currently a private pay service and is not subsidised. Our fees are listed upfront so there are no surprises. ACC claims for injury-related consults may be available, ask us when you book.</div>
         </div>
 
         <div class="faq-item p-6 cursor-pointer" @click="openFaq = openFaq === 4 ? null : 4">
@@ -1526,7 +1431,7 @@
             <h3 class="font-semibold text-white">What do I need for the video call?</h3>
             <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform" :class="openFaq === 4 ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </div>
-          <div x-show="openFaq === 4" class="mt-3 text-gray-400 text-sm">Just your phone, tablet, or computer with a camera and internet connection. We'll send you a link before your appointment — no app download required. Just click and you're in.</div>
+          <div x-show="openFaq === 4" class="mt-3 text-gray-400 text-sm">Just your phone, tablet, or computer with a camera and internet connection. We'll send you a link before your appointment, no app download required. Just click and you're in.</div>
         </div>
 
         <div class="faq-item p-6 cursor-pointer" @click="openFaq = openFaq === 5 ? null : 5">
@@ -1594,7 +1499,7 @@
             </label>
             <label class="flex items-start gap-3 p-3.5 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:border-amber-500/40 hover:bg-amber-950/30 transition" :class="screenAnswers.controlled ? 'border-amber-300 bg-amber-50' : ''">
               <input type="checkbox" x-model="screenAnswers.controlled" class="mt-0.5 accent-amber-500 w-4 h-4 flex-shrink-0" />
-              <span class="text-sm text-gray-300">I am seeking a prescription for a <strong>controlled drug</strong> — opioids (morphine, oxycodone, tramadol, codeine, fentanyl, methadone, buprenorphine), benzodiazepines (diazepam, clonazepam, temazepam, lorazepam), or stimulants (methylphenidate, dexamfetamine)</span>
+              <span class="text-sm text-gray-300">I am seeking a prescription for a <strong>controlled drug</strong>, opioids (morphine, oxycodone, tramadol, codeine, fentanyl, methadone, buprenorphine), benzodiazepines (diazepam, clonazepam, temazepam, lorazepam), or stimulants (methylphenidate, dexamfetamine)</span>
             </label>
             <label class="flex items-start gap-3 p-3.5 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:border-amber-500/40 hover:bg-amber-950/30 transition" :class="screenAnswers.physical ? 'border-amber-300 bg-amber-50' : ''">
               <input type="checkbox" x-model="screenAnswers.physical" class="mt-0.5 accent-amber-500 w-4 h-4 flex-shrink-0" />
@@ -1619,7 +1524,7 @@
             @click="screenStep = 'form'"
             class="w-full bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3.5 rounded-xl transition text-base"
           >
-            None of these apply — continue to booking
+            None of these apply, continue to booking
           </button>
           <p class="text-xs text-gray-400 text-center mt-3">If you're unsure whether this service is right for you, <a href="mailto:connectclinic@outlook.com" class="text-cyan-600 hover:underline">email us first</a>.</p>
         </div>
@@ -1688,14 +1593,21 @@
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-300 mb-1">Service needed</label>
             <select name="service" x-model="bookingService" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50">
-              <option value="">Select a service...</option>
-              <option>Repeat Prescription — $35</option>
-              <option>Medical Certificate — $35</option>
-              <option>General Telehealth Consult — $55</option>
-              <option>Acute Illness Review — $55</option>
-              <option>Wegovy / Weight Management Assessment — $120</option>
-              <option>Dietician Consultation — $95</option>
-              <option>Second Opinion / Condition Review — $85</option>
+              <option value="" disabled selected>Select a service…</option>
+              <optgroup label="12-week programmes">
+                <option>Hauora Hinengaro 12-week programme, $420</option>
+                <option>Mate Huka 12-week programme, $480</option>
+                <option>Whakaora Wawe 12-week programme, $520</option>
+              </optgroup>
+              <optgroup label="One-off consults">
+                <option>Repeat Prescription, $35</option>
+                <option>Medical Certificate, $35</option>
+                <option>Acute Illness Review, $55</option>
+                <option>General Telehealth Consult, $55</option>
+                <option>Health Coaching session, $65</option>
+                <option>Second Opinion / Condition Review, $85</option>
+                <option>Wegovy / Weight Management Assessment, $120</option>
+              </optgroup>
             </select>
           </div>
           <div class="mb-4">
@@ -1704,11 +1616,11 @@
           </div>
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-300 mb-1">Current medications <span class="text-red-400 font-normal text-xs">* required</span></label>
-            <input type="text" name="current_medications" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" placeholder="e.g. metformin 500mg, ramipril 5mg — or write 'nil' if none" />
+            <input type="text" name="current_medications" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" placeholder="e.g. metformin 500mg, ramipril 5mg, or write 'nil' if none" />
           </div>
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-300 mb-1">Drug allergies <span class="text-red-400 font-normal text-xs">* required</span></label>
-            <input type="text" name="allergies" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" placeholder="e.g. penicillin, sulfa drugs — or write 'NKDA' if none known" />
+            <input type="text" name="allergies" required class="w-full border border-white/15 rounded-lg px-3 py-2.5 text-sm bg-white/8 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50" placeholder="e.g. penicillin, sulfa drugs, or write 'NKDA' if none known" />
           </div>
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-300 mb-1">Relevant family history <span class="text-gray-400 font-normal">(optional)</span></label>
@@ -1747,7 +1659,7 @@
             <svg class="w-5 h-5 text-sky-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.9L15 14M4 8h8a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4a2 2 0 012-2z"/></svg>
             <span class="text-sm font-semibold text-sky-300">Your consultation will be via Zoom</span>
           </div>
-          <p class="text-xs text-gray-400 mb-3">Once payment is confirmed, Dr Katoa will email you your appointment time. Join using the link below at that time — no download required.</p>
+          <p class="text-xs text-gray-400 mb-3">Once payment is confirmed, Dr Katoa will email you your appointment time. Join using the link below at that time, no download required.</p>
           <a :href="window._zoomLink" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white font-semibold px-5 py-2.5 rounded-lg transition text-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
             Join Zoom consultation
@@ -1809,7 +1721,7 @@
               <option value="">Select...</option>
               <option>Repeat prescription management</option>
               <option>Wegovy / weight management assessment</option>
-              <option>Dietician consultation</option>
+              <!-- removed: health coach option -->
               <option>Second opinion</option>
               <option>Acute telehealth follow-up</option>
               <option>Other</option>
@@ -1889,7 +1801,7 @@
               <td class="p-4 text-center text-gray-500 text-xs">Not offered</td>
             </tr>
             <tr class="hover:bg-white/3 transition">
-              <td class="p-4 text-gray-300">Dietician</td>
+              <td class="p-4 text-gray-300">Health Coach</td>
               <td class="p-4 text-center font-bold text-cyan-400">$95</td>
               <td class="p-4 text-center text-gray-500 text-xs">Not offered</td>
               <td class="p-4 text-center text-gray-500 text-xs">Not offered</td>
@@ -1947,7 +1859,7 @@
               <span class="text-[0.65rem] text-gray-500 font-medium tracking-wider uppercase block mt-0.5">Limited</span>
             </div>
           </div>
-          <p class="text-gray-500 text-sm leading-relaxed mb-5">A clinic that ships software. Pacific GP + Coach telehealth, plus apps and research. Two wings, one mission — Pasifika and Māori health equity. Auckland-based, serving NZ-wide.</p>
+          <p class="text-gray-500 text-sm leading-relaxed mb-5">A clinic that ships software. Pacific GP + Coach telehealth, plus apps and research. Two wings, one mission, Pasifika and Māori health equity. Auckland-based, serving NZ-wide.</p>
           <!-- Credential badges -->
           <div class="flex flex-wrap gap-2">
             <span class="inline-flex items-center gap-1 text-[0.65rem] font-semibold text-teal-400 bg-teal-400/10 border border-teal-400/20 rounded-full px-2.5 py-1">FRNZCGP</span>
@@ -2064,7 +1976,7 @@
       'Hauora Hinengaro 12-week programme — $420':     'YOUR_STRIPE_LINK_HAUORA_HINENGARO',
       'Mate Huka 12-week programme — $480':            'YOUR_STRIPE_LINK_MATE_HUKA',
       'Whakaora Wawe 12-week programme — $520':        'YOUR_STRIPE_LINK_WHAKAORA_WAWE',
-      'Dietician Consultation — $95':                 'YOUR_STRIPE_LINK_DIETICIAN',
+      'Health Coaching session — $65':                 'YOUR_STRIPE_LINK_DIETICIAN',
       'Second Opinion / Condition Review — $85':      'YOUR_STRIPE_LINK_SECOND_OPINION',
     };
     // 3. Zoom Personal Meeting Room
