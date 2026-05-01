@@ -571,10 +571,79 @@
 <!-- ===================== SCRIPT ===================== -->
 <script>
 // ============================================================
-// CONFIG — replace these with your real Supabase credentials
+// CONFIG — Cloudflare KV-backed admin endpoint at /api/bookings.
+// Token is stored in localStorage('cc_admin_token') and prompted
+// for on first load. Set ADMIN_TOKEN in the Pages env to match.
 // ============================================================
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const ADMIN_API = '/api/bookings';
+const TOKEN_KEY = 'cc_admin_token';
+
+// Map intake-form service slugs to the human-readable strings the
+// dashboard already knows how to filter and badge.
+const SERVICE_LABEL = {
+  'mental-health': 'Mental Health Assessment — $120',
+  'weight-loss':   'Wegovy / Weight Management Assessment — $120',
+  'repeat':        'Repeat Prescription — $35',
+  'certificate':   'Medical Certificate — $35'
+};
+
+function splitName(full) {
+  if (!full) return { first: '', last: '' };
+  const parts = String(full).trim().split(/\s+/);
+  if (parts.length === 1) return { first: parts[0], last: '' };
+  return { first: parts[0], last: parts.slice(1).join(' ') };
+}
+
+// Normalize a KV booking record into the flat shape the dashboard
+// expects (matches the demo data and the old Supabase joined select).
+function normalizeKvBooking(rec) {
+  const p = rec.patient || {};
+  const t = rec.triage || {};
+  const { first, last } = splitName(p.name);
+  const slug = rec.service;
+  const serviceLabel = SERVICE_LABEL[slug] || slug || 'Consult';
+
+  // Best-effort reason: each service stores its primary free-text
+  // field under a different key in the triage payload.
+  const reason =
+    t.mh_reason || t.wl_other || t.rx_meds || t.mc_reason || '';
+
+  // Med list varies by intake type.
+  const meds =
+    t.mh_meds || t.rx_meds || t.wl_prior || '';
+
+  const safety = rec.safety || {};
+  const flagged =
+    safety.self === 'yes' || safety.med === 'yes' || safety.acute === 'yes';
+
+  return {
+    id: rec.id,
+    created_at: rec.submittedAt || rec.id,
+    first_name: first,
+    last_name: last,
+    date_of_birth: p.dob || '',
+    email: p.email || '',
+    phone: p.mobile || '',
+    service: serviceLabel,
+    reason,
+    current_medications: meds,
+    allergies: '',
+    family_history: '',
+    recent_admissions: '',
+    preferred_pharmacy: t.rx_pharmacy || '',
+    status: flagged ? 'flagged' : 'pending',
+    payment_status: 'unpaid',
+    booking_ref: (rec.id || '').split('-').pop() || '',
+    suburb: p.suburb || '',
+    nhi: p.nhi || '',
+    safety_self: safety.self || '',
+    safety_med: safety.med || '',
+    safety_acute: safety.acute || '',
+    raw_text: rec.text || '',
+    _expanded: false,
+    _isNew: false
+  };
+}
 
 // ============================================================
 // DEMO DATA — used when Supabase credentials are not set
@@ -676,26 +745,33 @@ function adminApp() {
     filterService: '',
     dateFrom: '',
     dateTo: '',
-    supabaseClient: null,
+    token: '',
+    pollHandle: null,
 
     // ----- INIT -----
     async init() {
-      const configured =
-        SUPABASE_URL !== 'YOUR_SUPABASE_URL' &&
-        SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
-
-      if (configured) {
-        try {
-          this.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-          await this.fetchFromSupabase();
-          this.subscribeToRealtime();
-        } catch (e) {
-          console.error('Supabase init failed, using demo data:', e);
-          this.loadDemoData();
+      this.token = (localStorage.getItem(TOKEN_KEY) || '').trim();
+      if (!this.token) {
+        const t = (prompt('Admin token (set ADMIN_TOKEN in Cloudflare Pages env):') || '').trim();
+        if (t) {
+          this.token = t;
+          localStorage.setItem(TOKEN_KEY, t);
         }
-      } else {
-        this.loadDemoData();
       }
+
+      if (!this.token) {
+        this.loadDemoData();
+        return;
+      }
+
+      const ok = await this.fetchFromApi();
+      if (!ok) {
+        // Bad token or KV not bound yet — fall back so the UI still renders.
+        this.loadDemoData();
+        return;
+      }
+      // Light polling — KV has no realtime, so re-fetch every 30s.
+      this.pollHandle = setInterval(() => { this.fetchFromApi(); }, 30000);
     },
 
     // ----- DEMO -----
@@ -706,100 +782,57 @@ function adminApp() {
       this.setLastUpdated();
     },
 
-    // ----- SUPABASE FETCH -----
-    async fetchFromSupabase() {
+    // ----- KV FETCH via /api/bookings -----
+    async fetchFromApi() {
       this.loading = true;
       try {
-        // Fetch bookings joined with patient data
-        const { data, error } = await this.supabaseClient
-          .from('bookings')
-          .select(`
-            id, created_at, service, reason, status, payment_status, booking_ref,
-            preferred_time, appointment_at,
-            family_history, recent_admissions,
-            patients (
-              first_name, last_name, date_of_birth,
-              email, phone, current_medications,
-              allergies, preferred_pharmacy
-            )
-          `)
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        this.bookings = (data || []).map(b => {
-          const p = (b.patients) || {};
-          return {
-            ...b,
-            first_name: p.first_name || '',
-            last_name: p.last_name || '',
-            date_of_birth: p.date_of_birth || '',
-            email: p.email || '',
-            phone: p.phone || '',
-            current_medications: p.current_medications || '',
-            allergies: p.allergies || '',
-            preferred_pharmacy: p.preferred_pharmacy || '',
-            _expanded: false,
-            _isNew: false,
-          };
-        });
+        const url = `${ADMIN_API}?limit=200&token=${encodeURIComponent(this.token)}`;
+        const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+        if (resp.status === 401) {
+          localStorage.removeItem(TOKEN_KEY);
+          alert('Admin token rejected. Reload to enter a new one.');
+          return false;
+        }
+        if (!resp.ok) {
+          console.error('API error', resp.status, await resp.text());
+          return false;
+        }
+        const json = await resp.json();
+        const records = Array.isArray(json.bookings) ? json.bookings : [];
+        const prevIds = new Set(this.bookings.map(b => b.id));
+        const next = records.map(normalizeKvBooking);
+        // Flag any record we haven't seen before so its card flashes.
+        next.forEach(b => { if (!prevIds.has(b.id)) b._isNew = true; });
+        this.bookings = next;
+        if (next.length && next[0]._isNew) {
+          setTimeout(() => { if (this.bookings[0]) this.bookings[0]._isNew = false; }, 1500);
+        }
+        this.isDemo = false;
+        this.setLastUpdated();
+        return true;
       } catch (e) {
         console.error('Fetch error:', e);
-        this.loadDemoData();
-        return;
+        return false;
+      } finally {
+        this.loading = false;
       }
-      this.loading = false;
-      this.setLastUpdated();
     },
 
     async refreshBookings() {
       if (this.isDemo) {
-        // Re-load demo to give feedback
         this.loading = true;
         await new Promise(r => setTimeout(r, 400));
         this.loadDemoData();
         return;
       }
-      await this.fetchFromSupabase();
-    },
-
-    // ----- REALTIME -----
-    subscribeToRealtime() {
-      if (!this.supabaseClient) return;
-      this.supabaseClient
-        .channel('admin-bookings')
-        .on('postgres_changes',
-          { event: 'INSERT', schema: 'public', table: 'bookings' },
-          async () => {
-            // Re-fetch to get full joined data
-            await this.fetchFromSupabase();
-            // Flash the first card briefly
-            if (this.bookings.length > 0) {
-              this.bookings[0]._isNew = true;
-              setTimeout(() => { if (this.bookings[0]) this.bookings[0]._isNew = false; }, 1500);
-            }
-          }
-        )
-        .subscribe();
+      await this.fetchFromApi();
     },
 
     // ----- STATUS UPDATE -----
+    // KV records are immutable here; status is computed client-side
+    // from the safety screen. Local override only.
     async updateStatus(booking, newStatus) {
-      const prev = booking.status;
       booking.status = newStatus;
-
-      if (!this.isDemo && this.supabaseClient) {
-        const { error } = await this.supabaseClient
-          .from('bookings')
-          .update({ status: newStatus })
-          .eq('id', booking.id);
-
-        if (error) {
-          console.error('Update failed:', error);
-          booking.status = prev;
-          alert('Status update failed: ' + error.message);
-        }
-      }
     },
 
     // ----- FILTERS -----

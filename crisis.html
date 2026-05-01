@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7A1B1B">
+<title>Need help now · Connect Clinic</title>
+<meta name="description" content="If you or someone you love needs urgent help right now, here are the right NZ services to call. Connect Clinic is non-urgent telehealth and not the right fit for an emergency.">
+<link rel="canonical" href="https://connectclinic.co.nz/crisis.html">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="assets/brand/connect-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFF7F2;--surface:#FFFFFF;
+  --crisis:#7A1B1B;--crisis-2:#5C1414;--crisis-soft:#F7DEDE;
+  --teal:#0E3B36;--ink:#1A1212;--ink-mute:#5C4747;--ink-dim:#8A7575;
+  --line:rgba(122,27,27,.14);
+  --display:'Newsreader',ui-serif,Georgia,serif;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit;text-decoration:none}
+
+.urgent-bar{background:var(--crisis);color:#fff;text-align:center;padding:14px 16px;font-size:15px;font-weight:600;letter-spacing:.04em}
+.urgent-bar a{color:#fff;text-decoration:underline;text-underline-offset:3px}
+
+main{padding:48px 20px 80px}
+.wrap{max-width:880px;margin:0 auto}
+
+.tag{font-size:12.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--crisis);display:inline-flex;align-items:center;gap:10px}
+.tag::before{content:"";width:24px;height:1px;background:var(--crisis)}
+.h1{font-family:var(--display);font-weight:500;font-size:clamp(36px,5vw,58px);line-height:1.04;letter-spacing:-.018em;color:var(--ink);margin-top:14px}
+.h1 em{font-style:normal;color:var(--crisis)}
+
+.lede{margin-top:14px;font-size:17px;color:var(--ink-mute);max-width:62ch;line-height:1.65}
+
+.line-call-now{
+  margin-top:24px;background:var(--crisis);color:#fff;border-radius:18px;padding:24px 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+}
+.line-call-now h2{font-family:var(--display);font-weight:500;font-size:24px;color:#fff;letter-spacing:-.005em}
+.line-call-now p{color:rgba(255,255,255,.82);font-size:15.5px;margin-top:4px;max-width:48ch;line-height:1.55}
+.call-btn{background:#fff;color:var(--crisis);padding:13px 22px;border-radius:999px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums}
+.call-btn:hover{background:var(--crisis-soft)}
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:24px}
+@media (max-width:680px){.grid{grid-template-columns:1fr}}
+.svc-line{
+  background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px 24px;
+  display:flex;flex-direction:column;gap:8px;
+  transition:transform .18s,box-shadow .18s,border-color .18s;
+}
+.svc-line:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(122,27,27,.10);border-color:var(--crisis)}
+.svc-line h3{font-family:var(--display);font-weight:500;font-size:20px;letter-spacing:-.005em;color:var(--ink)}
+.svc-line .num{font-family:var(--display);font-weight:500;font-size:30px;color:var(--crisis);font-variant-numeric:tabular-nums;line-height:1.1}
+.svc-line .meta{font-size:12.5px;color:var(--ink-dim);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.svc-line p{font-size:15px;color:var(--ink-mute);line-height:1.55}
+.svc-line a.go{margin-top:auto;font-size:15.5px;font-weight:600;color:var(--crisis);display:inline-flex;align-items:center;gap:6px;transition:gap .18s}
+.svc-line a.go:hover{gap:10px}
+
+.note{margin-top:36px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px 30px}
+.note h2{font-family:var(--display);font-weight:500;font-size:22px;color:var(--ink);letter-spacing:-.005em}
+.note p{margin-top:10px;font-size:15px;color:var(--ink-mute);line-height:1.65}
+.note ul{margin-top:14px;display:flex;flex-direction:column;gap:8px;list-style:none}
+.note li{font-size:15.5px;color:var(--ink);display:flex;gap:10px;align-items:flex-start}
+.note li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--crisis);flex-shrink:0;margin-top:8px}
+
+.foot-back{margin-top:48px;text-align:center}
+.foot-back a{color:var(--ink-mute);font-size:15px;border-bottom:1px solid rgba(0,0,0,.18);padding-bottom:2px}
+.foot-back a:hover{color:var(--ink);border-color:var(--ink)}
+
+footer{padding:32px 20px;text-align:center;font-size:15px;color:var(--ink-dim)}
+</style>
+</head>
+<body>
+
+<div class="urgent-bar">If life is in danger right now, dial <a href="tel:111">111</a> immediately.</div>
+
+<main>
+  <div class="wrap">
+
+    <span class="tag">Crisis help</span>
+    <h1 class="h1">If you need help <em>right now</em>.</h1>
+    <p class="lede">Connect Clinic is a non-urgent telehealth service. The lines below are staffed by trained crisis responders, available across Aotearoa New Zealand, and most are free. Please use them first.</p>
+
+    <article class="line-call-now">
+      <div>
+        <h2>Emergency: 111</h2>
+        <p>Dial 111 if there is an immediate threat to life, severe injury, chest pain, suspected stroke, or any acute medical emergency.</p>
+      </div>
+      <a class="call-btn" href="tel:111">Dial 111</a>
+    </article>
+
+    <div class="grid">
+
+      <article class="svc-line">
+        <span class="meta">Mental health · 24/7 · free</span>
+        <h3>1737 · Need to talk?</h3>
+        <span class="num"><a href="tel:1737">1737</a> · <a href="sms:1737">text 1737</a></span>
+        <p>Free national mental health line. Trained counsellors, available any time of day or night, in English or by referral to a Pasifika or Māori counsellor on request.</p>
+      </article>
+
+      <article class="svc-line">
+        <span class="meta">General health · 24/7 · free</span>
+        <h3>Healthline</h3>
+        <span class="num"><a href="tel:0800611116">0800 611 116</a></span>
+        <p>Free 24/7 health advice from registered nurses across NZ. Use this for non-emergency physical health concerns, advice about symptoms, or whether to escalate to 111.</p>
+      </article>
+
+      <article class="svc-line">
+        <span class="meta">Lifeline Aotearoa · 24/7 · free</span>
+        <h3>Lifeline</h3>
+        <span class="num"><a href="tel:0800543354">0800 543 354</a> · <a href="sms:4357">text HELP (4357)</a></span>
+        <p>National crisis support and suicide prevention line. Trained volunteers available 24 hours a day.</p>
+      </article>
+
+      <article class="svc-line">
+        <span class="meta">Suicide Crisis Helpline · 24/7 · free</span>
+        <h3>Suicide Crisis Helpline</h3>
+        <span class="num"><a href="tel:0508828865">0508 828 865 (TAUTOKO)</a></span>
+        <p>Free, 24/7 line for anyone in distress, suicidal thoughts, or worried about someone else. Run by people with lived experience.</p>
+      </article>
+
+      <article class="svc-line">
+        <span class="meta">Pasifika · phone hours</span>
+        <h3>Vaka Tautua</h3>
+        <span class="num"><a href="tel:0800582326">0800 582 326</a></span>
+        <p>Pasifika-led wellbeing support across NZ. Mental health navigators, kainga-aware support, alcohol and drug help. Office hours Mon–Fri.</p>
+      </article>
+
+      <article class="svc-line">
+        <span class="meta">Māori · 24/7 · free</span>
+        <h3>Te Haika</h3>
+        <span class="num"><a href="tel:0800745477">0800 745 477</a></span>
+        <p>Te Haika is the Wellington and Hutt Valley mental health crisis line. For other regions, call your local DHB mental health crisis team or 1737.</p>
+      </article>
+
+      <article class="svc-line">
+        <span class="meta">Youth · 24/7 · free</span>
+        <h3>Youthline</h3>
+        <span class="num"><a href="tel:0800376633">0800 376 633</a> · <a href="sms:234">text 234</a></span>
+        <p>Free 24/7 line for rangatahi and their whānau. Counsellors who specialise in youth mental health, bullying, sexuality, and family stress.</p>
+      </article>
+
+      <article class="svc-line">
+        <span class="meta">Family violence · 24/7 · free</span>
+        <h3>Are you OK?</h3>
+        <span class="num"><a href="tel:0800456450">0800 456 450</a></span>
+        <p>Free family violence helpline. Confidential support for people affected by family or sexual violence, or anyone worried about someone else.</p>
+      </article>
+
+    </div>
+
+    <article class="note">
+      <h2>Why we routed you here.</h2>
+      <p>The booking form flagged a question that suggests today is not the right day for a non-urgent video consult with us. The lines above are run by people trained for exactly this kind of moment, and most are free. Please call one before booking with Connect Clinic.</p>
+      <ul>
+        <li>If you are unsure which to call, ring <strong>1737</strong> first. They will route you onward if needed.</li>
+        <li>If anyone is in physical danger or unconscious, call <strong>111</strong>.</li>
+        <li>You can come back to <a href="book.html">book a non-urgent consult</a> with us once the immediate moment has passed.</li>
+      </ul>
+    </article>
+
+    <p class="foot-back"><a href="index.html">← Back to Connect Clinic</a></p>
+
+  </div>
+</main>
+
+<footer>
+  © 2026 Connect Clinic Limited · Aotearoa New Zealand
+</footer>
+
+</body>
+</html>

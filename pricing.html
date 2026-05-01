@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E3B36">
+<title>Pricing · Connect Clinic</title>
+<meta name="description" content="What our consults cost. Transparent flat fees, paid through Stripe at the time of booking. No enrolment, no waitlist, no monthly fee.">
+<link rel="canonical" href="https://connectclinic.co.nz/pricing.html">
+<link rel="icon" type="image/png" href="assets/brand/connect-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg: #F5EFE3;
+  --bg-soft: #EFE5D2;
+  --surface: #FFFFFF;
+  --teal: #0E3B36;
+  --teal-2: #1A5048;
+  --ink: #0E3B36;
+  --ink-mute: #5C6660;
+  --ink-dim: #8E948F;
+  --line: rgba(14,59,54,.10);
+  --line-2: rgba(14,59,54,.18);
+  --terra: #C56E3A;
+  --terra-2: #B25E2C;
+  --terra-soft: #F1D5BE;
+  --display: 'Newsreader', ui-serif, Georgia, serif;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--terra);color:#fff}
+
+.bar{background:var(--teal);color:rgba(255,255,255,.88);text-align:center;padding:11px 16px;font-size:15px;font-weight:500;letter-spacing:.04em}
+.bar a{color:var(--terra-soft);text-decoration:underline;text-underline-offset:3px;font-weight:600;margin-left:6px}
+
+.nav-wrap{position:sticky;top:0;z-index:50;background:rgba(245,239,227,.85);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);border-bottom:1px solid var(--line)}
+.nav{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:38px;height:38px;border-radius:10px;background:var(--teal);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.brand-mark img{width:32px;height:32px;object-fit:contain}
+.brand-name{font-family:var(--display);font-weight:500;font-size:22px;letter-spacing:-.01em;color:var(--ink)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{padding:8px 14px;border-radius:8px;font-size:15.5px;font-weight:500;color:var(--ink-mute);transition:color .18s,background .18s}
+.nav-links a:hover{color:var(--ink);background:var(--bg-soft)}
+.nav-links a.active{color:var(--ink);background:var(--bg-soft)}
+.nav-cta{background:var(--teal);color:#fff;padding:11px 22px;border-radius:999px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:6px}
+.nav-cta:hover{background:var(--teal-2)}
+@media (max-width:880px){.nav-links{display:none}}
+
+main{padding:64px 24px 96px}
+.wrap{max-width:1100px;margin:0 auto}
+.tag{font-size:12.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--terra);display:inline-flex;align-items:center;gap:10px}
+.tag::before{content:"";width:24px;height:1px;background:var(--terra)}
+.h1{font-family:var(--display);font-weight:500;font-size:clamp(40px,5vw,68px);line-height:1.04;letter-spacing:-.02em;color:var(--ink);text-wrap:balance;margin-top:14px}
+.h1 em{font-style:normal;color:var(--terra);font-weight:500}
+.lede{font-size:17px;color:var(--ink-mute);max-width:62ch;line-height:1.65;margin-top:14px}
+
+.intro{max-width:740px;margin:0 auto 56px;text-align:center}
+.intro .tag{justify-content:center}
+
+.price-table{display:grid;grid-template-columns:1fr;gap:14px;max-width:880px;margin:0 auto}
+.price-row{
+  background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  padding:28px 32px;
+  display:grid;grid-template-columns:1.4fr 1fr auto;align-items:center;gap:28px;
+  transition:border-color .18s,box-shadow .18s,transform .18s;
+}
+.price-row:hover{border-color:var(--terra);box-shadow:0 12px 30px rgba(14,59,54,.08);transform:translateY(-2px)}
+.price-row.feature{border:2px solid var(--terra);background:linear-gradient(180deg,#fff 0%,var(--terra-soft) 100%)}
+@media (max-width:760px){.price-row{grid-template-columns:1fr;gap:14px}}
+.price-row h3{font-family:var(--display);font-weight:500;font-size:22px;letter-spacing:-.005em}
+.price-row p{margin-top:6px;font-size:15.5px;color:var(--ink-mute);line-height:1.55}
+.price-meta{font-size:15px;color:var(--ink-dim);font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-top:8px}
+.price-amount{font-family:var(--display);font-weight:500;font-size:32px;color:var(--terra);font-variant-numeric:tabular-nums;line-height:1}
+.price-amount small{font-size:15px;color:var(--ink-mute);font-weight:500;display:block;margin-top:6px;font-family:var(--sans);letter-spacing:.04em;text-transform:none}
+.book-btn{background:var(--teal);color:#fff;padding:12px 22px;border-radius:999px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;transition:background .18s,transform .18s}
+.book-btn:hover{background:var(--teal-2);transform:translateY(-1px)}
+.price-row.feature .book-btn{background:var(--terra)}
+.price-row.feature .book-btn:hover{background:var(--terra-2)}
+
+.notes{margin-top:64px;background:var(--bg-soft);border-radius:24px;padding:40px 44px;max-width:880px;margin-left:auto;margin-right:auto}
+@media (max-width:760px){.notes{padding:32px 24px}}
+.notes h2{font-family:var(--display);font-weight:500;font-size:24px;letter-spacing:-.005em;color:var(--ink)}
+.notes ul{margin-top:16px;display:flex;flex-direction:column;gap:10px;list-style:none}
+.notes li{font-size:15.5px;color:var(--ink-mute);line-height:1.6;display:flex;gap:10px;align-items:flex-start}
+.notes li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--terra);flex-shrink:0;margin-top:8px}
+
+.cta-strip{margin:64px auto 0;max-width:880px;background:var(--teal);color:#fff;border-radius:24px;padding:40px 44px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px}
+@media (max-width:760px){.cta-strip{padding:32px 24px}}
+.cta-strip h3{font-family:var(--display);font-weight:500;font-size:22px;color:#fff;letter-spacing:-.005em}
+.cta-strip p{color:rgba(255,255,255,.78);font-size:15.5px;margin-top:6px;max-width:48ch}
+.cta-strip a{background:#fff;color:var(--ink);padding:12px 22px;border-radius:999px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:6px;transition:transform .18s}
+.cta-strip a:hover{transform:translateY(-1px)}
+
+footer{background:var(--bg);border-top:1px solid var(--line);padding:48px 24px 32px;margin-top:64px}
+.foot-wrap{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;font-size:15.5px;color:var(--ink-dim)}
+.foot-wrap a{color:var(--ink-mute)}
+.foot-wrap a:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<div class="bar">All consults are paid in full at booking through Stripe.<a href="index.html">Back to home</a></div>
+
+<div class="nav-wrap">
+  <nav class="nav" aria-label="Primary">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><img src="assets/brand/connect-logo.png" alt=""></span>
+      <span class="brand-name">Connect Clinic</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#clinical">Medical</a>
+      <a href="index.html#innovation">Innovation</a>
+      <a href="index.html#lifestyle">Lifestyle support</a>
+      <a href="index.html#conditions">Conditions</a>
+      <a href="pricing.html" class="active">Pricing</a>
+    </div>
+    <a class="nav-cta" href="index.html#go">Book a consult <span aria-hidden="true">→</span></a>
+  </nav>
+</div>
+
+<main>
+  <div class="wrap">
+
+    <div class="intro">
+      <span class="tag">Pricing</span>
+      <h1 class="h1">Flat fees. <em>No enrolment.</em></h1>
+      <p class="lede">Each consult is paid in full through Stripe at the time of booking. There is no enrolment, no waitlist, and no monthly fee. NZ patients only.</p>
+    </div>
+
+    <div class="price-table">
+
+      <article class="price-row feature">
+        <div>
+          <h3>Mental health assessment</h3>
+          <p>50-minute video assessment for anxiety, low mood, burnout, ADHD screening, or any concern that needs a careful clinical look. You leave with a working diagnosis, written plan, and a referral letter where one is needed. Our primary focus.</p>
+          <div class="price-meta">50 min · video · primary focus</div>
+        </div>
+        <div class="price-amount">NZD&nbsp;$120<small>initial consult</small></div>
+        <a class="book-btn" href="book.html?service=mental-health">Book <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="price-row">
+        <div>
+          <h3>Mental health follow-up</h3>
+          <p>30-minute review for patients already assessed at Connect Clinic. Used to titrate medication, review the plan, and adjust direction.</p>
+          <div class="price-meta">30 min · video · review</div>
+        </div>
+        <div class="price-amount">NZD&nbsp;$65<small>follow-up</small></div>
+        <a class="book-btn" href="book.html?service=mental-health">Book <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="price-row">
+        <div>
+          <h3>Weight loss &amp; GLP-1 consult</h3>
+          <p>30-minute initial consult for Wegovy, Saxenda, or Mounjaro. Side-effect tracking and dose escalation handled in 15-minute follow-ups at week 4 and week 12. Subject to NZ funding rules and clinical eligibility.</p>
+          <div class="price-meta">30 min · video · initial</div>
+        </div>
+        <div class="price-amount">NZD&nbsp;$95<small>initial consult</small></div>
+        <a class="book-btn" href="book.html?service=weight-loss">Book <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="price-row">
+        <div>
+          <h3>Repeat prescription</h3>
+          <p>Five-minute video for stable repeats. E-script to your pharmacy of choice. Not for opioids, benzodiazepines, ADHD stimulants, sleep medications, or first-time scripts.</p>
+          <div class="price-meta">5 min · video · stable repeats only</div>
+        </div>
+        <div class="price-amount">NZD&nbsp;$35<small>per repeat</small></div>
+        <a class="book-btn" href="book.html?service=repeat">Book <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="price-row">
+        <div>
+          <h3>Medical certificate</h3>
+          <p>Standard sick note, return-to-work certificate, or short-term off-work certificate up to 7 days. ACC and complex insurance forms need an in-person GP.</p>
+          <div class="price-meta">5 min · video · up to 7 days</div>
+        </div>
+        <div class="price-amount">NZD&nbsp;$35<small>per certificate</small></div>
+        <a class="book-btn" href="book.html?service=certificate">Book <span aria-hidden="true">→</span></a>
+      </article>
+
+    </div>
+
+    <div class="notes">
+      <h2>Things worth knowing</h2>
+      <ul>
+        <li>All prices are in New Zealand dollars and include GST where applicable.</li>
+        <li>Payment is taken in full at booking through Stripe. We never store card details.</li>
+        <li>If a consult is outside what we can safely cover by video, we will tell you in the first three minutes and refund the consult.</li>
+        <li>We do not see patients outside Aotearoa New Zealand. We do not see under-18s. For under-18s, please book through your usual in-person GP.</li>
+        <li>Connect Clinic is not a crisis service. If you or someone you love is in mental health crisis, call or text 1737, or 111 if there is risk of harm right now.</li>
+        <li>Funding for Connect Clinic apps (Talanoa, Mahino, GLP-1 Companion, Pasifika Medication Resource) sits separately and never depends on consult fees.</li>
+      </ul>
+    </div>
+
+    <div class="cta-strip">
+      <div>
+        <h3>Ready to book?</h3>
+        <p>Pick a service, pay through Stripe, get a Zoom link by email within minutes.</p>
+      </div>
+      <a href="index.html#go">Go to booking <span aria-hidden="true">→</span></a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="foot-wrap">
+    <span>© 2026 Connect Clinic Limited · Aotearoa New Zealand</span>
+    <span><a href="index.html">Home</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

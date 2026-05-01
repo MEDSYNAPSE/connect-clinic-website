@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E3B36">
+<title>Book a consult · Connect Clinic</title>
+<meta name="description" content="Book a Connect Clinic telehealth consult. A short triage questionnaire helps the consult run well from the first minute.">
+<link rel="canonical" href="https://connectclinic.co.nz/book.html">
+<link rel="icon" type="image/png" href="assets/brand/connect-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#F5EFE3;--bg-soft:#EFE5D2;--surface:#FFFFFF;
+  --teal:#0E3B36;--teal-2:#1A5048;
+  --ink:#0E3B36;--ink-mute:#5C6660;--ink-dim:#8E948F;
+  --line:rgba(14,59,54,.10);--line-2:rgba(14,59,54,.18);
+  --terra:#C56E3A;--terra-2:#B25E2C;--terra-soft:#F1D5BE;
+  --warn:#B22222;--warn-bg:#FBEAEA;
+  --display:'Newsreader',ui-serif,Georgia,serif;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button,input,textarea,select{font:inherit;color:inherit}
+::selection{background:var(--terra);color:#fff}
+
+.bar{background:var(--teal);color:rgba(255,255,255,.88);text-align:center;padding:11px 16px;font-size:15px;font-weight:500;letter-spacing:.04em}
+.bar a{color:var(--terra-soft);text-decoration:underline;text-underline-offset:3px;font-weight:600;margin-left:6px}
+
+.nav-wrap{position:sticky;top:0;z-index:50;background:rgba(245,239,227,.85);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);border-bottom:1px solid var(--line)}
+.nav{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:38px;height:38px;border-radius:10px;background:var(--teal);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.brand-mark img{width:32px;height:32px;object-fit:contain}
+.brand-name{font-family:var(--display);font-weight:500;font-size:22px;letter-spacing:-.005em;color:var(--ink)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{padding:8px 14px;border-radius:8px;font-size:15.5px;font-weight:500;color:var(--ink-mute)}
+.nav-links a.active,.nav-links a:hover{color:var(--ink);background:var(--bg-soft)}
+@media (max-width:880px){.nav-links{display:none}}
+
+main{padding:48px 20px 96px;min-height:80vh}
+.wrap{max-width:760px;margin:0 auto}
+.tag{font-size:12.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--terra);display:inline-flex;align-items:center;gap:10px}
+.tag::before{content:"";width:24px;height:1px;background:var(--terra)}
+.h1{font-family:var(--display);font-weight:500;font-size:clamp(34px,4.6vw,52px);line-height:1.05;letter-spacing:-.018em;color:var(--ink);margin-top:14px}
+.h1 em{font-style:normal;color:var(--terra)}
+.lede{margin-top:14px;font-size:16.5px;color:var(--ink-mute);max-width:60ch;line-height:1.65}
+
+.steps{display:flex;align-items:center;gap:8px;margin:32px 0 8px;font-size:12.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim)}
+.steps span{padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
+.steps span.active{color:#fff;background:var(--teal);border-color:var(--teal)}
+.steps span.done{color:var(--terra);border-color:var(--terra);background:var(--terra-soft)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:36px;margin-top:24px}
+@media (max-width:680px){.card{padding:26px 22px}}
+.card h2{font-family:var(--display);font-weight:500;font-size:26px;letter-spacing:-.005em;color:var(--ink)}
+.card .desc{margin-top:8px;color:var(--ink-mute);font-size:15px;line-height:1.6}
+
+.svc-pick{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:24px}
+@media (max-width:680px){.svc-pick{grid-template-columns:1fr}}
+.svc-pick label{cursor:pointer;border:2px solid var(--line);border-radius:18px;padding:22px;background:var(--surface);display:flex;flex-direction:column;gap:8px;transition:border-color .18s,background .18s,transform .18s}
+.svc-pick label:hover{border-color:var(--terra);background:var(--bg)}
+.svc-pick label.selected{border-color:var(--terra);background:var(--terra-soft)}
+.svc-pick label input{position:absolute;opacity:0}
+.svc-pick label.feature{grid-column:span 2;border-color:var(--terra);background:linear-gradient(180deg,#fff 0%,var(--terra-soft) 100%)}
+@media (max-width:680px){.svc-pick label.feature{grid-column:span 1}}
+.svc-pick .svc-title{font-family:var(--display);font-weight:500;font-size:21px;color:var(--ink);letter-spacing:-.005em}
+.svc-pick .svc-feat{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:6px}
+.svc-pick .svc-feat::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--terra)}
+.svc-pick .svc-desc{font-size:15px;color:var(--ink-mute);line-height:1.55}
+
+.q{margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.q:first-of-type{margin-top:8px;padding-top:0;border-top:0}
+.q-section{font-family:var(--display);font-weight:500;font-size:18px;letter-spacing:-.005em;color:var(--ink);margin:32px 0 -4px;padding-top:24px;border-top:1px solid var(--line-2)}
+.q-section:first-child{margin-top:8px;padding-top:0;border-top:0}
+.q-section + .q,.q-section + .q-row{border-top:0;padding-top:8px;margin-top:6px}
+.q-section .hint{display:block;font-family:var(--sans);font-weight:400;font-size:15px;color:var(--ink-dim);margin-top:4px;letter-spacing:0}
+.q-block{margin-top:18px;padding:18px 20px;border-radius:14px;border:1px solid var(--line);background:var(--bg)}
+.q-block.safety{border-color:rgba(178,34,34,.18);background:#FCF1F1}
+.q-label{font-size:15.5px;font-weight:500;color:var(--ink);display:block;margin-bottom:6px}
+.q-label .req{color:var(--terra);margin-left:4px}
+.q-help{font-size:15px;color:var(--ink-dim);margin-bottom:12px;line-height:1.55}
+.q-input,.q-text{width:100%;padding:13px 14px;border:1px solid var(--line-2);border-radius:12px;background:var(--surface);font-size:15px;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+.q-input:focus,.q-text:focus{outline:none;border-color:var(--terra);box-shadow:0 0 0 3px rgba(197,110,58,.12)}
+.q-text{min-height:96px;resize:vertical;font-family:var(--sans)}
+.q-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.q-row{grid-template-columns:1fr}}
+.q-radio,.q-check{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.q-radio label,.q-check label{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);cursor:pointer;font-size:15.5px;line-height:1.5;transition:border-color .15s,background .15s}
+.q-radio label:hover,.q-check label:hover{border-color:var(--terra)}
+.q-radio input,.q-check input{margin-top:3px;accent-color:var(--terra);flex-shrink:0}
+.q-radio label.selected,.q-check label.selected{border-color:var(--terra);background:var(--terra-soft)}
+.q-radio.inline{flex-direction:row;flex-wrap:wrap}
+.q-radio.inline label{flex:1;min-width:120px;justify-content:center}
+
+.actions{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:32px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:999px;font-weight:600;font-size:15.5px;border:1px solid transparent;cursor:pointer;transition:transform .18s,background .18s,color .18s,border-color .18s}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover:not([disabled]){background:var(--teal-2);transform:translateY(-1px)}
+.btn-primary[disabled]{opacity:.45;cursor:not-allowed}
+.btn-back{background:transparent;color:var(--ink-mute);border-color:var(--line)}
+.btn-back:hover{color:var(--ink);border-color:var(--ink)}
+
+.bmi-out{margin-top:8px;padding:10px 14px;border-radius:10px;background:var(--bg);font-size:15.5px;color:var(--ink-mute);font-weight:500}
+.bmi-out b{color:var(--ink);font-weight:600;font-family:var(--display);font-size:18px;display:inline-block;margin-right:6px}
+.bmi-out.green{color:#0E5C3C;background:#E4F2EA}
+.bmi-out.amber{color:#7A4F0A;background:#FBF1D8}
+
+.alert{margin-top:18px;padding:18px 20px;border-radius:14px;background:var(--warn-bg);border:1px solid rgba(178,34,34,.30);color:var(--warn);font-size:15.5px;line-height:1.55;font-weight:500}
+.alert b{display:block;font-weight:600;margin-bottom:4px;color:var(--warn)}
+
+.review-list{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.review-list dt{font-size:12.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim)}
+.review-list dd{font-size:15px;color:var(--ink);padding-bottom:14px;border-bottom:1px solid var(--line)}
+
+.thanks{text-align:center;padding:36px 20px}
+.thanks h2{font-family:var(--display);font-weight:500;font-size:32px;color:var(--ink);letter-spacing:-.01em}
+.thanks p{margin-top:14px;color:var(--ink-mute);font-size:16px;max-width:54ch;margin-left:auto;margin-right:auto;line-height:1.65}
+
+.legal{margin-top:18px;font-size:12.5px;color:var(--ink-dim);line-height:1.55}
+.legal a{color:var(--ink-mute);text-decoration:underline;text-underline-offset:2px}
+
+.hide{display:none !important}
+
+footer{background:var(--bg);border-top:1px solid var(--line);padding:32px 20px;margin-top:48px}
+.foot{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-size:15px;color:var(--ink-dim)}
+.foot a{color:var(--ink-mute)}
+.foot a:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<div class="bar">If this is an emergency, call 111. For mental health crisis, call or text 1737 anytime.<a href="crisis.html">Get crisis help</a></div>
+
+<div class="nav-wrap">
+  <nav class="nav" aria-label="Primary">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><img src="assets/brand/connect-logo.png" alt=""></span>
+      <span class="brand-name">Connect Clinic</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#clinical">Medical</a>
+      <a href="index.html#innovation">Innovation</a>
+      <a href="index.html#lifestyle">Lifestyle support</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="book.html" class="active">Book</a>
+    </div>
+    <a class="btn btn-primary" href="#step-service" style="font-size:15.5px;padding:10px 18px">Start booking <span aria-hidden="true">→</span></a>
+  </nav>
+</div>
+
+<main>
+  <div class="wrap">
+
+    <span class="tag">Booking</span>
+    <h1 class="h1" id="step-service">Book a <em>Connect Clinic</em> consult.</h1>
+    <p class="lede">A short triage questionnaire so the consult is useful from the first minute. Most patients finish this in three minutes. Nothing leaves your device until you submit at the end.</p>
+
+    <div class="steps" id="steps">
+      <span class="active">1 · Service</span>
+      <span>2 · Safety check</span>
+      <span>3 · Triage</span>
+      <span>4 · Your details</span>
+      <span>5 · Review</span>
+    </div>
+
+    <form id="bookForm" novalidate>
+
+      <!-- Step 1: Service -->
+      <section class="card" id="s-service">
+        <h2>What are you booking?</h2>
+        <p class="desc">Pick one. The questions on the next steps depend on the service.</p>
+        <div class="svc-pick" id="svcPick">
+          <label class="feature" data-svc="mental-health">
+            <input type="radio" name="service" value="mental-health" required>
+            <span class="svc-feat">Primary focus</span>
+            <span class="svc-title">Mental health assessment</span>
+            <span class="svc-desc">Anxiety, low mood, burnout, ADHD screening, or any concern that needs a careful clinical look. You leave with a working diagnosis, a written plan, and a referral letter where one is needed.</span>
+          </label>
+          <label data-svc="weight-loss">
+            <input type="radio" name="service" value="weight-loss" required>
+            <span class="svc-title">Weight loss &amp; GLP-1</span>
+            <span class="svc-desc">A consult about Wegovy, Saxenda, or Mounjaro, the lifestyle work alongside, and whether you're a clinical fit.</span>
+          </label>
+          <label data-svc="repeat">
+            <input type="radio" name="service" value="repeat" required>
+            <span class="svc-title">Repeat prescription</span>
+            <span class="svc-desc">A quick repeat for a stable medication. Not for opioids, benzodiazepines, ADHD stimulants, sleep medications, or first-time scripts.</span>
+          </label>
+          <label data-svc="certificate">
+            <input type="radio" name="service" value="certificate" required>
+            <span class="svc-title">Medical certificate</span>
+            <span class="svc-desc">A standard sick note, return-to-work, or short-term off-work certificate. ACC and complex insurance forms need an in-person GP.</span>
+          </label>
+        </div>
+        <div class="actions">
+          <span></span>
+          <button type="button" class="btn btn-primary" id="next1" disabled>Continue <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <!-- Step 2: Safety -->
+      <section class="card hide" id="s-safety">
+        <h2>Quick safety check.</h2>
+        <p class="desc">Three questions. If any are true right now, you'll be routed to the right service for an emergency.</p>
+
+        <div class="q">
+          <label class="q-label">Are you having thoughts of harming yourself or someone else right now?<span class="req">*</span></label>
+          <div class="q-radio inline" data-name="rf_self">
+            <label><input type="radio" name="rf_self" value="no" required>No</label>
+            <label><input type="radio" name="rf_self" value="yes">Yes</label>
+          </div>
+        </div>
+
+        <div class="q">
+          <label class="q-label">Do you have chest pain, severe shortness of breath, severe bleeding, or any sign of stroke (face droop, arm weakness, slurred speech)?<span class="req">*</span></label>
+          <div class="q-radio inline" data-name="rf_med">
+            <label><input type="radio" name="rf_med" value="no" required>No</label>
+            <label><input type="radio" name="rf_med" value="yes">Yes</label>
+          </div>
+        </div>
+
+        <div class="q">
+          <label class="q-label">Are you in an acute crisis right now that you need help with in the next hour?<span class="req">*</span></label>
+          <div class="q-radio inline" data-name="rf_acute">
+            <label><input type="radio" name="rf_acute" value="no" required>No</label>
+            <label><input type="radio" name="rf_acute" value="yes">Yes</label>
+          </div>
+        </div>
+
+        <div class="alert hide" id="acuteAlert">
+          <b>This service is not the right fit for an emergency.</b>
+          A telehealth booking is for non-urgent care. If anything you ticked is true right now, please use the right service. <a href="crisis.html" style="color:#fff;background:var(--warn);padding:6px 12px;border-radius:999px;text-decoration:none;display:inline-block;margin-top:8px">Open crisis page <span aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-back" data-back>Back</button>
+          <button type="button" class="btn btn-primary" id="next2" disabled>Continue <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <!-- Step 3: Triage (one block per service, shown by JS) -->
+      <section class="card hide" id="s-triage">
+        <h2>A few questions.</h2>
+        <p class="desc">Plain English. Skip anything that doesn't apply.</p>
+
+        <!-- Mental health -->
+        <div id="t-mental-health" class="hide">
+          <h3 class="q-section">Why you're booking<span class="hint">A few sentences in your own words.</span></h3>
+          <div class="q">
+            <label class="q-label">What's bringing you in today?<span class="req">*</span></label>
+            <textarea class="q-text" name="mh_reason" placeholder="A few sentences is plenty."></textarea>
+          </div>
+
+          <h3 class="q-section">How you've been over the past two weeks<span class="hint">Best guess. There's no wrong answer.</span></h3>
+          <div class="q">
+            <label class="q-label">Felt low, flat, or hopeless</label>
+            <div class="q-radio inline">
+              <label><input type="radio" name="mh_low" value="not_at_all">Not at all</label>
+              <label><input type="radio" name="mh_low" value="some_days">Some days</label>
+              <label><input type="radio" name="mh_low" value="most_days">Most days</label>
+              <label><input type="radio" name="mh_low" value="every_day">Nearly every day</label>
+            </div>
+          </div>
+          <div class="q">
+            <label class="q-label">Felt anxious, on edge, or unable to switch off</label>
+            <div class="q-radio inline">
+              <label><input type="radio" name="mh_anx" value="not_at_all">Not at all</label>
+              <label><input type="radio" name="mh_anx" value="some_days">Some days</label>
+              <label><input type="radio" name="mh_anx" value="most_days">Most days</label>
+              <label><input type="radio" name="mh_anx" value="every_day">Nearly every day</label>
+            </div>
+          </div>
+          <div class="q">
+            <label class="q-label">Affecting sleep, work, or close relationships</label>
+            <div class="q-radio inline">
+              <label><input type="radio" name="mh_function" value="not_really">Not really</label>
+              <label><input type="radio" name="mh_function" value="somewhat">Somewhat</label>
+              <label><input type="radio" name="mh_function" value="a_lot">A lot</label>
+            </div>
+          </div>
+
+          <h3 class="q-section">Your treatment history<span class="hint">Skip anything that doesn't apply.</span></h3>
+          <div class="q">
+            <label class="q-label">Currently taking any mental health medication?</label>
+            <input class="q-input" type="text" name="mh_meds" placeholder="e.g. fluoxetine 20 mg daily, started 6 months ago. Or 'none'.">
+          </div>
+          <div class="q">
+            <label class="q-label">Last seen a GP or therapist about this</label>
+            <input class="q-input" type="text" name="mh_lastseen" placeholder="e.g. saw GP about 3 months ago, never a therapist">
+          </div>
+          <div class="q">
+            <label class="q-label">Anything else worth flagging</label>
+            <textarea class="q-text" name="mh_other" placeholder="Diagnoses, important context, things that have helped before. Optional."></textarea>
+          </div>
+        </div>
+
+        <!-- Weight loss / GLP-1 -->
+        <div id="t-weight-loss" class="hide">
+          <h3 class="q-section">Your numbers<span class="hint">Used for an indicative BMI on the day of consult.</span></h3>
+          <div class="q">
+            <label class="q-label">Height and weight</label>
+            <div class="q-row">
+              <input class="q-input" type="number" inputmode="decimal" min="100" max="230" step="0.1" name="wl_height_cm" placeholder="Height (cm)" id="wlHeight">
+              <input class="q-input" type="number" inputmode="decimal" min="35" max="300" step="0.1" name="wl_weight_kg" placeholder="Weight (kg)" id="wlWeight">
+            </div>
+            <div class="bmi-out" id="bmiOut" style="display:none"></div>
+          </div>
+
+          <h3 class="q-section">Your history<span class="hint">Skip anything that doesn't apply.</span></h3>
+          <div class="q">
+            <label class="q-label">Tried a weight-loss medication before</label>
+            <input class="q-input" type="text" name="wl_prior" placeholder="e.g. tried Saxenda for 3 months, stopped due to nausea. Or 'no'.">
+          </div>
+          <div class="q">
+            <label class="q-label">Conditions you currently have</label>
+            <div class="q-check">
+              <label><input type="checkbox" name="wl_cond" value="t2dm">Type 2 diabetes</label>
+              <label><input type="checkbox" name="wl_cond" value="htn">High blood pressure</label>
+              <label><input type="checkbox" name="wl_cond" value="dyslip">High cholesterol</label>
+              <label><input type="checkbox" name="wl_cond" value="osa">Sleep apnoea</label>
+              <label><input type="checkbox" name="wl_cond" value="liver">Fatty liver</label>
+              <label><input type="checkbox" name="wl_cond" value="pcos">PCOS</label>
+              <label><input type="checkbox" name="wl_cond" value="none">None of these</label>
+            </div>
+          </div>
+
+          <h3 class="q-section">Important screening<span class="hint">These determine whether GLP-1 medication is safe for you.</span></h3>
+          <div class="q-block safety">
+            <div class="q">
+              <label class="q-label">Pregnant, planning pregnancy, or breastfeeding<span class="req">*</span></label>
+              <div class="q-radio inline">
+                <label><input type="radio" name="wl_pregnant" value="no" required>No</label>
+                <label><input type="radio" name="wl_pregnant" value="yes">Yes</label>
+                <label><input type="radio" name="wl_pregnant" value="na">Not applicable</label>
+              </div>
+            </div>
+            <div class="q">
+              <label class="q-label">Any history of pancreatitis, gallbladder disease, medullary thyroid cancer, or MEN2<span class="req">*</span></label>
+              <div class="q-radio inline">
+                <label><input type="radio" name="wl_history" value="no" required>No</label>
+                <label><input type="radio" name="wl_history" value="yes">Yes</label>
+                <label><input type="radio" name="wl_history" value="not_sure">Not sure</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="q">
+            <label class="q-label">Anything else worth flagging</label>
+            <textarea class="q-text" name="wl_other" placeholder="Optional"></textarea>
+          </div>
+        </div>
+
+        <!-- Repeat prescription -->
+        <div id="t-repeat" class="hide">
+          <h3 class="q-section">Your medication<span class="hint">So we can prepare the e-script before the consult.</span></h3>
+          <div class="q">
+            <label class="q-label">Medication and dose<span class="req">*</span></label>
+            <textarea class="q-text" name="rx_meds" placeholder="e.g. metformin 500 mg twice daily; fluoxetine 20 mg daily" required></textarea>
+          </div>
+          <div class="q">
+            <label class="q-label">Pharmacy name and suburb<span class="req">*</span></label>
+            <input class="q-input" type="text" name="rx_pharmacy" placeholder="e.g. Unichem Mangere Bridge" required>
+          </div>
+          <div class="q">
+            <label class="q-label">Last seen a GP or specialist about this medication</label>
+            <input class="q-input" type="text" name="rx_lastreview" placeholder="e.g. 4 months ago at my usual GP">
+          </div>
+
+          <h3 class="q-section">Recent changes<span class="hint">Anything different since the last fill?</span></h3>
+          <div class="q">
+            <label class="q-label">New symptoms or side-effects</label>
+            <textarea class="q-text" name="rx_changes" placeholder="If nothing, say 'no changes'."></textarea>
+          </div>
+
+          <h3 class="q-section">Confirmations<span class="hint">Required before a telehealth repeat can be issued.</span></h3>
+          <div class="q-block">
+            <div class="q-check">
+              <label><input type="checkbox" name="rx_confirm" value="not_controlled" required>Not for opioids, benzodiazepines, ADHD stimulants, or sleep medications.</label>
+              <label><input type="checkbox" name="rx_confirm" value="not_first" required>Not a first-time prescription — has been prescribed by a doctor before.</label>
+              <label><input type="checkbox" name="rx_confirm" value="stable" required>I am stable on this medication, no recent serious side-effects.</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Medical certificate -->
+        <div id="t-certificate" class="hide">
+          <h3 class="q-section">What and when<span class="hint">A short certificate up to 7 consecutive days.</span></h3>
+          <div class="q">
+            <label class="q-label">Reason for the certificate<span class="req">*</span></label>
+            <textarea class="q-text" name="mc_reason" placeholder="A few sentences. e.g. flu-like illness for the last 3 days." required></textarea>
+          </div>
+          <div class="q">
+            <label class="q-label">Dates to cover<span class="req">*</span></label>
+            <div class="q-row">
+              <input class="q-input" type="date" name="mc_from" required>
+              <input class="q-input" type="date" name="mc_to" required>
+            </div>
+            <p class="q-help">Max 7 consecutive days. Longer or backdated certificates need an in-person GP.</p>
+          </div>
+
+          <h3 class="q-section">Context<span class="hint">Helps shape the wording of the certificate.</span></h3>
+          <div class="q">
+            <label class="q-label">Who is it for</label>
+            <div class="q-radio inline" data-name="mc_for">
+              <label><input type="radio" name="mc_for" value="employer">Employer</label>
+              <label><input type="radio" name="mc_for" value="school">School / university</label>
+              <label><input type="radio" name="mc_for" value="other">Other</label>
+            </div>
+          </div>
+          <div class="q">
+            <label class="q-label">Seen a GP recently for this issue</label>
+            <input class="q-input" type="text" name="mc_seen" placeholder="e.g. yes, GP yesterday. Or 'no'.">
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-back" data-back>Back</button>
+          <button type="button" class="btn btn-primary" id="next3">Continue <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <!-- Step 4: Patient details -->
+      <section class="card hide" id="s-details">
+        <h2>Your details.</h2>
+        <p class="desc">We need these to confirm the booking and send the Zoom link.</p>
+
+        <div class="q">
+          <label class="q-label">Full name<span class="req">*</span></label>
+          <input class="q-input" type="text" name="p_name" required autocomplete="name">
+        </div>
+
+        <div class="q">
+          <label class="q-label">Date of birth<span class="req">*</span></label>
+          <input class="q-input" type="date" name="p_dob" required autocomplete="bday">
+        </div>
+
+        <div class="q-row" style="margin-top:24px;border-top:1px solid var(--line);padding-top:24px">
+          <div>
+            <label class="q-label">Email<span class="req">*</span></label>
+            <input class="q-input" type="email" name="p_email" required autocomplete="email">
+          </div>
+          <div>
+            <label class="q-label">Mobile<span class="req">*</span></label>
+            <input class="q-input" type="tel" name="p_mobile" required autocomplete="tel" placeholder="e.g. 021 234 5678">
+          </div>
+        </div>
+
+        <div class="q-row">
+          <div>
+            <label class="q-label">Suburb / city</label>
+            <input class="q-input" type="text" name="p_suburb" autocomplete="address-level2">
+          </div>
+          <div>
+            <label class="q-label">NHI number (optional)</label>
+            <input class="q-input" type="text" name="p_nhi" placeholder="If known">
+          </div>
+        </div>
+
+        <div class="q">
+          <label class="q-label">Confirmations<span class="req">*</span></label>
+          <div class="q-check">
+            <label><input type="checkbox" name="p_confirm" value="nz_resident" required>I am currently in Aotearoa New Zealand and will be at the time of the consult.</label>
+            <label><input type="checkbox" name="p_confirm" value="adult" required>I am 18 years or older.</label>
+            <label><input type="checkbox" name="p_confirm" value="privacy" required>I have read the <a href="privacy.html" target="_blank" style="text-decoration:underline">privacy policy</a> and consent to the consult.</label>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-back" data-back>Back</button>
+          <button type="button" class="btn btn-primary" id="next4">Review <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <!-- Step 5: Review -->
+      <section class="card hide" id="s-review">
+        <h2>Quick review.</h2>
+        <p class="desc">Last chance to change anything. Submitting will send your details to Connect Clinic and take you to the secure payment step on Stripe.</p>
+
+        <dl class="review-list" id="reviewList"></dl>
+
+        <p class="legal">By submitting, you confirm the above is accurate to the best of your knowledge. Information is sent to Connect Clinic over a secure connection and is used only for clinical care, payment, and required record-keeping. <a href="privacy.html">Privacy policy</a>. <a href="terms.html">Terms</a>.</p>
+
+        <div class="actions">
+          <button type="button" class="btn btn-back" data-back>Back</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Submit and pay <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <!-- Step 6: Thanks (post-submit) -->
+      <section class="card hide" id="s-thanks">
+        <div class="thanks">
+          <h2>Got it.</h2>
+          <p id="thanksLine">Your details are in. Taking you to the secure payment step on Stripe. Please don't close this tab.</p>
+          <p style="margin-top:24px"><a class="btn btn-primary" id="payLink" href="#">Continue to payment <span aria-hidden="true">→</span></a></p>
+          <p class="legal">If the payment page does not open in a few seconds, click the button above. After payment a Zoom link is emailed to you within a minute.</p>
+        </div>
+      </section>
+
+    </form>
+  </div>
+</main>
+
+<footer>
+  <div class="foot">
+    <span>© 2026 Connect Clinic Limited · Aotearoa New Zealand</span>
+    <span><a href="index.html">Home</a> · <a href="pricing.html">Pricing</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="crisis.html">Crisis help</a></span>
+  </div>
+</footer>
+
+<script>
+const STRIPE_LINKS = {
+  "mental-health": "https://buy.stripe.com/9B628q45jh2U2LW1yS6c003",
+  "weight-loss":   "https://buy.stripe.com/9B628q45jh2U2LW1yS6c003",
+  "repeat":        "https://buy.stripe.com/00w9ASgS57sk0DOelE6c002",
+  "certificate":   "https://buy.stripe.com/aFa8wO6dr2802LW2CW6c001"
+};
+
+const SVC_LABEL = {
+  "mental-health":"Mental health assessment",
+  "weight-loss":"Weight loss & GLP-1 consult",
+  "repeat":"Repeat prescription",
+  "certificate":"Medical certificate"
+};
+
+const STEP_IDS = ['s-service','s-safety','s-triage','s-details','s-review','s-thanks'];
+let stepIdx = 0;
+
+function showStep(i){
+  STEP_IDS.forEach((id,j)=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.classList.toggle('hide', j!==i);
+  });
+  const stepsBar=document.getElementById('steps');
+  if(stepsBar){
+    [...stepsBar.children].forEach((s,j)=>{
+      s.classList.remove('active','done');
+      if(j<i) s.classList.add('done');
+      if(j===i) s.classList.add('active');
+    });
+  }
+  stepIdx=i;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.querySelectorAll('[data-back]').forEach(b=>{
+  b.addEventListener('click',()=>{ if(stepIdx>0) showStep(stepIdx-1); });
+});
+
+// Step 1: service selection
+const svcPick = document.getElementById('svcPick');
+svcPick.addEventListener('change', e=>{
+  if(e.target.name!=='service') return;
+  document.querySelectorAll('#svcPick label').forEach(l=>l.classList.toggle('selected', l.querySelector('input').checked));
+  document.getElementById('next1').disabled = !e.target.checked;
+});
+document.getElementById('next1').addEventListener('click',()=>{
+  const v=svcPick.querySelector('input[name=service]:checked');
+  if(!v) return;
+  // show the right triage block
+  ['mental-health','weight-loss','repeat','certificate'].forEach(s=>{
+    const el=document.getElementById('t-'+s);
+    if(el) el.classList.toggle('hide', s!==v.value);
+  });
+  showStep(1);
+});
+
+// Step 2: safety
+const safety = document.getElementById('s-safety');
+const acuteAlert = document.getElementById('acuteAlert');
+const next2 = document.getElementById('next2');
+function evalSafety(){
+  const yes = ['rf_self','rf_med','rf_acute'].some(n=>{
+    const el=document.querySelector(`input[name=${n}]:checked`);
+    return el && el.value==='yes';
+  });
+  const allAnswered = ['rf_self','rf_med','rf_acute'].every(n=>document.querySelector(`input[name=${n}]:checked`));
+  acuteAlert.classList.toggle('hide', !yes);
+  next2.disabled = !allAnswered || yes;
+  // visual selected state
+  safety.querySelectorAll('.q-radio label').forEach(l=>l.classList.toggle('selected', l.querySelector('input').checked));
+}
+safety.addEventListener('change', evalSafety);
+next2.addEventListener('click', ()=>showStep(2));
+
+// Step 3: triage
+const next3 = document.getElementById('next3');
+const triage = document.getElementById('s-triage');
+triage.addEventListener('change', ()=>{
+  triage.querySelectorAll('.q-radio label, .q-check label').forEach(l=>l.classList.toggle('selected', l.querySelector('input').checked));
+});
+// BMI calc
+function calcBMI(){
+  const h=parseFloat(document.getElementById('wlHeight').value);
+  const w=parseFloat(document.getElementById('wlWeight').value);
+  const out=document.getElementById('bmiOut');
+  if(!h||!w||h<100||w<35){ out.style.display='none'; return; }
+  const bmi = w / Math.pow(h/100,2);
+  out.style.display='block';
+  out.classList.remove('green','amber');
+  let label='';
+  if(bmi<18.5) label='Underweight';
+  else if(bmi<25){ label='Healthy weight'; out.classList.add('green'); }
+  else if(bmi<30){ label='Overweight'; out.classList.add('amber'); }
+  else if(bmi<35){ label='Obesity, class I'; out.classList.add('amber'); }
+  else if(bmi<40){ label='Obesity, class II'; out.classList.add('amber'); }
+  else { label='Obesity, class III'; out.classList.add('amber'); }
+  out.innerHTML = `<b>${bmi.toFixed(1)}</b> ${label} · indicative only, the GP will confirm at the consult`;
+}
+['wlHeight','wlWeight'].forEach(id=>{
+  const el=document.getElementById(id); if(el) el.addEventListener('input',calcBMI);
+});
+next3.addEventListener('click', ()=>{
+  // basic validation: required fields in the visible triage block
+  const visible = triage.querySelector('div[id^=t-]:not(.hide)');
+  if(!visible) return showStep(3);
+  const reqs = visible.querySelectorAll('[required]');
+  let ok=true;
+  for(const r of reqs){
+    if(r.type==='radio'){
+      if(!visible.querySelector(`input[name=${r.name}]:checked`)){ ok=false; r.closest('.q')?.scrollIntoView({behavior:'smooth',block:'center'}); break; }
+    } else if(r.type==='checkbox'){
+      if(!r.checked){ ok=false; r.closest('.q')?.scrollIntoView({behavior:'smooth',block:'center'}); break; }
+    } else if(!r.value.trim()){ ok=false; r.focus(); break; }
+  }
+  if(ok) showStep(3);
+});
+
+// Step 4: details
+const detailsCard=document.getElementById('s-details');
+detailsCard.addEventListener('change', ()=>{
+  detailsCard.querySelectorAll('.q-check label').forEach(l=>l.classList.toggle('selected', l.querySelector('input').checked));
+});
+document.getElementById('next4').addEventListener('click', ()=>{
+  const reqs = detailsCard.querySelectorAll('[required]');
+  for(const r of reqs){
+    if(r.type==='checkbox' && !r.checked){ r.closest('.q')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+    if(r.type!=='checkbox' && !r.value.trim()){ r.focus(); return; }
+    if(r.type==='email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.value)){ r.focus(); return; }
+  }
+  // build review
+  const fd = new FormData(document.getElementById('bookForm'));
+  const dl = document.getElementById('reviewList');
+  dl.innerHTML='';
+  const svc = fd.get('service');
+  function row(k,v){ if(v==null||v==='')return; const dt=document.createElement('dt');dt.textContent=k;const dd=document.createElement('dd');dd.textContent=v;dl.appendChild(dt);dl.appendChild(dd); }
+  row('Service', SVC_LABEL[svc]||svc);
+  row('Name', fd.get('p_name'));
+  row('Date of birth', fd.get('p_dob'));
+  row('Email', fd.get('p_email'));
+  row('Mobile', fd.get('p_mobile'));
+  if(fd.get('p_suburb')) row('Suburb', fd.get('p_suburb'));
+  if(fd.get('p_nhi')) row('NHI', fd.get('p_nhi'));
+  // service-specific summary
+  if(svc==='mental-health'){
+    row('Reason for booking', fd.get('mh_reason'));
+    if(fd.get('mh_low')) row('Low / flat over 2 weeks', fd.get('mh_low').replace(/_/g,' '));
+    if(fd.get('mh_anx')) row('Anxious over 2 weeks', fd.get('mh_anx').replace(/_/g,' '));
+    if(fd.get('mh_function')) row('Affecting daily life', fd.get('mh_function').replace(/_/g,' '));
+    if(fd.get('mh_meds')) row('Current mental health meds', fd.get('mh_meds'));
+    if(fd.get('mh_lastseen')) row('Last seen by GP / therapist', fd.get('mh_lastseen'));
+    if(fd.get('mh_other')) row('Other context', fd.get('mh_other'));
+  } else if(svc==='weight-loss'){
+    if(fd.get('wl_height_cm')) row('Height (cm)', fd.get('wl_height_cm'));
+    if(fd.get('wl_weight_kg')) row('Weight (kg)', fd.get('wl_weight_kg'));
+    if(fd.get('wl_prior')) row('Previous weight medications', fd.get('wl_prior'));
+    const conds=fd.getAll('wl_cond'); if(conds.length) row('Current conditions', conds.join(', '));
+    if(fd.get('wl_pregnant')) row('Pregnancy / planning', fd.get('wl_pregnant'));
+    if(fd.get('wl_history')) row('Pancreatitis / gallbladder / thyroid history', fd.get('wl_history').replace(/_/g,' '));
+    if(fd.get('wl_other')) row('Other', fd.get('wl_other'));
+  } else if(svc==='repeat'){
+    row('Medication(s)', fd.get('rx_meds'));
+    row('Pharmacy', fd.get('rx_pharmacy'));
+    if(fd.get('rx_lastreview')) row('Last GP / specialist review', fd.get('rx_lastreview'));
+    if(fd.get('rx_changes')) row('Symptom / side-effect changes', fd.get('rx_changes'));
+  } else if(svc==='certificate'){
+    row('Reason', fd.get('mc_reason'));
+    row('From', fd.get('mc_from'));
+    row('To', fd.get('mc_to'));
+    if(fd.get('mc_for')) row('For', fd.get('mc_for'));
+    if(fd.get('mc_seen')) row('Recently seen by GP', fd.get('mc_seen'));
+  }
+  showStep(4);
+});
+
+// Submit
+document.getElementById('bookForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  const fd = new FormData(e.target);
+  const data = Object.fromEntries(fd.entries());
+  // include array fields
+  data.wl_cond = fd.getAll('wl_cond');
+  data.rx_confirm = fd.getAll('rx_confirm');
+  data.p_confirm = fd.getAll('p_confirm');
+  data.submittedAt = new Date().toISOString();
+  data.userAgent = navigator.userAgent;
+
+  let stripeUrl = STRIPE_LINKS[data.service] || STRIPE_LINKS['mental-health'];
+  try{
+    const res = await fetch('/api/book', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    });
+    if(res.ok){
+      const j = await res.json().catch(()=>({}));
+      if(j.stripeUrl) stripeUrl = j.stripeUrl;
+    }
+  } catch(err){
+    // network failed - keep going to Stripe anyway, the patient still pays + we can take history at the consult
+    console.warn('Booking endpoint unreachable, falling through to Stripe', err);
+  }
+
+  // Append patient email to Stripe link as a hint (Stripe checkout will accept this)
+  try {
+    const u = new URL(stripeUrl);
+    if(data.p_email && !u.searchParams.has('prefilled_email')){
+      u.searchParams.set('prefilled_email', data.p_email);
+    }
+    stripeUrl = u.toString();
+  } catch(_){}
+
+  document.getElementById('payLink').href = stripeUrl;
+  document.getElementById('thanksLine').textContent =
+    `Your details are in. Taking you to the secure payment step on Stripe for your ${SVC_LABEL[data.service] || 'consult'}. Please don't close this tab.`;
+  showStep(5);
+  setTimeout(()=>{ window.location.href = stripeUrl; }, 1500);
+});
+
+// Initial state. Honour ?service=... deep links from the rest of the site.
+(function bootstrapFromQuery(){
+  let preselected = false;
+  try {
+    const svcParam = new URLSearchParams(window.location.search).get('service');
+    if (svcParam && STRIPE_LINKS[svcParam]) {
+      const radio = document.querySelector(`input[name=service][value="${svcParam}"]`);
+      if (radio) {
+        radio.checked = true;
+        // sync selected styling
+        document.querySelectorAll('#svcPick label').forEach(l =>
+          l.classList.toggle('selected', l.querySelector('input').checked));
+        // show the matching triage block, hide the others
+        ['mental-health','weight-loss','repeat','certificate'].forEach(s => {
+          const el = document.getElementById('t-' + s);
+          if (el) el.classList.toggle('hide', s !== svcParam);
+        });
+        document.getElementById('next1').disabled = false;
+        // jump the patient straight to the safety check
+        showStep(1);
+        preselected = true;
+      }
+    }
+  } catch(_) { /* fall through to step 0 */ }
+  if (!preselected) showStep(0);
+})();
+</script>
+</body>
+</html>
