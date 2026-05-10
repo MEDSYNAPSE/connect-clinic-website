@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E3B36">
+<title>About · Connect Clinic</title>
+<meta name="description" content="Who runs Connect Clinic, the small studio of Pacific health software we build alongside the clinic, and the philosophy that ties it all together.">
+<link rel="canonical" href="https://connectclinic.co.nz/about.html">
+<link rel="icon" type="image/png" href="assets/brand/connect-logo.png">
+<link rel="apple-touch-icon" href="assets/brand/connect-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg: #F5EFE3;
+  --bg-soft: #EFE5D2;
+  --surface: #FFFFFF;
+  --teal: #0E3B36;
+  --teal-2: #1A5048;
+  --ink: #0E3B36;
+  --ink-mute: #5C6660;
+  --ink-dim: #8E948F;
+  --line: rgba(14,59,54,.10);
+  --line-2: rgba(14,59,54,.18);
+  --terra: #C56E3A;
+  --terra-2: #B25E2C;
+  --terra-soft: #F1D5BE;
+  --display: 'Newsreader', ui-serif, Georgia, serif;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+::selection{background:var(--terra);color:#fff}
+
+.bar{background:var(--teal);color:rgba(255,255,255,.88);text-align:center;padding:11px 16px;font-size:15px;font-weight:500;letter-spacing:.04em}
+.bar a{color:var(--terra-soft);text-decoration:underline;text-underline-offset:3px;font-weight:600;margin-left:6px}
+.bar a:hover{color:#fff}
+
+.nav-wrap{position:sticky;top:0;z-index:50;background:rgba(245,239,227,.85);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);border-bottom:1px solid var(--line)}
+.nav{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:42px;height:42px;display:flex;align-items:center;justify-content:center;overflow:visible}
+.brand-mark img{width:42px;height:42px;object-fit:contain}
+.brand-name{font-family:var(--display);font-weight:500;font-size:22px;letter-spacing:-.01em;color:var(--ink)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{padding:8px 14px;border-radius:8px;font-size:15.5px;font-weight:500;color:var(--ink-mute);transition:color .18s,background .18s}
+.nav-links a.active,.nav-links a:hover{color:var(--ink);background:var(--bg-soft)}
+.nav-cta{background:var(--teal);color:#fff;padding:11px 22px;border-radius:999px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:6px;transition:transform .18s,filter .18s,background .18s}
+.nav-cta:hover{transform:translateY(-1px);background:var(--teal-2)}
+@media (max-width:880px){.nav-links{display:none}.nav{padding:12px 18px}}
+
+section{position:relative;padding:96px 24px}
+.wrap{max-width:1200px;margin:0 auto}
+.tag{font-size:12.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--terra);display:inline-flex;align-items:center;gap:10px}
+.tag::before{content:"";width:24px;height:1px;background:var(--terra)}
+.h1{font-family:var(--display);font-weight:500;font-size:clamp(40px,5.6vw,72px);line-height:1.04;letter-spacing:-.02em;color:var(--ink);text-wrap:balance}
+.h1 em{font-style:normal;color:var(--terra);font-weight:500}
+.h2{font-family:var(--display);font-weight:500;font-size:clamp(28px,3.4vw,44px);line-height:1.06;letter-spacing:-.018em;color:var(--ink);text-wrap:balance}
+.h2 em{font-style:normal;color:var(--terra);font-weight:500}
+.lede{font-size:17px;color:var(--ink-mute);max-width:62ch;line-height:1.65}
+
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:999px;font-weight:600;font-size:15.5px;transition:transform .18s,background .18s;border:1px solid transparent}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{transform:translateY(-1px);background:var(--teal-2)}
+.btn-light{background:var(--surface);color:var(--ink);border-color:var(--line-2)}
+.btn-light:hover{background:#fff;border-color:var(--ink)}
+.btn .arrow{transition:transform .18s}
+.btn:hover .arrow{transform:translateX(3px)}
+
+/* HERO */
+.hero{padding:80px 24px 72px;text-align:center}
+.hero-inner{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;max-width:880px;margin:0 auto}
+.hero-inner .tag{justify-content:center}
+.hero-inner .lede{margin:0 auto}
+.hero-inner h1{margin-top:8px}
+
+/* Story */
+.story{padding:72px 24px;background:var(--bg-soft)}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;max-width:1100px;margin:0 auto}
+@media (max-width:880px){.story-grid{grid-template-columns:1fr;gap:28px;text-align:center}}
+.story-photo{border-radius:24px;overflow:hidden;aspect-ratio:5/4;border:1px solid var(--line);box-shadow:0 18px 48px rgba(14,59,54,.10)}
+.story-photo img{width:100%;height:100%;object-fit:cover}
+.story-text{display:flex;flex-direction:column;gap:18px}
+@media (max-width:880px){
+  .story-text{align-items:center}
+  .story-text .tag{justify-content:center}
+  .story-text .lede{margin:0 auto}
+}
+
+/* Apps grid */
+.apps{padding:96px 24px;background:var(--teal);color:#fff}
+.apps .lede{color:rgba(255,255,255,.78)}
+.apps .h2{color:#fff}
+.apps .tag{color:var(--terra-soft)}
+.apps .tag::before{background:var(--terra-soft)}
+.apps-head{max-width:760px;margin:0 auto 48px;text-align:center}
+.apps-head .tag{justify-content:center}
+.apps-head .h2{margin-top:14px}
+.apps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1180px;margin:0 auto}
+@media (max-width:920px){.apps-grid{grid-template-columns:1fr}}
+.app-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:22px;padding:0;overflow:hidden;display:flex;flex-direction:column;transition:transform .18s,border-color .18s}
+.app-card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.32)}
+.app-card-art{aspect-ratio:5/4;background:rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.app-card-art img{width:100%;height:100%;object-fit:cover}
+.app-art-fallback{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:32px;color:rgba(255,255,255,.55)}
+.app-art-fallback .glyph{font-family:var(--display);font-weight:500;font-size:54px;color:rgba(255,255,255,.85);letter-spacing:-.02em}
+.app-art-fallback .placeholder{font-size:12.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase}
+.app-card-body{padding:26px 26px 28px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;flex:1}
+.app-status{font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--terra-soft);display:inline-flex;align-items:center;gap:8px;margin-bottom:6px;justify-content:center}
+.app-status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--terra-soft)}
+.app-status.dim{color:rgba(255,255,255,.55)}.app-status.dim::before{background:rgba(255,255,255,.55)}
+.app-status.soon{color:rgba(255,255,255,.7)}.app-status.soon::before{background:rgba(255,255,255,.7)}
+.app-card h3{font-family:var(--display);font-weight:500;font-size:24px;letter-spacing:-.01em;color:#fff}
+.app-card .why{font-style:italic;color:var(--terra-soft);font-size:14.5px;font-weight:500;line-height:1.5}
+.app-card p{font-size:15px;color:rgba(255,255,255,.78);line-height:1.6}
+.app-card-foot{margin-top:auto;padding-top:14px}
+.pill-link{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--terra-soft);background:rgba(241,213,190,.12);border:1px solid rgba(241,213,190,.30);padding:10px 16px;border-radius:999px;transition:background .18s,border-color .18s,color .18s}
+.pill-link:hover{background:rgba(241,213,190,.18);color:#fff;border-color:rgba(241,213,190,.55)}
+
+/* Team */
+.team{padding:96px 24px;background:var(--bg)}
+.team-head{max-width:760px;margin:0 auto 36px;text-align:center}
+.team-head .tag{justify-content:center}
+.team-head .h2{margin-top:14px}
+.team-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;max-width:980px;margin:0 auto}
+@media (max-width:760px){.team-grid{grid-template-columns:1fr}}
+.team-card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:32px 28px;text-align:center}
+.team-card h3{font-family:var(--display);font-weight:500;font-size:24px;letter-spacing:-.01em;color:var(--ink);margin-bottom:4px}
+.team-card .role{display:inline-block;font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--terra);margin-bottom:14px}
+.team-card p{font-size:15.5px;color:var(--ink-mute);line-height:1.65;max-width:46ch;margin:0 auto}
+
+/* CTA */
+.go{padding:96px 24px}
+.go-card{
+  max-width:900px;margin:0 auto;background:var(--teal);color:#fff;border-radius:32px;
+  padding:64px 56px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;overflow:hidden;
+  position:relative;box-shadow:0 24px 60px rgba(14,59,54,.18)
+}
+@media (max-width:880px){.go-card{padding:40px 28px}}
+.go-card h3{font-family:var(--display);font-weight:500;font-size:clamp(28px,3.2vw,40px);line-height:1.08;color:#fff;text-wrap:balance}
+.go-card h3 em{font-style:normal;color:var(--terra-soft);font-weight:500}
+.go-card p{color:rgba(255,255,255,.82);font-size:16px;line-height:1.65;margin-top:14px;max-width:60ch}
+.go-card .tag{justify-content:center}
+.go-cta{margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-on-dark{background:#fff;color:var(--ink)}
+.btn-on-dark:hover{transform:translateY(-1px);filter:brightness(.97)}
+
+/* Footer */
+footer{background:var(--bg-soft);padding:52px 24px;border-top:1px solid var(--line);font-size:14px;color:var(--ink-mute)}
+.foot-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:36px}
+@media (max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}}
+.foot-col{display:flex;flex-direction:column;gap:8px}
+.foot-col h5{font-family:var(--display);font-weight:500;font-size:16px;color:var(--ink);margin-bottom:8px}
+.foot-col a{padding:2px 0;color:var(--ink-mute);transition:color .18s}
+.foot-col a:hover{color:var(--ink)}
+.foot-bottom{max-width:1180px;margin:36px auto 0;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:13px;color:var(--ink-dim)}
+
+@media (max-width:760px){section{padding:64px 18px}.story,.apps,.team,.go{padding:64px 18px}}
+</style>
+</head>
+<body>
+
+<div class="bar">A Pacific-led telehealth clinic for mental and physical health.<a href="index.html">Back to the clinic</a></div>
+
+<div class="nav-wrap">
+  <nav class="nav" aria-label="Primary">
+    <a class="brand" href="/">
+      <span class="brand-mark"><img src="assets/brand/connect-logo.png" alt=""></span>
+      <span class="brand-name">Connect Clinic</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#clinical">Medical</a>
+      <a href="index.html#lifestyle">Lifestyle support</a>
+      <a href="index.html#conditions">Conditions</a>
+      <a class="active" href="about.html">About</a>
+      <a href="pricing.html">Pricing</a>
+    </div>
+    <a class="nav-cta" href="book.html">Book a consult <span aria-hidden="true">→</span></a>
+  </nav>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <span class="tag">About Connect</span>
+      <h1 class="h1">A clinic, a studio, and a <em>Pacific way</em> of doing both.</h1>
+      <p class="lede">Connect Clinic is a Pacific-led telehealth practice for mental and physical health, with a small software studio attached. The clinic comes first. The apps exist because the clinic kept running into the same blank spaces — language, medication understanding, the gap between visits — and we couldn't find tools that filled them properly.</p>
+    </div>
+  </div>
+</header>
+
+<section id="story" class="story">
+  <div class="story-grid">
+    <div class="story-text">
+      <span class="tag">Our story</span>
+      <h2 class="h2">Built where the patient lives, not where the clinic sits.</h2>
+      <p class="lede">Started in Mangere by a Tongan GP. Grew out of years of seeing the same patterns in mainstream care — Pasifika families squeezed into ten-minute appointments, mental health collapsed into a checklist, physical health discussed without the cultural picture in the room.</p>
+      <p class="lede">Connect's answer is to slow the consult down, lead with talanoa, and treat mental and physical health as one conversation rather than two referrals.</p>
+    </div>
+    <div class="story-photo">
+      <img src="assets/img-ai/portrait-elder.jpg" alt="A Pasifika elder on a video call with her clinician, family photos behind her" width="512" height="1024">
+    </div>
+  </div>
+</section>
+
+<section id="apps" class="apps">
+  <div class="apps-head">
+    <span class="tag">From the studio</span>
+    <h2 class="h2">Pacific health software, built in clinic.</h2>
+    <p class="lede">Three apps in active build, each shipped under the same principle: a tool a doctor would feel comfortable handing to a patient at the end of a consult. Free or low-cost where possible, no engagement bait, no streaks, no guilt loops.</p>
+  </div>
+
+  <div class="apps-grid">
+
+    <article class="app-card">
+      <div class="app-card-art">
+        <div class="app-art-fallback"><span class="glyph">Tā</span><span class="placeholder">on TestFlight</span></div>
+      </div>
+      <div class="app-card-body">
+        <span class="app-status">On TestFlight</span>
+        <h3>Talanoa</h3>
+        <p class="why">Identity is a protective factor.</p>
+        <p>Pacific kids who grow up speaking their heritage language do better at school, sleep better, and stay rooted in family. Language loss is one of the strongest signals of mental health drift in young Pasifika patients. Talanoa teaches five Pacific languages through everyday phrases, daily culture alerts, and progressive lessons.</p>
+        <div class="app-card-foot"><a class="pill-link" href="https://testflight.apple.com/join/xv7A6wWg" target="_blank" rel="noopener">Join the TestFlight <span aria-hidden="true">→</span></a></div>
+      </div>
+    </article>
+
+    <article class="app-card">
+      <div class="app-card-art">
+        <div class="app-art-fallback"><span class="glyph">Rx</span><span class="placeholder">in design · 2026</span></div>
+      </div>
+      <div class="app-card-body">
+        <span class="app-status dim">In design</span>
+        <h3>Pasifika Medication Resource</h3>
+        <p class="why">Patients deserve to understand the pills they take.</p>
+        <p>A plain-English (and Pacific-language) reference for the medications most often prescribed to NZ Pasifika patients. What the drug does, why it matters, common side-effects, when to call the GP. Built because too many patients leave a consult with a script they don't fully understand.</p>
+      </div>
+    </article>
+
+    <article class="app-card">
+      <div class="app-card-art">
+        <div class="app-art-fallback"><span class="glyph">Wt</span><span class="placeholder">coming late 2026</span></div>
+      </div>
+      <div class="app-card-body">
+        <span class="app-status soon">Coming late 2026</span>
+        <h3>GLP-1 Companion</h3>
+        <p class="why">For everyone on weight medication.</p>
+        <p>Patients on Wegovy, Saxenda, or Mounjaro need more than a quick consult and a hand-wave. Side-effect tracking, dose-escalation reminders, lifestyle nudges, and clear escalation triggers. Open to every NZ patient on a GLP-1, not just Pasifika.</p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section id="team" class="team">
+  <div class="team-head">
+    <span class="tag">The team</span>
+    <h2 class="h2">Who runs the clinic.</h2>
+    <p class="lede">A small core, deliberately. Pacific-led at every level — clinical decisions, software, and the way patients are met when they walk in.</p>
+  </div>
+  <div class="team-grid">
+    <div class="team-card">
+      <h3>Dr Francis Katoa</h3>
+      <span class="role">Founder · GP · Clinical lead</span>
+      <p>MBChB, FRNZCGP, MCNZ. Tongan, Auckland-based. GP across Pasifika community health, mental health, weight medicine, and medicinal cannabis. Builds the apps too.</p>
+    </div>
+    <div class="team-card">
+      <h3>Warren Aseloka</h3>
+      <span class="role">Health coach · Whānau support</span>
+      <p>Pacific health coach working alongside the clinical consult. Sits with patients on the lifestyle scaffolding — sleep, food, movement, behaviour change — that makes the medication stick.</p>
+    </div>
+  </div>
+</section>
+
+<section id="cta" class="go">
+  <div class="go-card">
+    <div>
+      <span class="tag" style="color:var(--terra-soft)"><span style="background:var(--terra-soft)"></span>Ready when you are</span>
+      <h3>Pick a service. Pay. <em>Zoom link in minutes.</em></h3>
+      <p>Same-day slots most weekdays, 8am to 8pm NZ time. NZ patients only. No insurance or referral required.</p>
+      <div class="go-cta">
+        <a class="btn btn-on-dark" href="book.html">Book a consult <span class="arrow">→</span></a>
+        <a class="btn btn-light" href="index.html">Back to the clinic</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-col">
+      <a class="brand" href="/">
+        <span class="brand-mark"><img src="assets/brand/connect-logo.png" alt=""></span>
+        <span class="brand-name">Connect Clinic</span>
+      </a>
+      <p>A Pacific-led telehealth clinic in Aotearoa New Zealand. Mental and physical health, by video, built for Pasifika families.</p>
+    </div>
+    <div class="foot-col">
+      <h5>Clinical</h5>
+      <a href="book.html?service=mental-health">Mental health appointment</a>
+      <a href="book.html?service=physical-health">Physical health consult</a>
+      <a href="book.html?service=family">Whānau / aiga consult</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="crisis.html">Crisis help</a>
+    </div>
+    <div class="foot-col">
+      <h5>About</h5>
+      <a href="about.html#story">Our story</a>
+      <a href="about.html#apps">Apps from the studio</a>
+      <a href="about.html#team">Who runs the clinic</a>
+    </div>
+    <div class="foot-col">
+      <h5>Reach us</h5>
+      <a href="tel:+6498735039">+64 9 873 5039 ext 800</a>
+      <a href="mailto:francis.katoa@icloud.com">francis.katoa@icloud.com</a>
+      <span>26 Whakahui Lane, Mangere Bridge, Auckland 2022</span>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 Connect Clinic Limited · Aotearoa New Zealand · Registered medical practitioner: Dr Francis Katoa, MBChB, FRNZCGP, MCNZ</span>
+    <span>Built in Mangere</span>
+  </div>
+</footer>
+
+</body>
+</html>
